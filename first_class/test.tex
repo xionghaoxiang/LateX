@@ -1,0 +1,520 @@
+\documentclass[12pt]{ctexart}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{url}
+
+\usepackage{xcolor}  % 用于设置代码颜色（可选）
+\lstset{
+  basicstyle=\ttfamily\normalsize,       % 基本字体风格
+  %numbers=left,                     % 行号在左侧
+  %numberstyle=\tiny\color{gray},   % 行号样式
+  keywordstyle=\color{blue},       % 关键词颜色
+  commentstyle=\color{green!60!black}, % 注释颜色
+  stringstyle=\color{red},         % 字符串颜色
+  breaklines=true,                 % 自动换行
+  frame=single,                    % 代码框
+  tabsize=4,
+  captionpos=b                     % 标题在底部
+}
+\setstretch{1.5}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{南京航空航天大学}
+\rhead{卓越工程师基础训练报告}
+\cfoot{\thepage}
+\graphicspath{{media/}}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+
+\title{\textbf{南京航空航天大学\\[1em] 卓越工程师基础训练报告}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{1em}
+\vspace{-3em}
+\begin{center}
+    {\Large \bfseries 学生信息}
+\end{center}
+\vspace{1.5em}
+\begin{center}
+\begin{tabularx}{0.9\textwidth}{l X}
+姓名：       & \underline{\makebox[10cm][c]{熊浩翔}} \\[1em]
+学号：       & \underline{\makebox[10cm][c]{032310315}} \\[1em]
+专业：       & \underline{\makebox[10cm][c]{自动化}} \\[1em]
+班级：       & \underline{\makebox[10cm][c]{0323106}} \\[1em]
+指导教师：   & \underline{\makebox[10cm][c]{罗韬}} \\[1em]
+训练时间：   & \underline{\makebox[10cm][c]{9周—20周}} \\
+\end{tabularx}
+\end{center}
+
+\newpage 
+\tableofcontents
+\newpage
+% -------------------- 实验项目一 --------------------
+\section{训练项目一：智能竞赛抢答器 \\ \normalsize - Multisim仿真}
+
+\subsection{实验目的}\noindent
+1.培养学生综合运用理论知识解决实际问题的能力。\\
+2.掌握电子电路的一般的设计方法，了解电子产品研制开发过程\\
+3.提高电子电路实验技能及仪器使用能力。\\
+4.掌握电子电路安装和调试的方法及故障排除方法。\\
+5.学会撰写课程设计总结报告。\\
+6.学会查阅手册和文献资料。\\
+\subsection{实验原理}\noindent
+1.通过信号发生器或555定时器产生一个频率一定的脉冲信号输入74LS90\\
+2.74LS90将这个脉冲信号通过八进制转化为8种不同的状态（3位二进制数）输入到138译码器的输入端\\
+3.74LS138通过将这个三位二进制数转换成对应的0-7数字编码。\\
+4.通过与门或门非门将这7种不同的状态转换成对应的学号。\\
+5.74LS47连接共阳极数码管将学号显示出来。\\
+\begin{center}
+\includegraphics[width=1\textwidth]{image1.png}\\
+\includegraphics[width=1\textwidth]{image2.png}\\
+\includegraphics[width=1\textwidth]{image3.png}\\    
+\end{center}
+
+\subsection{实验步骤}
+\noindent 1.可以使用555定时器形成多谐触发器产生频率一定的时钟信号，或者直接使用信号发生器输出时钟信号。\\
+\begin{center}
+    \includegraphics[width=1\textwidth]{image4.png}
+\end{center}
+2.用74LS90芯片将时钟信号以8进制的方式转化为8种不同的状态,将Qa，Qb，Qc接入74LS138的A0，A1，A2，进而获得数字0-7的译码输出。将我的学号0315写为二进制表示，这里用abcd表示分析L1L2L3L4和abcd直接的关系，得到两者之间的特性方程。最后通过74LS47连接8段式共阳极数码管进行编译数码显示。
+\begin{center}
+    \includegraphics[width=1\textwidth]{image5.png}
+    \includegraphics[width=1\textwidth]{image6.png}
+    \includegraphics[width=1\textwidth]{image7.png}
+    \includegraphics[width=1\textwidth]{image8.png}
+\end{center}
+\subsection{实验结果}
+
+\subsubsection*{电路图}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{image9.png} % 请替换为你的图像文件名
+\end{center}
+
+\subsubsection*{仿真结果}
+\noindent 简要描述：\\实验现象：当选手按下开关时，信号发生器会输出一定频率的脉冲信号，并以此在数码管上显示0315（我的后4位学号），当信号发生频率较大时，数码管上看起来就像同时点亮0315四个数字。
+\begin{center}
+\includegraphics[width=1\textwidth]{image10.png} % 请替换为你的图像文件名
+\includegraphics[width=1\textwidth]{image11.png}
+\includegraphics[width=1\textwidth]{image12.png}
+\includegraphics[width=1\textwidth]{image13.png}
+\end{center}
+
+
+
+% -------------------- 实验项目二 --------------------
+\section{训练项目二：水位控制器 \\ \normalsize - 焊接练习}
+
+\subsection{实验目的}
+\noindent 1.掌握电子元器件、常用电子仪器的使用方法\newline
+2.加深对555定时器的工作原理的理解\\
+3.培养电路设计、搭建、调试的能力\\
+\subsection{实验原理}
+\begin{center}
+    \includegraphics[width=1\textwidth]{image14.png}
+    \includegraphics[width=1\textwidth]{image15.png}
+    \includegraphics[width=1\textwidth]{image16.png}
+\end{center}
+
+\subsection{实验步骤}\noindent
+1.根据电路图准备好相关的元器件以及万能板。\\
+2.依据电路图对相关器件进行实物的焊接及采用脱锡的方式进行连线。\\
+3.焊接完成后用万用表对相关的线路进行通断检测，以及仔细检查各个元器件的正负极，确保连接无误，器件完好。\\
+4.进行上电测试，打开开关，对com端进行相应的操作观察二极管的亮暗变化。\\
+\subsection{实验结果}
+
+\subsubsection*{电路图}
+\begin{center}
+    \includegraphics[width=1\textwidth]{image17.png}
+    \includegraphics[width=1\textwidth]{image18.png}
+    \includegraphics[width=1\textwidth]{image19.png}
+\end{center}
+
+
+\subsubsection*{实物照片}
+\begin{center}
+\includegraphics[height=0.3\textheight]{image20.jpeg}
+\includegraphics[height=0.3\textheight]{image21.jpeg}
+\end{center}
+简要描述：\\实验现象：接入5v 直流稳压电源后，将开关拨向on端，二极管就被点亮，当com端和on以及off端连接到一起时（相当于水位已经到达了满的位置）此时二极管熄灭。
+
+
+% -------------------- 实验项目三 --------------------
+\section{训练项目三：双工对讲机 \\ \normalsize - 开发、制版、组装}
+
+\subsection{实验目的}\noindent
+1.深入了解esp32微控制器的功能特点及编程方法\\
+2.掌握INMP441麦克风和MAX98357A功放芯片的实际应用\\
+3.掌握I2S总线在音频传输中的应用\\
+4.熟悉ESP-NOW，UDP或MQTTX协议在数据传输中的实际应用\\
+5.能够独立设计一个完整的对讲机系统，提高能够实际解决工程项目的能力
+\subsection{实验原理}
+\begin{center}
+    \includegraphics[width=1\textwidth]{image22.png}
+    \includegraphics[width=1\textwidth]{image23.png}
+    \includegraphics[width=1\textwidth]{image24.png}
+    \includegraphics[width=1\textwidth]{image25.png}
+    \includegraphics[width=1\textwidth]{image26.png}    
+\end{center}
+
+\subsection{实验步骤}
+\begin{center}
+    \includegraphics[width=1\textwidth]{image27.png}
+    \includegraphics[width=1\textwidth]{image28.png}
+    \includegraphics[width=1\textwidth]{image29.png}
+    %\includegraphics[width=1\textwidth]{image25.png} 
+    %\includegraphics[width=1\textwidth]{image26.png}    
+\end{center}
+
+\subsection{实验结果}
+
+\subsubsection*{电路图}
+\begin{center}
+\includegraphics[width=1\textwidth]{image30.png}
+\end{center}
+\subsubsection*{实物照片}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image31.jpeg}
+        \caption{图 1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image32.jpeg}
+        \caption{图 2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image33.jpeg}
+        \caption{图 3}
+    \end{subfigure}
+
+    \vspace{0.5em}
+
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image34.jpeg}
+        \caption{图 4}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image35.jpeg}
+        \caption{图 5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{image36.jpeg}
+        \caption{图 6}
+    \end{subfigure}
+
+    \caption{设备实物图展示}
+    \label{fig:hardware_photos}
+\end{figure}
+\begin{itemize}
+    \item 1.MAX98357A的验证：
+\end{itemize}将程序烧录到ESP32S3中，串口显示连接到WIFI后开始从烧录的网址下载音频，下载完成后扬声器开始播放音乐。
+\begin{figure}[H]
+    \centering
+    % 第一行的两张图
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{image37.jpeg}
+        \caption{BCLK线}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{image38.jpeg}
+        \caption{LRC线}
+    \end{subfigure}
+
+    \vspace{1em} % 控制上下图间距
+
+    % 第二行的单张图
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{image39.jpeg}
+        \caption{DIN线}
+    \end{subfigure}
+
+    \caption{三条音频数据线的信号信息：BCLK、LRC 与 DIN}
+    \label{fig:signal-combined}
+\end{figure}
+\begin{itemize}
+    \item 2.INMP441的验证：
+\end{itemize}
+将程序烧录到ESP32S3后，电脑运行python脚本后，成功建立好服务器，当按住BOOT按键对准麦克风讲话，ESP32S3将会录音编码并将信息发送到电脑创建好的服务器中，随即从电脑扬声器中发出刚刚录入的声音。
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{image37.jpeg}
+        \caption{SCK线的信号}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{image38.jpeg}
+        \caption{WS线的信号}
+    \end{subfigure}
+
+    \vspace{1em}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{image39.jpeg}
+        \caption{SD线的信号}
+    \end{subfigure}
+
+    \caption{三条音频信号线的波形图}
+    \label{fig:siglines}
+\end{figure}
+\begin{itemize}
+    \item 3.基于ESP-NOW的双工对讲机的验证：
+\end{itemize}将程序烧录到两个ESP32后使他们同时工作，其中一台按住BOOT按键后进行录音并且将数据广播发送到另一台，另一台接受到之后通过扬声器播放录入的声音。
+% --- 第一组：98357的信号 ---
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image40.jpeg}
+        \caption{DIN 信号}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image41.jpeg}
+        \caption{BLOCK 信号}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image42.jpeg}
+        \caption{LRC 信号}
+    \end{subfigure}
+    \caption{98357 各信号线的波形图}
+    \label{fig:98357_signals}
+\end{figure}
+
+% --- 第二组：441的信号 ---
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image43.jpeg}
+        \caption{WS 信号}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image44.jpeg}
+        \caption{SD 信号}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{image45.jpeg}
+        \caption{SCK 信号}
+    \end{subfigure}
+    \caption{441 各信号线的波形图}
+    \label{fig:441_signals}
+\end{figure}
+
+\subsubsection*{流程图（可选）}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{image49.png}
+\includegraphics[width=0.8\textwidth]{image50.png}
+\end{center}
+% -------------------- 小结与附录 --------------------
+\section{训练小结及心得}
+\subsection{学号抢答电路的设计仿真：}
+\noindent 实验总结：\\
+该实验用到了NI mutisim软件，并基于74LS90，74LS138，74LS47，与或非门，数码管等数字电路基础硬件做出了一个能显示我后4位学号的电路仿真。\\
+实验收获：\\
+a.在电脑上安装了NI mutisim仿真软件,初步熟悉了该软件的基本操作,这对于以后做电路仿真,电赛设计,数电实验等奠定了基础,并初步学习了如何合理的使用电脑上的软件。\\
+b.加深了数字电子元器件的认识,学会了如何使用它们,并用他们的输入输出特性设计自己想要的需求与功能。如138的8个输出转化成自己的学号，通过74LS47与共阳极的数码管相接实现数字的数码显示。\\
+c.学会了使用探测的发光二极管实现电路过程中的检测，正确的进行电路的调试。\\
+d.仿真中遇见了各种问题，学会了通过拆分一个个子模块实现问题的定位与检测。\\
+e.增强了上网搜索查询资料的能力面对以后各种新的电子元器件通过上网学习，理解并利用他们从而实现自己的需求。\\
+f.在设计学号抢答电路时，我学会了如何分析电路需求并简化设计。通过逻辑化思维，学会能够将复杂的电路问题拆解成多个较小的子问题，逐步解决。这种方法不仅在数字电路设计中有用，在其他工程领域的设计中也能起到很大的作用。通过优化逻辑门的组合，减少了不必要的元件，提高了电路的可靠性和效率。\\
+通过这次学号抢答电路的设计与实验，我不仅加深了对数字电路基本原理的理解，还提升了自己的动手能力、问题解决能力。实验中的每一次问题的解决、每一次电路的优化，都让我获得了巨大的成长。我将继续在实践中不断总结经验，逐步提高自己的专业能力，为未来的学习和工作做好准备。\\
+\subsection{水位控制器的实践：}
+\noindent 实验总结：\\
+该实验通过一个实际的应用问题提取出一个电路问题，从而实现通过电路设计解决这个需求。该实验主要是依据电路图实现元器件的焊接与连线，进而进行实物的测试与运用。
+实验收获：\\
+a. 焊接技能的提升：\\
+在实验过程中，我掌握了基础的焊接技能，包括如何用烙铁进行焊接、如何避免短路、如何处理焊接点等细节。这些技能不仅对本次实验有帮助，还为今后其他电路的设计和搭建打下了基础。同时我学会了如何检查焊接质量，发现并解决焊接过程中可能出现的问题，如虚焊、短路、焊点过多等。并且学会了吸锡器的使用。这为我们出现焊接错误时能够重新修改提供了方法。同时学会了识别万能板的正反面，学会了通过万能板以及脱锡及飞线的方式进行元件的联通。\\
+b. 对水位控制原理的理解：\\
+本次实验让我对水位控制系统有了更深入的理解，特别是如何通过传感器反馈信号，控制继电器进而启动水泵。水作为导体可以在电路设计中起到至关重要的作用。水位过低相当于一个短路，水位已满相当于一个短路。从而通过断路与短路实现最后二极管的亮灭。在现实生活中，这种系统广泛应用于水箱、游泳池、蓄水池等场所，通过自动控制水位来避免水位过高或过低的情况，具有很高的实际应用价值。\\
+c. 安全意识的提升：\\
+本次实验让我增强了对实验过程中安全的重视，特别是在使用电烙铁和电源时，我学会了如何正确使用工具，防止烙铁烫伤、短路等问题。另外，实验过程中，我学会了保持耐心和细心，确保每一步操作都做到最好，避免因疏忽而导致电路出现问题，避免出现焊接的难以发觉的问题。\\
+d.电路问题的检查：\\
+通过这个实验，我学会了用示波器或者万用表检查电路的通断问题。学会了通过将万用表 处于蜂鸣档判断焊接是否短路，以及通过二极管的模式测定二极管的的正负极性。通过本次实验，大大增强了我对电子仪器的掌握与使用。这将有助于我今后同类问题的解决。例如：当我第一次焊接完成后调试发现二极管并不亮，通过万用表进行仔细的检查发现是开关的右侧两点并没有焊接在一起。\\
+通过这次水位控制器的焊接与实验，我不仅学到了电路焊接的基本技巧，还更深刻地理解了水位自动控制系统的工作原理和应用。虽然在实验过程中遇到了一些挑战，但我通过不断调试和改进，最终完成了实验目标。今后，我将继续提高我的电路设计和焊接技能，在实践中不断积累经验。\\
+\subsection{基于ESP32的双工对讲机：}	
+\noindent 实验总结：\\
+实验收获：\\
+ \textbf{a.掌握ESP32S3的基本操作与编程：}\\
+在实验中，我深入了解了ESP32S3的硬件结构和编程模型，学习了如何通过Arduino IDE开发ESP32S3应用。通过控制441与98357的相关验证实验等基础实验，掌握了I2S通信、Wi-Fi连接等基本功能。
+该实验让我熟悉了ESP32开发的流程，包括如何通过USB将程序烧录到ESP32S3、如何调试代码等。\\
+\textbf{b. 嵌入式系统调试与优化技能的提升：}\\
+在调试过程中，我学习了如何使用串口监视器查看ESP32的输出数据，排查程序中的错误，并逐步优化程序逻辑。在进行系统集成时，遇到过连接不稳定或电源不足等问题，学习了如何进行硬件故障排查和软件调试。\\
+d.提升了软硬件结合的能力：\\
+在实验中，我们需要将硬件与软件紧密结合，虽然老师为我们提供了代码，但是我们可以通过对现有的代码进行分析从而学习如何调试硬件连接、传感器模块以及编写控制程序。通过这次实践，我更深入地理解了硬件电路与软件编程之间的互动，学习了如何通过编程控制硬件模块。\\
+e.提升使用电脑软件的能力：\\
+在本次实验中，我学会了如何使用GitHub以及Tortoise git的相关使用，如何在电脑端cmd中进行指令的操作，如何更改电脑的环境变量。同时在使用这些软件时遇见了许多问题：如使用Tortoise git无法进行拉取操作，cmd中无法运行python，在使用Arduino中遇见了串口信息为乱码，无法为样本分配内存，程序内存过大，WiFi无法连接，缺少对应的软件包代码无法进行编译，MQTTX无法连接等等，通过一个问题一个问题的查询与寻求老师的帮助，从而一个一个的解决，在此过程中，我深刻感受到了学会正确的使用计算机以及学会相关软件的操作至关重要！\\
+f.了解并学会使用人工智能\\
+在进行实验的过程中我们或许会遇见许许多多我们不知道的问题，但随着AI的发展诞生了如chatgpt等大模型，也衍生出了一系列相关的软件如：cursor等。学会了如何通过人工的引导式提问获得精确的回答以及根据问题做出的修改！
+g.学会硬件出现问题时如何对相关的硬件进行调试进而发现问题的所在：
+在麦克风收集声音后，电脑端却没发出声音，串口中并没有相关的报错信息，排除软件的问题，进而检查硬件的错误，首先检测了高低电平是否为正确的3.3V与0V，接着检查每个元器件是否处于正常工作状态，接着检查相关数据线是否接错对应的地方，最终检查完后发现L/R线接错进而无法录入声音。\\
+h.学会了一些常用工具的使用\\
+在进行该实验中，我学会了如何熟练地使用万用表，示波器，剥线钳，吸锡器，镊子，剪刀，螺丝刀，焊接用品等，增强了我的动手实践能力，实现了从理论到实践的转化。\\
+
+\section{附录} 
+（如有需要，可在此附上参考文献、实验记录、代码片段等）
+\subsection{代码}
+\begin{lstlisting}[language=C, caption=麦克风采集配置：]
+const i2s_config_t rec_i2s_config = {
+      .mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_RX),
+      .sample_rate = SAMPLE_RATE,
+      .bits_per_sample = I2S_BITS_PER_SAMPLE_32BIT,
+      .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
+      .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_I2S| I2S_COMM_FORMAT_I2S_MSB),
+      .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
+      .dma_buf_count = 2,
+      .dma_buf_len = 256,
+}    
+\end{lstlisting}
+\begin{lstlisting}[language=C,caption={扬声器采集配置：}]
+const i2s_config_t spk_i2s_config = {
+      .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
+      .sample_rate = SAMPLE_RATE,
+      .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
+      .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT, //2-channels
+      .communication_format =(i2s_comm_format_t)(I2S_COMM_FORMAT_I2S),
+      .intr_alloc_flags = 0,
+      .dma_buf_count = 2,
+      .dma_buf_len = 256,
+};    
+\end{lstlisting}
+\begin{lstlisting}[language=C, caption=对讲机主程序代码]
+//#include <AsyncMQTT_ESP32.h>
+
+#include "common.h"
+#include "esp_now_trans.h"
+//#include "udp_trans.h"
+#include "mqtt_trans.h"
+
+// WiFi network credentials
+//TP-LINK_0D2246
+const char* wifi_ssid = "Xiaomi13";
+const char* wifi_password = "xhx1958105721";
+
+bool b_send_over = 1; //发送完成标志位
+bool b_recv_over = 0; //接受完成标志位
+bool b_speak_out;     //0代表对外讲话，1代表收听
+
+void setup(void)
+{
+    Serial.println("Init start!");
+
+    Serial.begin(115200);
+
+    //ESP-NOW初始化，用来传输音频
+#if USE_TRANS_PROTOCOL == USE_ESP_NOW
+    init_esp_now();
+#elif USE_TRANS_PROTOCOL == USE_UDP
+    init_udp();
+#elif USE_TRANS_PROTOCOL == USE_MQTT
+    init_mqtt();
+#else
+    Serial.println("Unknown Version");
+    return;
+#endif
+
+    //I2S初始化 
+    init_i2s();
+    
+    pinMode(BTN, INPUT_PULLUP);//按键
+    pinMode(LED, OUTPUT);//指示灯
+    digitalWrite(LED, HIGH);
+
+    Serial.println("Init end!");
+}
+
+bool BtnisPressed(void)//按键是否按下
+{
+    return !digitalRead(BTN);   
+}
+
+void loop(void)
+{
+    if ( BtnisPressed() )//按下按键发射数据
+    {
+        b_speak_out = 0;
+
+        digitalWrite(LED, HIGH); //发射时开灯
+
+        uint32_t samples_read = local_i2s_read(samples_16bit, CUR_SAMPLE_COUNT); //读取数据
+
+#if USE_TRANS_PROTOCOL == USE_ESP_NOW
+        covert_data_bit(samples_16bit, samples_8bit, samples_read); //发送时转换为8位
+
+        send_esp_now_data(samples_8bit, samples_read);  //发射数据
+#elif USE_TRANS_PROTOCOL == USE_UDP
+    #if USE_16BIT_DATA == 0
+        covert_data_bit(samples_16bit, samples_8bit, samples_read); //发送时转换为8位
+        
+        send_udp_data(samples_8bit, samples_read);
+    #elif USE_16BIT_DATA == 1
+        send_udp_data((uint8_t *) samples_16bit, samples_read * sizeof(int16_t));
+    #endif
+#elif USE_TRANS_PROTOCOL == USE_MQTT
+        send_mqtt_data(samples_16bit, samples_read);
+#else
+    Serial.println("Unknown Version");
+    return;
+#endif
+    }
+    else//接收数据，接受部分在回调函数中
+    {
+      delay(28);//经过一段延时再判断，接收数据并且播放也需要时间
+
+      b_speak_out = 1;
+      
+      if (b_recv_over)
+      {
+          b_recv_over = 0;
+          
+          if(digitalRead(LED))  //接受数据时闪烁LED
+              digitalWrite(LED, LOW);
+          else
+              digitalWrite(LED, HIGH);
+      }
+      else
+      {
+          digitalWrite(LED, LOW);  //没有接收到消息，也没有发射，关灯
+          i2s_zero_dma_buffer(SPK_I2S_PORT);  //清空DMA中缓存的数据，你可以尝试一下不清空（注释这行）是什么效果
+#if USE_TRANS_PROTOCOL == USE_UDP
+          sequenceNumber = 0;
+#endif
+      }
+    }
+}
+
+}
+\end{lstlisting}
+
+% -------------------- 注意事项 --------------------
+\subsection{注意事项}
+\begin{itemize}[leftmargin=2em]
+    \item 请注意实验过程中正确连接电路，避免短路或元器件损坏。
+    \item 训练报告需按模板要求完整填写，并附上必要的电路图和实验记录。
+\end{itemize}
+
+\subsection{参考文献}
+\bibliographystyle{plain}
+\bibliography{books}
+\nocite{*}
+\end{document}

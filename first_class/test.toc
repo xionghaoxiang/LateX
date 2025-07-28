@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {1}训练项目一：智能竞赛抢答器 \\ \normalsize - Multisim仿真}{3}{}%
+\contentsline {subsection}{\numberline {1.1}实验目的}{3}{}%
+\contentsline {subsection}{\numberline {1.2}实验原理}{3}{}%
+\contentsline {subsection}{\numberline {1.3}实验步骤}{5}{}%
+\contentsline {subsection}{\numberline {1.4}实验结果}{7}{}%
+\contentsline {section}{\numberline {2}训练项目二：水位控制器 \\ \normalsize - 焊接练习}{10}{}%
+\contentsline {subsection}{\numberline {2.1}实验目的}{10}{}%
+\contentsline {subsection}{\numberline {2.2}实验原理}{11}{}%
+\contentsline {subsection}{\numberline {2.3}实验步骤}{11}{}%
+\contentsline {subsection}{\numberline {2.4}实验结果}{12}{}%
+\contentsline {section}{\numberline {3}训练项目三：双工对讲机 \\ \normalsize - 开发、制版、组装}{14}{}%
+\contentsline {subsection}{\numberline {3.1}实验目的}{14}{}%
+\contentsline {subsection}{\numberline {3.2}实验原理}{14}{}%
+\contentsline {subsection}{\numberline {3.3}实验步骤}{16}{}%
+\contentsline {subsection}{\numberline {3.4}实验结果}{17}{}%
+\contentsline {section}{\numberline {4}训练小结及心得}{22}{}%
+\contentsline {subsection}{\numberline {4.1}学号抢答电路的设计仿真：}{22}{}%
+\contentsline {subsection}{\numberline {4.2}水位控制器的实践：}{22}{}%
+\contentsline {subsection}{\numberline {4.3}基于ESP32的双工对讲机：}{24}{}%
+\contentsline {section}{\numberline {5}附录}{25}{}%
+\contentsline {subsection}{\numberline {5.1}代码}{25}{}%
+\contentsline {subsection}{\numberline {5.2}注意事项}{29}{}%
+\contentsline {subsection}{\numberline {5.3}参考文献}{30}{}%

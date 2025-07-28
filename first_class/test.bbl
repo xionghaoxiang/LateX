@@ -1,0 +1,41 @@
+\begin{thebibliography}{1}
+
+\bibitem{INSPEC:26098772}
+L.~Cao.
+\newblock Ai4tech: X-ai enabling x-tech with human-like, generative, decentralized, humanoid and metaverse ai.
+\newblock {\em International Journal of Data Science and Analytics}, 18:219--38, 2024 2024.
+
+\bibitem{WOS:000792916700005}
+Longbing Cao.
+\newblock A new age of ai: Features and futures.
+\newblock {\em IEEE INTELLIGENT SYSTEMS}, 37(1):25--37, JAN 1 2022.
+
+\bibitem{20251718306431}
+Toju Duke and Paolo Giudici.
+\newblock {\em Responsible AI in Practice: A Practical Guide to Safe and Human AI}.
+\newblock 2025.
+\newblock AI governance;AI risk impact assessment;AI risk mitigation;AI safety;AI safety metric;Data ethic;Responsible AI;Risk impact assessments;Risk mitigation;Safety metrics;.
+
+\bibitem{20252118481317}
+Gustavo Moreira, Edyta~Paulina Bogucka, Marios Constantinides, and Daniele Quercia.
+\newblock The hall of ai fears and hopes: Comparing the views of ai influencers and those of members of the u.s. public through an interactive platform.
+\newblock pages ACM SIGCHI --, Yokohama, Japan, 2025.
+\newblock AI fear;AI governance;AI hope;AI influencer;Empirical ethic;Ethical AI;Interactive platform;Participatory AI ethic;Responsible AI;Value alignment;.
+
+\bibitem{esp-idf}
+Espressif Systems.
+\newblock {\em 南航电工实验教材}, 2023.
+\newblock ESP-IDF Programming Guide.
+
+\bibitem{esp32-voice}
+康田帅.
+\newblock 学习笔记（用esp32做一个实时语音对讲机）.
+\newblock \url{https://example.com}, 2024.
+\newblock 个人博客.
+
+\bibitem{multisim}
+张三.
+\newblock {\em 数字电子技术基础}.
+\newblock 高等教育出版社, 2023.
+
+\end{thebibliography}
