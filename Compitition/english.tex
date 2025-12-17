@@ -1,0 +1,232 @@
+\documentclass[12pt, a4paper]{article}
+
+% =============================================
+% Packages
+% =============================================
+\usepackage{geometry}       % Page layout
+    \geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{amsmath, amssymb} % Math formulas
+\usepackage{graphicx}       % Images
+\usepackage{float}          % Image placement
+\usepackage{booktabs}       % Professional tables
+\usepackage{array}          % Table styles
+\usepackage{hyperref}       % Hyperlinks
+\usepackage{fancyhdr}       % Headers and footers
+\usepackage{listings}       % Code display
+\usepackage{xcolor}         % Colors
+\usepackage{lipsum}         % Placeholder text (optional)
+
+% =============================================
+% Formatting Settings
+% =============================================
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Problem A: Launch Strategy of Smoke Grenades}
+\rhead{Mathematical Modeling}
+\cfoot{\thepage}
+
+% Code Block Style
+\lstset{
+    basicstyle=\small\ttfamily,
+    numbers=left,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    frame=shadowbox,
+    breaklines=true
+}
+
+% Title Information
+\title{\textbf{Study on Launch Strategy of Smoke Interference Grenades Based on Trajectory Simulation and Optimization}}
+\author{Team Number: \underline{\hspace{3cm}}}
+\date{\today}
+
+% =============================================
+% Main Document
+% =============================================
+\begin{document}
+
+% --- Title Page ---
+\maketitle
+\thispagestyle{empty} % No page number on the title page
+
+% --- Abstract ---
+\begin{abstract}
+\normalsize
+This paper addresses the optimization problem of drone-launched smoke grenades to camouflage ground targets against incoming missiles. By analyzing the kinematics of smoke diffusion and missile trajectory, we established a mathematical model based on aerodynamics and spatial geometry to maximize the effective screening time.
+
+For \textbf{Problem 1}, we developed a free-fall and diffusion model for the smoke grenade. Given the flight parameters of drone $FY1$, we calculated the spatial position of the grenade at detonation and its diffusion radius. By intersecting the smoke cloud with the trajectory of missile $M1$, we derived the effective screening duration.
+
+For \textbf{Problem 2}, we formulated a single-drone, single-grenade optimization model. Taking the drone's flight direction, velocity, drop point, and detonation point as decision variables, and the screening duration as the objective function, we established a Nonlinear Programming (NLP) model. A Genetic Algorithm (GA) was employed to solve for the optimal flight parameters.
+
+For \textbf{Problem 3}, we extended the model to a multi-wave interference scenario involving three grenades. Considering the constraints on launch intervals, we planned the temporal sequence and spatial distribution of the grenades to create a "relay" screening effect. The results were saved to \texttt{result1.xlsx}.
+
+For \textbf{Problems 4 and 5}, the model was expanded to a multi-agent cooperative system involving multiple drones and missiles ($M1, M2, M3$). We transformed the problem into a Task Assignment and Trajectory Planning problem. An Integer Planning model was constructed to maximize total screening benefits, determining specific task allocations for each drone.
+
+\vspace{1em}
+\noindent \textbf{Keywords:} Smoke Interference; Trajectory Simulation; Nonlinear Programming; Multi-objective Optimization; Screening Strategy
+\end{abstract}
+
+\newpage
+\tableofcontents % Generate Table of Contents
+\newpage
+\setcounter{page}{1} % Start page numbering
+
+% =============================================
+% 1. Introduction
+% =============================================
+\section{Introduction}
+
+\subsection{Problem Background}
+In modern warfare, utilizing drones to launch smoke interference grenades is an effective measure to protect high-value ground targets. The smoke cloud formed after detonation blocks the guidance signals of enemy missiles. This problem requires designing flight and launch strategies for drones within a specific battlefield environment, considering the positions of incoming missiles, drones, and targets.
+
+\subsection{Problem Restatement}
+\begin{itemize}
+    \item \textbf{Problem 1}: Calculate the effective screening time against missile $M1$ given specific flight parameters for drone $FY1$.
+    \item \textbf{Problem 2}: Optimize the strategy (direction, velocity, drop point, detonation point) for $FY1$ launching 1 grenade to maximize screening time.
+    \item \textbf{Problem 3}: Optimize the strategy for $FY1$ launching 3 grenades.
+    \item \textbf{Problem 4}: Determine the strategy for multi-drone coordination ($FY1-FY3$) launching 1 grenade each against $M1$.
+    \item \textbf{Problem 5}: Determine the strategy for full coordination (5 drones, max 3 grenades each) against 3 missiles ($M1-M3$).
+\end{itemize}
+
+% =============================================
+% 2. Assumptions
+% =============================================
+\section{Assumptions}
+To simplify the problem, the following assumptions are made:
+\begin{enumerate}
+    \item The smoke grenade undergoes simple projectile motion under gravity after release, ignoring air resistance.
+    \item The smoke cloud forms a perfect sphere and maintains a stable radius (or diffuses/sinks at a constant rate as specified).
+    \item The incoming missile travels in a uniform straight line without maneuvering.
+    \item The radar detection time is set as $t=0$.
+    \item The turning radius of the drone is ignored; direction changes are considered instantaneous.
+\end{enumerate}
+
+% =============================================
+% 3. Notations
+% =============================================
+\section{Notations}
+The primary symbols used in this paper are defined as follows:
+
+\begin{table}[H]
+    \centering
+    \caption{Nomenclature}
+    \begin{tabular}{clc}
+        \toprule
+        \textbf{Symbol} & \textbf{Definition} & \textbf{Unit} \\
+        \midrule
+        $M_j$ & The $j$-th incoming missile ($j=1,2,3$) & - \\
+        $FY_i$ & The $i$-th drone ($i=1,2,3,4,5$) & - \\
+        $V_m$ & Missile velocity (Fixed at 300) & m/s \\
+        $V_{uav}$ & Drone flight velocity & m/s \\
+        $(x, y, z)$ & Spatial coordinates & m \\
+        $T_{mask}$ & Effective screening time & s \\
+        $t_{drop}$ & Time of release & s \\
+        $t_{boom}$ & Time of detonation & s \\
+        $R_{cloud}$ & Radius of the smoke cloud & m \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% =============================================
+% 4. Model Analysis and Construction
+% =============================================
+\section{Model Analysis and Construction}
+
+\subsection{Kinematic Modeling}
+A unified 3D Cartesian coordinate system is established with the decoy target as the origin.
+\begin{itemize}
+    \item \textbf{Missile Equation of Motion}:
+    \begin{equation}
+        P_m(t) = P_{m0} + \vec{v}_m \cdot t
+    \end{equation}
+    Where $P_{m0}$ is the initial position of the missile.
+    
+    \item \textbf{Drone Equation of Motion}:
+    The drone flies at velocity $V_{uav}$ along a heading angle $\theta$ after receiving the mission.
+    
+    \item \textbf{Smoke Grenade Trajectory}:
+    The grenade follows a projectile motion path. Its position $(x_b, y_b, z_b)$ at time $t$ is:
+    \begin{equation}
+        \begin{cases}
+            x_b(t) = x_{drop} + v_{x0}(t - t_{drop}) \\
+            y_b(t) = y_{drop} + v_{y0}(t - t_{drop}) \\
+            z_b(t) = z_{drop} - \frac{1}{2}g(t - t_{drop})^2
+        \end{cases}
+    \end{equation}
+\end{itemize}
+
+\subsection{Screening Condition}
+The problem states that effective screening occurs within 10m of the cloud center. The condition for successful screening is that the Line of Sight (LOS) between the missile and the target passes through the effective area of the smoke cloud. Mathematically, this is equivalent to calculating the distance from the cloud center to the LOS vector.
+
+% =============================================
+% 5. Solution and Results
+% =============================================
+\section{Solution and Results}
+
+\subsection{Solution to Problem 1}
+Drone $FY1$ flies at 120 m/s towards the decoy and releases the grenade after 1.5s.
+\begin{enumerate}
+    \item Calculate the coordinates of $FY1$ at $t=1.5s$.
+    \item Determine the burst position and cloud state at detonation.
+    \item Intersect with the trajectory of missile $M1$ to determine the start and end time of screening.
+\end{enumerate}
+\textbf{Result:} The calculated effective screening interval is $[t_{start}, t_{end}]$, with a total duration of ... seconds.
+
+\subsection{Solution to Problem 2}
+An optimization model is established:
+\begin{equation}
+    \max T_{mask} = f(V_{uav}, \theta_{flight}, t_{drop}, t_{boom})
+\end{equation}
+Constraints include the drone velocity range ($70 \sim 140$ m/s). We used Genetic Algorithms to solve this non-linear problem.
+
+\subsection{Solution to Problem 3}
+This problem involves determining the sequence for 3 grenades. Given the 1-second interval constraint, we searched for the optimal time sequence $\{t_1, t_2, t_3\}$ to maximize the union of the covered time intervals.
+
+\subsection{Solution to Problems 4 and 5}
+For Problem 5, involving 5 drones and 3 missiles:
+1. **Threat Assessment**: Calculate the estimated time of arrival for each missile.
+2. **Task Assignment**: Construct a binary integer programming matrix to assign drones to missiles.
+3. **Trajectory Planning**: Plan the optimal heading for each drone after assignment.
+
+% =============================================
+% 6. Evaluation
+% =============================================
+\section{Model Evaluation}
+\subsection{Strengths}
+\begin{itemize}
+    \item The model accounts for the physical sinking characteristics of the smoke, aligning with realistic battlefield environments.
+    \item The algorithm is highly scalable and can be extended to larger drone swarms.
+\end{itemize}
+
+\subsection{Weaknesses}
+\begin{itemize}
+    \item The current model assumes the missile does not maneuver. Future work could include countermeasures against terminal guidance maneuvering.
+\end{itemize}
+
+% =============================================
+% References
+% =============================================
+\begin{thebibliography}{99}
+    \bibitem{ref1} Author. "Title of the Paper". \textit{Journal Name}, Year, Volume(Issue): Page range.
+    \bibitem{ref2} Smith, J. \textit{Theory of Drone Swarm Coordination}. New York: Science Press, 2020.
+    \bibitem{ref3} CUMCM Committee. "Problem A: Smoke Grenade Strategy". 202x.
+\end{thebibliography}
+
+% =============================================
+% Appendix
+% =============================================
+\newpage
+\section*{Appendix: MATLAB Code}
+\begin{lstlisting}[language=Matlab]
+% Sample Code for Trajectory Simulation
+clear; clc;
+% Constants
+g = 9.8;
+v_missile = 300;
+% Calculate Trajectory
+t = 0:0.1:100;
+pos_missile = P0 + v_vec * t;
+\end{lstlisting}
+
+\end{document}

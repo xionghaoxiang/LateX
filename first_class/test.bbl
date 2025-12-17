@@ -1,41 +1,36 @@
 \begin{thebibliography}{1}
 
-\bibitem{INSPEC:26098772}
-L.~Cao.
-\newblock Ai4tech: X-ai enabling x-tech with human-like, generative, decentralized, humanoid and metaverse ai.
-\newblock {\em International Journal of Data Science and Analytics}, 18:219--38, 2024 2024.
+\bibitem{MJiarong2021}
+{ESP32-S3}的开发{ | }1.初识 {ESP32-S3}——{ESP32-S3}引脚图详细解释, 2021.
 
-\bibitem{WOS:000792916700005}
-Longbing Cao.
-\newblock A new age of ai: Features and futures.
-\newblock {\em IEEE INTELLIGENT SYSTEMS}, 37(1):25--37, JAN 1 2022.
+\bibitem{vor234_SN9816}
+{Arduino} 使用 {SNR9816TTS} 模块教程, 2023.
 
-\bibitem{20251718306431}
-Toju Duke and Paolo Giudici.
-\newblock {\em Responsible AI in Practice: A Practical Guide to Safe and Human AI}.
-\newblock 2025.
-\newblock AI governance;AI risk impact assessment;AI risk mitigation;AI safety;AI safety metric;Data ethic;Responsible AI;Risk impact assessments;Risk mitigation;Safety metrics;.
+\bibitem{Espressif_S3_DevKitC}
+Espressif Systems.
+\newblock {\em {ESP32-S3-DevKitC-1} 技术规格书}, 2024.
 
-\bibitem{20252118481317}
-Gustavo Moreira, Edyta~Paulina Bogucka, Marios Constantinides, and Daniele Quercia.
-\newblock The hall of ai fears and hopes: Comparing the views of ai influencers and those of members of the u.s. public through an interactive platform.
-\newblock pages ACM SIGCHI --, Yokohama, Japan, 2025.
-\newblock AI fear;AI governance;AI hope;AI influencer;Empirical ethic;Ethical AI;Interactive platform;Participatory AI ethic;Responsible AI;Value alignment;.
+\bibitem{LingshunLab_MAX98357}
+{Lingshun Lab}.
+\newblock {ESP32} 使用 {MAX98357} {I2S} 音频放大器模块播放音乐（{mp3/m3u/aac/wav}）, 2023.
 
 \bibitem{esp-idf}
 Espressif Systems.
 \newblock {\em 南航电工实验教材}, 2023.
 \newblock ESP-IDF Programming Guide.
 
+\bibitem{qq16601363_MAX98357A}
+一起玩科技.
+\newblock 一起玩儿物联网人工智能小车（{ESP32}）——68 使用 {MAX98357A} 模块播放声音, 2023.
+
+\bibitem{qq16601363_INMP441}
+一起玩科技.
+\newblock 一起玩儿物联网人工智能小车（{ESP32}）——69 使用 {INMP441} 模块采集声音, 2023.
+
 \bibitem{esp32-voice}
 康田帅.
 \newblock 学习笔记（用esp32做一个实时语音对讲机）.
-\newblock \url{https://example.com}, 2024.
+\newblock \url{https://www.cnblogs.com/shumei52/p/18597416}, 2024.
 \newblock 个人博客.
-
-\bibitem{multisim}
-张三.
-\newblock {\em 数字电子技术基础}.
-\newblock 高等教育出版社, 2023.
 
 \end{thebibliography}
