@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.27)  17 DEC 2025 21:01
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.27)  17 DEC 2025 21:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -349,6 +349,15 @@ Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \extratabsurround=\skip65
 \backup@length=\skip66
 \ar@cellbox=\box61
+) (e:/software/texlive/2025/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
+\TX@col@width=\dimen265
+\TX@old@table=\dimen266
+\TX@old@col=\dimen267
+\TX@target=\dimen268
+\TX@delta=\dimen269
+\TX@cols=\count317
+\TX@ftn=\toks33
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
  (e:/software/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
@@ -378,22 +387,22 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (e:/software/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count317
+\c@section@level=\count318
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count318
+\etb@tempcnta=\count319
 ) (e:/software/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
-\@linkdim=\dimen265
-\Hy@linkcounter=\count319
-\Hy@pagecounter=\count320
+\@linkdim=\dimen270
+\Hy@linkcounter=\count320
+\Hy@pagecounter=\count321
  (e:/software/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
 ) (e:/software/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count321
+\Hy@SavedSpaceFactor=\count322
  (e:/software/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
 )
@@ -405,21 +414,21 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count322
+\c@Hy@tempcnt=\count323
  (e:/software/texlive/2025/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4763.
-\XeTeXLinkMargin=\dimen266
+\XeTeXLinkMargin=\dimen271
  (e:/software/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
  (e:/software/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count323
-\Field@Width=\dimen267
-\Fld@charsize=\dimen268
+\Fld@menulength=\count324
+\Field@Width=\dimen272
+\Fld@charsize=\dimen273
 Package hyperref Info: Hyper figures OFF on input line 6042.
 Package hyperref Info: Link nesting OFF on input line 6047.
 Package hyperref Info: Hyper index ON on input line 6050.
@@ -431,18 +440,18 @@ Package hyperref Info: PDF/A mode OFF on input line 6072.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count324
-\c@Item=\count325
-\c@Hfootnote=\count326
+\Hy@abspage=\count325
+\c@Item=\count326
+\c@Hfootnote=\count327
 )
 Package hyperref Info: Driver (autodetected): hxetex.
  (e:/software/texlive/2025/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2024-11-05 v7.01l Hyperref driver for XeTeX
 \pdfm@box=\box62
-\c@Hy@AnnotLevel=\count327
-\HyField@AnnotCount=\count328
-\Fld@listcount=\count329
-\c@bookmark@seq@number=\count330
+\c@Hy@AnnotLevel=\count328
+\HyField@AnnotCount=\count329
+\Fld@listcount=\count330
+\c@bookmark@seq@number=\count331
  (e:/software/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
  (e:/software/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty
@@ -470,26 +479,26 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthL=\skip79
 \f@nch@widthC=\skip80
 \f@nch@widthR=\skip81
-\@temptokenb=\toks33
+\@temptokenb=\toks34
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count331
+\lst@mode=\count332
 \lst@gtempboxa=\box63
-\lst@token=\toks34
-\lst@length=\count332
-\lst@currlwidth=\dimen269
-\lst@column=\count333
-\lst@pos=\count334
-\lst@lostspace=\dimen270
-\lst@width=\dimen271
-\lst@newlines=\count335
-\lst@lineno=\count336
-\lst@maxwidth=\dimen272
+\lst@token=\toks35
+\lst@length=\count333
+\lst@currlwidth=\dimen274
+\lst@column=\count334
+\lst@pos=\count335
+\lst@lostspace=\dimen275
+\lst@width=\dimen276
+\lst@newlines=\count336
+\lst@lineno=\count337
+\lst@maxwidth=\dimen277
  (e:/software/texlive/2025/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
-\c@lstnumber=\count337
-\lst@skipnumbers=\count338
+\c@lstnumber=\count338
+\lst@skipnumbers=\count339
 \lst@framebox=\box64
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2024/09/23 1.10c listings configuration
@@ -497,8 +506,8 @@ File: listings.cfg 2024/09/23 1.10c listings configuration
 Package: listings 2024/09/23 1.10c (Carsten Heinz)
  (e:/software/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK-listings.sty
 Package: xeCJK-listings 2022/08/05 v3.9.1 xeCJK patch file for listings
-\l__xeCJK_listings_max_char_int=\count339
-\l__xeCJK_listings_flag_int=\count340
+\l__xeCJK_listings_max_char_int=\count340
+\l__xeCJK_listings_flag_int=\count341
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
  (e:/software/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
@@ -516,34 +525,34 @@ Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 ) (e:/software/texlive/2025/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2024/07/06 v1.0i Color table columns (DPC)
-\everycr=\toks35
+\everycr=\toks36
 \minrowclearance=\skip82
-\rownum=\count341
+\rownum=\count342
 )
-\c@theorem=\count342
+\c@theorem=\count343
  (./chinese.aux)
 \openout1 = `chinese.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 54.
+LaTeX Font Info:    ... okay on input line 54.
 
 Package fontspec Info: 
 (fontspec)             Adjusting the maths setup (use [no-math] to avoid
@@ -551,56 +560,56 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 53.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 53.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 53.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 53.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 53.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 53.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 53.
-LaTeX Font Info:    Redeclaring math accent \check on input line 53.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 53.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 53.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 53.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 53.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 53.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 54.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 54.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 54.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 54.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 54.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 54.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 54.
+LaTeX Font Info:    Redeclaring math accent \check on input line 54.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 54.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 54.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 54.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 54.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 54.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 53.
+(Font)              `operators' in the math version `normal' on input line 54.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 53.
+(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 54.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 53.
+(Font)              `operators' in the math version `bold' on input line 54.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/m/n on input line 53.
+(Font)                  OT1/cmr/bx/n --> TU/lmr/m/n on input line 54.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  TU/lmr/m/n --> TU/lmr/m/n on input line 53.
+(Font)                  TU/lmr/m/n --> TU/lmr/m/n on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 53.
+(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/b/n on input line 53.
+(Font)                  OT1/cmr/bx/n --> TU/lmr/b/n on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 53.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 53.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 54.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  TU/lmr/m/n --> TU/lmr/b/n on input line 53.
+(Font)                  TU/lmr/m/n --> TU/lmr/b/n on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> TU/lmr/b/it on input line 53.
+(Font)                  OT1/cmr/bx/it --> TU/lmr/b/it on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 53.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 54.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 53.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 54.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -636,17 +645,17 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 53.
+Package hyperref Info: Link coloring OFF on input line 54.
 (./chinese.out) (./chinese.out)
 \@outlinefile=\write3
 \openout3 = `chinese.out'.
 
-\c@lstlisting=\count343
-LaTeX Font Info:    Trying to load font information for U+msa on input line 57.
+\c@lstlisting=\count344
+LaTeX Font Info:    Trying to load font information for U+msa on input line 58.
  (e:/software/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 57.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 58.
  (e:/software/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -721,7 +730,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 168--170
+Underfull \hbox (badness 10000) in paragraph at lines 177--179
 
  []
 
@@ -764,14 +773,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [6]
-File: images/resuilt_pro1.png Graphic file (type bmp)
-<images/resuilt_pro1.png>
-
-Overfull \hbox (70.81947pt too wide) in paragraph at lines 354--361
-[]\TU/SimSun(0)/m/n/12 经 计 算，|  结 果 如 下 图[]\TU/lmr/m/n/12 2[]\TU/SimSun(0)/m/n/12 所 示\TU/lmr/m/n/12 , \TU/SimSun(0)/m/n/12 烟 幕 弹 起 爆 时 刻：| $\OML/cmm/m/it/12 t \OT1/cmr/m/n/12 = 5\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 10\OML/cmm/m/it/12 s$\TU/lmr/m/n/12 , \TU/SimSun(0)/m/n/12 烟 幕 起 爆 初 始 坐 标：| $\OT1/cmr/m/n/12 (17188\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 00\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 0\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 00\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 1736\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 50)$
- []
-
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -781,6 +782,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [7]
+File: images/resuilt_pro1.png Graphic file (type bmp)
+<images/resuilt_pro1.png>
+
+Overfull \hbox (70.81947pt too wide) in paragraph at lines 384--391
+[]\TU/SimSun(0)/m/n/12 经 计 算，|  结 果 如 下 图[]\TU/lmr/m/n/12 2[]\TU/SimSun(0)/m/n/12 所 示\TU/lmr/m/n/12 , \TU/SimSun(0)/m/n/12 烟 幕 弹 起 爆 时 刻：| $\OML/cmm/m/it/12 t \OT1/cmr/m/n/12 = 5\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 10\OML/cmm/m/it/12 s$\TU/lmr/m/n/12 , \TU/SimSun(0)/m/n/12 烟 幕 起 爆 初 始 坐 标：| $\OT1/cmr/m/n/12 (17188\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 00\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 0\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 00\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 1736\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 50)$
+ []
+
+
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -799,9 +808,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [9]
-File: images/resuilt_pro2_2.png Graphic file (type bmp)
-<images/resuilt_pro2_2.png>
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -811,6 +817,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [10]
+File: images/resuilt_pro2_2.png Graphic file (type bmp)
+<images/resuilt_pro2_2.png>
+
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -829,12 +838,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [12]
-File: images/resuilt_pro3_2.png Graphic file (type bmp)
-<images/resuilt_pro3_2.png>
-
-Missing character: There is no 、 (U+3001) in font [lmroman12-regular]:mapping=tex-text;!
-Missing character: There is no 、 (U+3001) in font [lmroman12-regular]:mapping=tex-text;!
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -844,8 +847,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [13]
-Missing character: There is no α ("3B1) in font cmmi12!
-Missing character: There is no α ("3B1) in font cmmi12!
+File: images/resuilt_pro3_2.png Graphic file (type bmp)
+<images/resuilt_pro3_2.png>
 
 
 
@@ -856,7 +859,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [14]
-Missing character: There is no ） (U+FF09) in font [lmroman12-regular]:mapping=tex-text;!
+Missing character: There is no 、 (U+3001) in font [lmroman12-regular]:mapping=tex-text;!
+Missing character: There is no 、 (U+3001) in font [lmroman12-regular]:mapping=tex-text;!
+Missing character: There is no α ("3B1) in font cmmi12!
+Missing character: There is no α ("3B1) in font cmmi12!
 
 
 
@@ -867,7 +873,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [15]
-Overfull \hbox (5.54095pt too wide) in paragraph at lines 659--668
+Missing character: There is no ） (U+FF09) in font [lmroman12-regular]:mapping=tex-text;!
+
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[16]
+Overfull \hbox (5.54095pt too wide) in paragraph at lines 686--695
  [][] 
  []
 
@@ -882,7 +899,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[16]
+[17]
 Missing character: There is no （ (U+FF08) in font [lmroman12-regular]:mapping=tex-text;!
 Missing character: There is no ） (U+FF09) in font [lmroman12-regular]:mapping=tex-text;!
 
@@ -894,23 +911,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[17]
-Overfull \hbox (33.86516pt too wide) in paragraph at lines 734--759
+[18]
+Overfull \hbox (33.86516pt too wide) in paragraph at lines 761--786
  [][] 
  []
 
 File: images/pro5_2.png Graphic file (type bmp)
 <images/pro5_2.png>
 
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[18]
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -928,11 +936,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[20] (e:/software/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 800.
-
+[20]
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -941,7 +945,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[21]
+[21] (e:/software/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+)
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 827.
+
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1131,13 +1139,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [42]
-Missing character: There is no 🏆 (U+1F3C6) in font [lmmono10-regular]:!
-
-Overfull \hbox (123.2104pt too wide) in paragraph at lines 1647--1648
-[][] 
- []
-
-
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1147,6 +1148,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [43]
+Missing character: There is no 🏆 (U+1F3C6) in font [lmmono10-regular]:!
+
+Overfull \hbox (123.2104pt too wide) in paragraph at lines 1674--1675
+[][] 
+ []
+
+
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1200,28 +1208,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[49] (./chinese.aux)
+[49]
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[50] (./chinese.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
  ***********
-
-
-Package rerunfilecheck Warning: File `chinese.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `chinese.out':
-(rerunfilecheck)             Before: 007F99A9FE5DADCE951D069113C02AB4;6103
-(rerunfilecheck)             After:  D3944662B07CE4B13A095445C3A10272;6055.
+Package rerunfilecheck Info: File `chinese.out' has not changed.
+(rerunfilecheck)             Checksum: C5784CE919975ACE84976327AD6E7160;6155.
  ) 
 Here is how much of TeX's memory you used:
- 18841 strings out of 473832
- 386857 string characters out of 5729027
- 1355465 words of memory out of 5000000
- 41611 multiletter control sequences out of 15000+600000
- 571351 words of font info for 120 fonts, out of 8000000 for 9000
+ 18909 strings out of 473832
+ 388006 string characters out of 5729027
+ 1356838 words of memory out of 5000000
+ 41675 multiletter control sequences out of 15000+600000
+ 571359 words of font info for 121 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 93i,21n,111p,540b,2389s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,28n,111p,540b,2389s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on chinese.pdf (52 pages).
+Output written on chinese.pdf (53 pages).

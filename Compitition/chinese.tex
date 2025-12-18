@@ -12,6 +12,7 @@
 \usepackage{float}          % 图片浮动控制
 \usepackage{booktabs}       % 三线表
 \usepackage{array}          % 表格样式
+\usepackage{tabularx}       % 自动调整表格宽度
 \usepackage{hyperref}       % 超链接
 \usepackage{fancyhdr}       % 页眉页脚
 \usepackage{listings}       % 代码展示
@@ -138,28 +139,36 @@
 % 4. 符号说明
 % =============================================
 \section{符号说明}
-本文主要使用的符号定义如下表所示：
+本文主要使用的符号定义如下表\ref{tab:0}所示：
 
 \begin{table}[H]
-    \centering
-    \caption{符号说明}
-    \begin{tabular}{clc}
-        \toprule[1.5pt]
-        \textbf{符号} \quad    & \textbf{含义} & \textbf{单位} \\
-        \midrule[1pt]
-        $M_j$ \quad  & 第 $j$ 枚来袭导弹 ($j=1,2,3$) & - \\
-        $FY_i$  \quad & 第 $i$ 架无人机 ($i=1,2,3,4,5$) & - \\
-        $V_m$ \quad  & 导弹飞行速度 (固定 300) & m/s \\
-        $V_{uav}$ \quad  & 无人机飞行速度 & m/s \\
-        $(x, y, z)$ \quad  & 空间坐标位置 & m \\
-        $T_{mask}$\quad   & 有效遮蔽时间 & s \\
-        $t_{drop}$\quad   & 烟幕弹投放时刻 & s \\
-        $t_{boom}$\quad  & 烟幕弹起爆时刻 & s \\
-        $R_{cloud}$ \quad  & 烟幕云团有效遮蔽半径 & m \\
-        \bottomrule[1.5pt]
-    \end{tabular}
+\centering
+\label{tab:0}
+\caption{符号说明（按物理意义分组排序）}
+\begin{tabularx}{\linewidth}{>{\bfseries}l>{\raggedright\arraybackslash}Xc}
+\toprule[1.5pt]
+符号 & 含义 & 单位 \\
+$M_j$ & 第 $j$ 枚来袭导弹 ($j=1,2,3$) & - \\
+$FY_i$ & 第 $i$ 架无人机 ($i=1,2,3,4,5$) & - \\
+$V_m$ & 导弹飞行速度 (固定 300) & m/s \\
+$v_{FY_i}$ & 第 $i$ 架无人机飞行速度 & m/s \\
+$\boldsymbol{v_{FY_i}}$ & 无人机速度向量 & m/s \\
+$\boldsymbol{n_{M_j}}$ & 导弹飞行方向单位向量 & - \\
+$\alpha$ & 无人机飞行航向角 & rad \\
+$g$ & 重力加速度 & m/s$^2$ \\
+$t_{drop}$ & 烟幕弹投放时刻 & s \\
+$t_{burst}$ & 烟幕弹起爆时刻 & s \\
+$t_{delay}$ & 烟幕弹起爆延时 & s \\
+$R_{cloud}$ & 烟幕云团有效遮蔽半径 & m \\
+$v_{cloud}$ & 烟幕云团下沉速度 & m/s \\
+$\boldsymbol{P}_{S,k}(t)$ & 第$k$枚烟幕弹$t$时刻位置 & m \\
+$\boldsymbol{P}_{B,k}$ & 第$k$枚烟幕弹起爆位置 & m \\
+$D(t)$ & 烟幕云团中心到导弹-目标连线距离 & m \\
+$T_{cover}$ & 有效遮蔽时间 & s \\
+$I_j(t)$ & 第$j$枚导弹的遮蔽指示函数 & - \\
+\bottomrule[1.5pt]
+\end{tabularx}
 \end{table}
-
 % =============================================
 % 5. 模型建立
 % =============================================
@@ -240,6 +249,8 @@ $$
 % 6. 模型求解
 % =============================================
 \section{模型求解}
+
+
 
 \subsection{问题一求解：固定参数}
 问题一针对的是具体场景在给定所有的参数下(烟幕弹的投放时间，起爆时间)，求解得出单枚烟幕弹对单枚导弹的有效遮蔽时间，
@@ -349,7 +360,26 @@ T_{cover}
 \approx
 \sum_{k=0}^{N} I(t_k)\,\Delta t.
 $$
+\subsubsection{模型汇总}
 
+
+$$
+\left\{
+\begin{aligned}
+& \mathbf{P}_{M}(t)=\mathbf{P}_{M}(0)+V_m  \mathbf{n}_{M} t \\
+& \mathbf{P}_{FY_1}\left( t \right) =\mathbf{P}_{FY_1}\left( 0 \right) +\mathbf{v}_{FY_1}t \\
+& \mathbf{P}_{B}=\mathbf{P}_{FY_1}(t_{drop})+\mathbf{v}_{FY_1}t_{delay}-\left( 0,0,\frac{1}{2}gt_{delay}^2 \right) \\
+& \mathbf{P}_{S}(t)=\mathbf{P}_{B}-(0,0,v_{cloud}(t-t_{burst})) \\
+& D(t)=\begin{cases}
+\|\overrightarrow{AP}\| & \text{if } r \leq 0 \text{ (导弹后方)}\\
+\|P-B\| & \text{if } r \geq 1 \text{ (目标后方)}\\
+\frac{\|\overrightarrow{AP}\times\overrightarrow{AB}\|}{\|\overrightarrow{AB}\|} & \text{if } 0<r<1 \text{ (线段投影内)}
+\end{cases} \\
+& I(t)=\begin{cases}1,&\text{if } D(t)\le R_{cloud} \text{ and } t\geq t_{burst}\\0,&\text{otherwise}\end{cases} \\
+& T=\int_0^{T_{end}}{I\left( t \right) dt}
+\end{aligned}
+\right.
+$$
 
 \subsubsection{求解结果：} 经计算，结果如下图\ref{fig:1}所示,烟幕弹起爆时刻：$t=5.10 s$,
 烟幕起爆初始坐标：$(17188.00,0.00,1736.50)$有效遮蔽时间段为 $8.1-9.5s$，总时长为 $1.4s$。
@@ -526,36 +556,33 @@ $$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
 
 \subsubsection{求解结果}
 根据上述的流程，我们采用灾变机制的改进粒子群算法得到
-无人机FY1投放3枚烟幕弹干扰导弹 M1的最优策略见下图\ref{fig:3}
-\\对应的最大有效遮挡时间是12.54241s
-\\无人机航向方向角为:180.67°
-\\无人机速度大小为:95m/s。
-\\三枚烟幕弹的具体投放策略见下表\ref{tab:3}。
+无人机FY1航向方向角为180.67°,速度大小为95m/s时对应的最大有效遮挡时间是12.54241s
+投放3枚烟幕弹干扰导弹 M1的最优策略见下图\ref{fig:3}，三枚烟幕弹的具体投放策略见下表\ref{tab:3}。
 
 \begin{table}[htbp]
-  \centering
-  \caption{Problem\,3 最终策略}
-  \label{tab:3}
-  \begin{tabular}{ll}
-    \toprule
-    参数 & 数值 \\
-    \midrule
-    最大有效遮蔽时长 & 12.54241\,s \\
-    无人机速度 & 95\,m/s \\
-    无人机航向 & 3.1533\,rad\,(180.67$^\circ$) \\
-    \midrule
-    \multicolumn{2}{l}{烟弹投放与起爆时刻}\\
-    \midrule
-    烟弹1投放时刻 & 0.0000\,s \\
-    烟弹1起爆时刻 & 0.0000\,s \\
-    烟弹2投放时刻 & 2.7509\,s \\
-    烟弹2起爆时刻 & 6.4326\,s \\
-    烟弹3投放时刻 & 8.0057\,s \\
-    烟弹3起爆时刻 & 13.3706\,s \\
-    \bottomrule
-  \end{tabular}
+\centering
+\label{tab:3}
+\caption{Problem\,3 最终策略}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}l>{\raggedleft\arraybackslash}Xr@{}}
+\toprule
+参数 & 数值 \\
+\midrule
+最大有效遮蔽时长 & 12.54241\,s \\
+无人机速度 & 95\,m/s \\
+无人机航向 & 3.1533\,rad\ (180.67$^\circ$) \\
+\addlinespace
+\rowcolor{gray!8} \multicolumn{2}{@{}l}{\small 烟幕弹时间链} \\
+\rowcolor{gray!4} 烟弹1投放时刻 & 0.0000\,s \\
+\rowcolor{gray!4} 烟弹1起爆时刻 & 0.0000\,s \\
+\rowcolor{gray!8} 烟弹2投放时刻 & 2.7509\,s \\
+\rowcolor{gray!8} 烟弹2起爆时刻 & 6.4326\,s \\
+\rowcolor{gray!4} 烟弹3投放时刻 & 8.0057\,s \\
+\rowcolor{gray!4} 烟弹3起爆时刻 & 13.3706\,s \\
+\bottomrule
+\end{tabularx}
 \end{table}
-\begin{figure}[htbp]
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{images/resuilt_pro3_2.png}
   \caption{Problem\,3 结果}
