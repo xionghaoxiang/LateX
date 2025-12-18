@@ -61,18 +61,33 @@
 \begin{abstract}
 \normalsize
 定点精确投放的烟幕干扰弹，可以在目标前方特定空域形成遮蔽，有效地干扰敌方导弹。
-本文针对无人机投放烟幕干扰弹以掩护地面目标的问题，建立了基于空气动力学和空间几何的数学模型。
-通过分析导弹与烟幕云团的相对运动关系，获得了不同情境下的最优投放策略，以最大化有效遮蔽时间。
+本文针对无人机投放烟幕干扰弹以掩护目标的问题，建立了基于运动学模型和空间几何的数学模型。
+通过分析导弹与烟幕云团的相对运动与位置关系，获得了不同情境下的最优投放策略，以得到最大化有效遮蔽时间。
 
-针对\textbf{问题一}，我们建立了烟幕弹自由落体与扩散模型。已知无人机 $FY1$ 的飞行参数，通过计算烟幕弹起爆时的空间位置与扩散半径，结合导弹 $M1$ 的运动轨迹，求解出两者在时空上的交集，从而得出有效遮蔽时长。
+针对\textbf{问题一}，无人机 $FY1$ 飞行策略和投弹策略已知，我们建立了烟幕弹自由落体与扩散模型。
+通过计算烟幕弹起爆时的空间位置与扩散半径，
+结合导弹 $M1$ 的运动轨迹，进行时间步长离散化仿真，同时利用遮蔽判定指示函数，从而得出有效遮蔽时长为1.4s。
 
-针对\textbf{问题二}，这是一个单机单弹对单导弹的优化问题。以无人机飞行方向、速度、投放点和起爆点为决策变量，以遮蔽时间为目标函数，建立了非线性规划模型。利用遗传算法（Genetic Algorithm）进行求解，确定了使遮蔽时间最长的飞行参数。
+针对\textbf{问题二}我们以无人机飞行方向、速度、投放点和起爆点为决策变量，以遮蔽时间为目标函数，
+建立了非线性规划模型。为提高求解效率，我们采用双层优化策略，确定了使得遮蔽时间最长的飞行参数和投放策略。
 
-针对\textbf{问题三}，在问题二的基础上引入多枚烟幕弹。考虑到烟幕生成的不连续性，建立了多波次干扰模型。通过规划三枚烟幕弹的时间间隔与空间分布，确立了“接力式”遮蔽策略，并将结果存入 \texttt{result1.xlsx}。
+针对\textbf{问题三}，在问题二的基础上引入多枚烟幕弹，使问题演化为具有时间顺序约束的多变量优化问题。针对传统的优化算法在多变量情况下容易陷入停滞的情况，我们
+引入灾变机制的改进粒子群算法，求得多枚烟幕干扰弹的最优投放时序与起爆方案。
 
-针对\textbf{问题四}和\textbf{问题五}，模型扩展为多机多弹协同对抗多枚导弹（M1, M2, M3）。我们将问题转化为多智能体协同任务分配（Task Assignment）与轨迹规划问题。构建了以总遮蔽效益最大化为目标的整数规划模型，给出了各架无人机的具体任务分配与投放指令。
+针对\textbf{问题四}，任务变更为三架无人机共同拦截一枚导弹，
+那么核心问题在于协调三架处于不同空间位置的无人机的投弹策略。为此我们选择鲁棒性强的差分进化算法（DE）对多无人机联合决策变量求解，
+得到最优策略。
 
+针对\textbf{问题五}，
+模型扩展为多机多弹协同对抗多枚导弹，同时涉及无人机飞行轨迹规划与烟幕弹投放时序选择，
+具有显著的时空耦合特性和高维复杂性。
+为此，我们沿用问题二中使用的双层优化模型，将轨迹规划与投弹调度问题进行有效解耦。
+外层采用遗传算法对无人机的飞行参数进行优化，以确定合理的空间位姿；
+内层在给定飞行轨迹的条件下，利用贪心策略对烟幕弹投放时机进行高效调度，
+在满足弹药数量及时间间隔约束的前提下最大化对来袭导弹的遮蔽时间。
 \vspace{1em}
+
+
 \noindent \textbf{关键词：} 烟幕干扰；动态几何遮蔽；多目标优化；投放策略；多机协同
 \end{abstract}
 
@@ -89,7 +104,12 @@
 \subsection{问题背景}
 现代战争中，利用无人机投放烟幕干扰弹是保护地面重要目标的有效手段，具有成本低、效费比高等优点。烟幕弹在空中起爆后形成云团，形成遮蔽，干扰敌方导弹。
 本题要求在给定的战场环境下（包含来袭导弹位置、无人机位置、目标位置及物理参数），综合考虑多个物体的运动轨迹，设计无人机的飞行与投放策略，以实现最大化的遮蔽效果。
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/1.jpg}
+    \caption{问题背景}
+    \label{fig:7}
+\end{figure}
 \subsection{问题提出}
 \begin{itemize}
     \item \textbf{问题 1}：对于给定单无人机 $FY1$ 的具体飞行参数，根据运动学建立数学模型
@@ -119,9 +139,14 @@
 但是直接考虑所有的决策变量，时间复杂度与空间复杂度较高，无法直接求解。
 因而需要对问题进行简化，将问题转化为多智能体协同任务分配与投放策略问题。
 
-
-
-% =============================================
+\subsection{总体分析}
+根据上述的要求，我们进行了如下图\ref{fig:overall_analysis}所示的工作：
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{images/our_work.PNG}
+    \caption{总体分析框架}
+    \label{fig:overall_analysis}
+\end{figure}
 % 3. 模型假设
 % =============================================
 \section{模型假设}
@@ -148,12 +173,13 @@
 \begin{tabularx}{\linewidth}{>{\bfseries}l>{\raggedright\arraybackslash}Xc}
 \toprule[1.5pt]
 符号 & 含义 & 单位 \\
+\midrule
 $M_j$ & 第 $j$ 枚来袭导弹 ($j=1,2,3$) & - \\
 $FY_i$ & 第 $i$ 架无人机 ($i=1,2,3,4,5$) & - \\
 $V_m$ & 导弹飞行速度 (固定 300) & m/s \\
 $v_{FY_i}$ & 第 $i$ 架无人机飞行速度 & m/s \\
-$\boldsymbol{v_{FY_i}}$ & 无人机速度向量 & m/s \\
-$\boldsymbol{n_{M_j}}$ & 导弹飞行方向单位向量 & - \\
+$\boldsymbol{v}_{FY_i}$ & 第 $i$ 架无人机速度向量 & m/s \\
+$\boldsymbol{n}_{M_j}$ & 第 $j$ 枚导弹飞行方向单位向量 & - \\
 $\alpha$ & 无人机飞行航向角 & rad \\
 $g$ & 重力加速度 & m/s$^2$ \\
 $t_{drop}$ & 烟幕弹投放时刻 & s \\
@@ -175,11 +201,10 @@ $I_j(t)$ & 第$j$枚导弹的遮蔽指示函数 & - \\
 \section{模型建立}
 
 根据题目描述首先建立统一的三维直角坐标系$Oxyz$。以假目标中心为原点$x$ 轴与 $y$ 轴位于水平面内，
-$z$ 轴竖直向上,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T$ 为真目标中心高度。\\
-\\第$j$ 枚导弹的初始位置位于点$$P_{M_j}(0) $$
-\\第$i$ 架无人机的初始位置位于点$$P_{FY_i}(0)$$
-\\我们可以利用matlab绘制初始时刻的宏观战场态势图，如图\ref{fig:geometry}所示。
-\begin{figure}[H]
+$z$ 轴竖直向上则假目标位置为$P_O=(0,0,0)$,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T$ 为真目标中心高度。
+第$j$ 枚导弹的初始位置位于点$P_{M_j}(0) $，
+第$i$ 架无人机的初始位置位于点$P_{FY_i}(0)$，我们可以利用matlab绘制初始时刻的宏观战场态势图，如图\ref{fig:geometry}所示。
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{images/geometry.png}
     \caption{宏观战场态势图}
@@ -190,60 +215,61 @@ $z$ 轴竖直向上,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T
 这说明FY1后续可能应该优先对导弹进行拦截。
 同时在高度上，无人机群成梯度配置，可以形成低位前伸烟幕拦截网。
 \subsection{导弹运动模型构建}
-导弹$M_j$以速度 $V_m=300m/s$ 直线飞向假目标$\boldsymbol{P_O}$，其单位方向向量为：
-$$
-\boldsymbol{n_{M_j}}=\frac{\boldsymbol{P_O}-\boldsymbol{P_{M_j}}\left( 0 \right)}{||\boldsymbol{P_O}-\boldsymbol{P_{M_j}}\left( 0 \right) ||}
-$$
-\\第$j$枚导弹初始位置为$$\boldsymbol{P}_{M_j}(0) $$
-\\导弹在任意时刻 $t$的位置为：
-$$\boldsymbol{P}_{M_j}(t)=\boldsymbol{P}_{M_j}(0)+V_m  \boldsymbol{n}_{M_j}$$
+第$j$枚导弹初始位置为$\boldsymbol{P}_{M_j}(0)$,导弹$M_j$以速度 $V_m=300m/s$ 直线飞向假目标$\boldsymbol{P_O}$，其单位方向向量为：
+\begin{equation}
+\boldsymbol{n_{M_j}}=\frac{\boldsymbol{P_O}-\boldsymbol{P}_{M_j}\left( 0 \right)}{||\boldsymbol{P_O}-\boldsymbol{P_{M_j}}\left( 0 \right) ||}
+\end{equation}
+导弹在任意时刻 $t$的位置为：
+\begin{equation}\boldsymbol{P}_{M_j}(t)=\boldsymbol{P}_{M_j}(0)+V_m  \boldsymbol{n}_{M_j}\end{equation}
 
 \subsection{无人机运动模型构建}
-第$i$枚无人机的初始位置为$$\boldsymbol{P}_{FY_i}(0) $$第$i$架无人机飞行速度为 $v_i$，航向角为$\alpha_i$
+第$i$枚无人机的初始位置为$\boldsymbol{P}_{FY_i}(0)$,第$i$架无人机飞行速度为 $v_i$，航向角为$\alpha_i$
 ，其速度向量表示为：
-$$
+\begin{equation}
 \boldsymbol{v}_{FY_i}=v_i\left( \cos \alpha _i,\sin \alpha _i,0 \right) 
-$$
-\\无人机在任意时刻 $t$ 的位置为：$$
+\end{equation}
+\\无人机在任意时刻 $t$ 的位置为：\begin{equation}
 \boldsymbol{P}_{FY_i}\left( t \right) =\boldsymbol{P}_{FY_i}\left( 0 \right) +\boldsymbol{v}_{FY_i}t
-$$
+\end{equation}
 \subsection{烟幕干扰弹的运动模型}
 设第$k$枚烟幕弹在 
 $t_{drop,k}$ 时刻投放，起爆延时为 
 $t_{delay,k}$，重力加速度为$g$
 起爆时刻为：
-$$t_{burst,k} = t_{drop,k} + t_{delay,k}$$
+\begin{equation}t_{burst,k} = t_{drop,k} + t_{delay,k}\end{equation}
 \\起爆位置为：
-$$\boldsymbol{P}_{B,k}=\boldsymbol{P}_{FY_i}(t_{drop,k})+\boldsymbol{v}_{FY_i}t_{delay,k}-\left( 0,0,\frac{1}{2}gt_{delay,k}^2 \right) $$
+\begin{equation}\boldsymbol{P}_{B,k}=\boldsymbol{P}_{FY_i}(t_{drop,k})+\boldsymbol{v}_{FY_i}t_{delay,k}-\left( 0,0,\frac{1}{2}gt_{delay,k}^2 \right) \end{equation}
 \subsection{烟幕弹的下沉模型}
 烟幕弹起爆后形成半径为 
 $R_{cloud}$ 的球形云团，其中心以速度 
 $v_{cloud}$ 匀速下沉：
 
-$$\boldsymbol{P}_{S,k}(t)=\boldsymbol{P}_{B,k}-(0,0,v_{cloud}(t-t_{p,k})), \quad t \geq t_{p,k}$$
+\begin{equation}\boldsymbol{P}_{S,k}(t)=\boldsymbol{P}_{B,k}-(0,0,v_{cloud}(t-t_{burst,k})), \quad t \geq t_{burst,k}\end{equation}
 \subsection{有效遮蔽判定模型}
 \subsubsection{几何遮挡条件}
 根据题目，可知无人机及导弹的初始位置离真目标（原点为（0，200，0），半径为7，高度为10的圆柱体）所在位置十分遥远，而题中未提到无人机和导弹的视野，那说明其不在题目考虑范围内。我们可以合理假设导弹视野为全范围，即只要在导弹正前方的事物，都处于导弹视野范围内，那对于一个距离十分远，且相对于距离量级来说大小很小的一个真目标，便于进行计算和后续的优化问题，我们可以将其简化为一个质点，进而将遮蔽条件转化为：当烟幕云团中心到“导弹与真目标质心连线”的垂直距离小于等于烟幕半径时，视为有效遮蔽。
 \subsubsection{点到线段距离算法}
-设导弹位置为点A，真目标位置为点B，烟幕弹中心为点P。向量$\overrightarrow{AB}=B-A$，向量$\overrightarrow{AP}=P-A$。投影系数r计算公式为：$$
-r=\frac{\overrightarrow{AP}\cdot\overrightarrow{AB}}{\|\overrightarrow{AB}\|^2}$$
+设导弹位置为点A，真目标位置为点B，烟幕弹中心为点P。向量$\overrightarrow{AB}=B-A$，向量$\overrightarrow{AP}=P-A$。投影系数r计算公式为：
+\begin{equation}
+r=\frac{\overrightarrow{AP}\cdot\overrightarrow{AB}}{\|\overrightarrow{AB}\|^2}
+\end{equation}
 距离分三种情况讨论：
-$$D(t)=\begin{cases}
+\begin{equation}D(t)=\begin{cases}
 \|\overrightarrow{AP}\| & \text{if } r \leq 0 \text{ (导弹后方)}\\
 \|P-B\| & \text{if } r \geq 1 \text{ (目标后方)}\\
 \frac{\|\overrightarrow{AP}\times\overrightarrow{AB}\|}{\|\overrightarrow{AB}\|} & \text{if } 0<r<1 \text{ (线段投影内)}
-\end{cases}$$
+\end{cases}\end{equation}
 \subsection{遮蔽时间定义}
-遮蔽时间定义为：$$
-I_j(t)=\begin{cases}1,&\text{if } D_{k,i}(t)\le R_{cloud} \text{ and } t\geq t_{p,k}\\0,&\text{otherwise}\end{cases}
-$$其中$D_{k,i}(t)$为第$k$枚烟幕弹对第$j$枚导弹在时刻$t$的点到线段距离。\\
-导弹 $j$ 的总有效遮蔽时长为：$$
+遮蔽时间定义为：\begin{equation}
+I_j(t)=\begin{cases}1,&\text{if } D_{k,i}(t)\le R_{cloud} \text{ and } t\geq t_{burst,k}\\0,&\text{otherwise}\end{cases}
+\end{equation}其中$D_{k,i}(t)$为第$k$枚烟幕弹对第$j$枚导弹在时刻$t$的点到线段距离。\\
+导弹 $j$ 的总有效遮蔽时长为：\begin{equation}
 T_j=\int_0^{T_{end}}{I_j\left( t \right) dt}
-$$
+\end{equation}
 在不同问题中，优化目标统一表示为：
-$$
+\begin{equation}
 \max\text{\ }T_{cover}\ =\ \sum_j{T_j}
-$$
+\end{equation}
 
 % =============================================
 % 6. 模型求解
@@ -294,92 +320,92 @@ $
 \subsubsection{运动轨迹计算}
 由模型建立中的运动模型，可确定系统中各实体的空间位置。
 无人机在投放时刻的空间位置为
-$$
+$
 \mathbf{P}_{FY_1}
 =
 \mathbf{P}_{FY_1}(t_{drop}).
-$$
-烟幕干扰弹的起爆时刻为
-$$
+$,烟幕干扰弹的起爆时刻为
+\begin{equation}
 t_{burst}=t_{drop}+t_{delay},
-$$
-其起爆位置为
-$$
+\end{equation}
+则其起爆位置为
+\begin{equation}
 \mathbf{P}_{burst}
 =
 \mathbf{P}_{FY_1}(t_{drop})
 +
-\mathbf{v}_{FY_1}t_{delay}
+\boldsymbol{v}_{FY_1}t_{delay}
 -
 \left(0,\,0,\,\tfrac{1}{2}gt_{delay}^2\right).
-$$
+\end{equation}
 起爆后，烟幕云团中心以恒定速度沿竖直方向下沉，其在任意时刻 $t$ 的位置为
-$$
+\begin{equation}
 \mathbf{P}_{S}(t)
 =
 \mathbf{P}_{burst}
 -
 \left(0,\,0,\,v_s(t-t_{burst})\right),
 \quad t\ge t_{burst}.
-$$
+\end{equation}
 导弹 M1 在任意时刻 $t$ 的位置为
-$$
+\begin{equation}
 \mathbf{P}_{M}(t)
 =
 \mathbf{P}_{M}(0)
 +
 v_M\mathbf{n}_M t,
-$$
+\end{equation}
 其中 $\mathbf{n}_M$ 为导弹指向假目标的单位方向向量。
 
 \subsubsection{有效遮蔽时长计算}
 
 为计算烟幕干扰弹对导弹 M1 的有效遮蔽时长，将导弹飞行全过程时间区间 $[0,T_{end}]$ 进行离散化处理。设时间步长为 $\Delta t$，离散时间点为
-$$
+\begin{equation}
 t_k=k\Delta t,\quad k=0,1,\ldots,N.
-$$
+\end{equation}
 
 在每一离散时刻 $t_k$，计算烟幕云团中心到导弹与真目标连线的最短距离 $d(t_k)$。当满足
-$$
+\begin{equation}
 d(t_k)\le R_{cloud}
 \quad \text{且} \quad
 t_k\ge t_{burst}
-$$时，认为该时刻烟幕对导弹 M1 实现有效遮蔽。
+\end{equation}时，认为该时刻烟幕对导弹 M1 实现有效遮蔽。
 定义遮蔽指示函数
-$$
+\begin{equation}
 I(t_k)=
 \begin{cases}
 1, & d(t_k)\le R_{cloud},\ t_k\ge t_{burst},\\
 0, & \text{otherwise}.
 \end{cases}
-$$
+\end{equation}
 
 则烟幕干扰弹对导弹 M1 的总有效遮蔽时长可近似表示为
-$$
+\begin{equation}
 T_{cover}
 \approx
 \sum_{k=0}^{N} I(t_k)\,\Delta t.
-$$
+\end{equation}
 \subsubsection{模型汇总}
 
 
-$$
+\begin{equation}
 \left\{
 \begin{aligned}
 & \mathbf{P}_{M}(t)=\mathbf{P}_{M}(0)+V_m  \mathbf{n}_{M} t \\
-& \mathbf{P}_{FY_1}\left( t \right) =\mathbf{P}_{FY_1}\left( 0 \right) +\mathbf{v}_{FY_1}t \\
-& \mathbf{P}_{B}=\mathbf{P}_{FY_1}(t_{drop})+\mathbf{v}_{FY_1}t_{delay}-\left( 0,0,\frac{1}{2}gt_{delay}^2 \right) \\
+& \mathbf{P}_{FY_1}\left( t \right) =\mathbf{P}_{FY_1}\left( 0 \right) +\boldsymbol{v}_{FY_1}t \\
+& \mathbf{P}_{B}=\mathbf{P}_{FY_1}(t_{drop})+\boldsymbol{v}_{FY_1}t_{delay}-\left( 0,0,\frac{1}{2}gt_{delay}^2 \right) \\
 & \mathbf{P}_{S}(t)=\mathbf{P}_{B}-(0,0,v_{cloud}(t-t_{burst})) \\
+& r=\frac{\left( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right) \right) ·\left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)}{||\mathbf{P}_T\ -\ \mathbf{P}_M\left( t \right) ||^2}\\
 & D(t)=\begin{cases}
-\|\overrightarrow{AP}\| & \text{if } r \leq 0 \text{ (导弹后方)}\\
-\|P-B\| & \text{if } r \geq 1 \text{ (目标后方)}\\
-\frac{\|\overrightarrow{AP}\times\overrightarrow{AB}\|}{\|\overrightarrow{AB}\|} & \text{if } 0<r<1 \text{ (线段投影内)}
+\|( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right))\| & \text{if } r \leq 0 \text{ (导弹后方)}\\
+\|\left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)\| & \text{if } r \geq 1 \text{ (目标后方)}\\
+\frac{\left( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right) \right) \times \left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)}{||\mathbf{P}_T\ -\ \mathbf{P}_M\left( t \right) ||^2} & \text{if } 0<r<1 \text{ (线段投影内)}
 \end{cases} \\
 & I(t)=\begin{cases}1,&\text{if } D(t)\le R_{cloud} \text{ and } t\geq t_{burst}\\0,&\text{otherwise}\end{cases} \\
 & T=\int_0^{T_{end}}{I\left( t \right) dt}
 \end{aligned}
 \right.
-$$
+\end{equation}
 
 \subsubsection{求解结果：} 经计算，结果如下图\ref{fig:1}所示,烟幕弹起爆时刻：$t=5.10 s$,
 烟幕起爆初始坐标：$(17188.00,0.00,1736.50)$有效遮蔽时间段为 $8.1-9.5s$，总时长为 $1.4s$。
@@ -397,8 +423,11 @@ $$
 飞行航向角$\alpha$,
 投放时刻$t_{drop}$,
 延时起爆时间$t_{delay}$,
-由此定义出决策向量X:
-$$X=[v_{FY1},\alpha,t_{drop},t_{delay}]^T$$
+由此定义出决策向量$X$:
+\begin{equation}
+    X=[v_{FY_1},\alpha,t_{drop},t_{delay}]^T
+\end{equation}
+
 
 
 \subsubsection{运动状态方程}
@@ -406,31 +435,42 @@ $$X=[v_{FY1},\alpha,t_{drop},t_{delay}]^T$$
 
 
 基于问题一的运动学模型，需要将无人机的速度向量参数化。无人机速度向量可表示为：
-$$\boldsymbol{v_{FY_1}}=\left[\begin{matrix}v_{FY1}cos{\alpha}\\v_{FY_1}sin{\alpha}\\0\\\end{matrix}\right]$$
+\begin{equation}
+\boldsymbol{v_{FY_1}}\left(v_{FY_1},\alpha\right)=\left[v_{FY_1}\cos\alpha,v_{FY_1}\sin\alpha,0\right]^T
+\end{equation}
 
 投放点位置和起爆点位置更新为用X表示的函数：
-$$
+\begin{equation}
 \boldsymbol{P}_{drop}\left(X\right)=\boldsymbol{P}_{FY_1}(0)+\boldsymbol{v_{FY_1}} \left(v_{FY_1},\alpha\right)\cdot t_{drop}
-$$
-$$
+\end{equation}
+\begin{equation}
 \boldsymbol{P}_{burst}\left(X\right)=\boldsymbol{P}_{drop}\left(X\right)+\boldsymbol{v_{FY_1}} \left(v_{FY_1},\alpha\right)\cdot t_{delay}+\left[0,0,-\frac{1}{2}gt_{delay}^2\right]^T
-$$
+\end{equation}
 
 \subsubsection{目标函数}
 目标是最大化有效遮蔽时长，利用问题一中定义的遮蔽判定指示函数得出目标函数：
-$$max J\left(X\right)=T_{cover}={\int}_0^{T_{end}}I\left(t,X\right)dt$$
+\begin{equation}
+maxJ\left(X\right)=T_{cover}={\int}_0^{T_{end}}I\left(t;X\right)dt
+\end{equation}
 
 \subsubsection{约束条件}
 根据题目和对于模型速度特征的分析，约束条件如下:
 速度约束：
-$$70\le v_{FY_1}\le140$$
+\begin{equation}
+70\le v_{FY_1}\le140
+\end{equation}
 
 时间约束：
-$$0<t_{drop}\le12,1\le t_{delay}\le8$$
+\begin{equation}
+0\le t_{drop}\le12,1\le t_{delay}\le8
+\end{equation}  
 
-高度约束：$$
+高度约束：\begin{equation}
 z_{burst}\left(X\right)>0
-$$
+\end{equation}
+
+
+
 \subsubsection{求解算法}
 由于目标函数涉及复杂的几何运动及分段逻辑，具有高度的非线性和非凸性，且决策变量相对于一般的单变量优化问题具有高自由度。
 所以为了解决此类问题，本问题采用双层优化策略，外层使用网格扫描，内层使用粒子群优化算法。
@@ -444,17 +484,18 @@ $$
 在内层针对剩余决策变量进行寻优。
 设置粒子群规模为N=30; 
 粒子速度与位置更新公式：
-$$
-v_i^{k+1}=wv_i^k+c_1r_1\left(p_{best,i}-x_i^k\right)+c_2r_2\left(g_{best}-x_i^k\right)
-$$
-$$
-x_i^{k+1}=x_i^k+v_i^{k+1}
-$$适应度函数：
-$$
+\begin{equation}
+    v_i^{k+1}=wv_i^k+c_1r_1\left(p_{best,i}-x_i^k\right)+c_2r_2\left(g_{best}-x_i^k\right)
+\end{equation}
+\begin{equation}
+    x_i^{k+1}=x_i^k+v_i^{k+1}
+\end{equation}
+   
+\noindent 适应度函数：
+\begin{equation}
 F\left(x\right)=-T_{cover}\left(x\right)
-$$
-
-\paragraph{求解结果：}
+\end{equation}
+\subsubsection{求解结果}
 经过计算，得到最优投放策略如下：\\
 无人机以196.91°的航向角度，72m/s的速度，0s时刻投放，2.4991s后起爆，有效遮蔽时长为4.738s如下图\ref{fig:2}所示。
 \begin{figure}[H]
@@ -493,47 +534,64 @@ $$
 延时起爆时间2$$t_{delay,2} $$
 延时起爆时间3$$t_{delay,3} $$
 由此定义出决策向量X:
-$$\mathbf{X}=[v_{FY_1},\alpha,t_{drop,1},t_{drop,2},t_{drop,3},t_{delay,1},t_{delay,2},t_{delay,3}]T  $$
+\begin{equation}
+\mathbf{X}=[v_{FY_1},\alpha,t_{drop,1},t_{drop,2},t_{drop,3},t_{delay,1},t_{delay,2},t_{delay,3}]^T 
+\end{equation}
 
 \subsubsection{状态方程更新}
-基于问题一的运动学模型，第 $k$枚烟幕弹的运动状态由下式描述
+基于问题一的运动学模型，第$k$枚烟幕弹的运动状态由下式描述:
+\\
 1.	投放点坐标：
- $$P_{drop,k}(\mathbf{X})=B_0+\mathbf{v}_{FY1}(v_{FY1},\alpha)\cdot t_{drop,k}$$
+\begin{equation}
+    P_{drop,k}(\mathbf{X})=B_0+\mathbf{v}_{FY1}(v_{FY1},\alpha)\cdot t_{drop,k}
+\end{equation}
 2.	起爆点坐标
- $$P_{burst,k}(\mathbf{X})=P_{drop,k}(\mathbf{X})+\mathbf{v}_{FY1}(v_{FY1},\alpha)\cdot t_{delay,k}+\left[0,0,-\frac{1}{2}gt_{delay,k}^2\right]^T$$
+\begin{equation}
+P_{burst,k}(\mathbf{X})=P_{drop,k}(\mathbf{X})+\mathbf{v}_{FY1}(v_{FY1},\alpha)\cdot t_{delay,k}+\left[0,0,-\frac{1}{2}gt_{delay,k}^2\right]^T
+\end{equation}
 3.	烟幕云团中心轨迹：
 起爆时刻$\ t_{burst,k}=t_{drop,k}+t_{delay,k} $后，第$k$个云团中心位置为
- $$P_{S,k}(t)=P_{burst,k}-[0,0,v_{sink}\cdot(t-t_{burst,k})]^T \quad ,\quad t\in[t_{burst,k},t_{burst,k}+20]$$
+\begin{equation}
+    P_{S,k}(t)=P_{burst,k}-[0,0,v_{sink}\cdot(t-t_{burst,k})]^T \quad ,\quad t\in[t_{burst,k},t_{burst,k}+20]
+\end{equation} 
 
 \subsubsection{目标函数}
 由于 3 个烟幕团可能同时存在并产生遮挡效果，总遮蔽时间不能简单求和，而应计算时间轴上的并集。
 定义第 $k$枚烟幕弹在$t$时刻的遮蔽指示函数 $I_k(t;\mathbf{X})$:
-$$
+\begin{equation}
 I_k(t;\mathbf{X})=\begin{cases}
 1, & \text{if } D_k(t) \leq R_{cloud} \text{ and } t \in [t_{burst,k}, t_{burst,k}+20] \\
 0, & \text{otherwise}
 \end{cases}
-$$
+\end{equation}
 其中 $D_k(t)$ 为第$k$个烟幕中心到“导弹-目标”视线的距离（计算方法同问题一）。
-
+\noindent
 系统在$t$时刻的遮蔽状态是所有单个烟幕弹的逻辑或
-$$
+\begin{equation}
 I_{total}(t;\mathbf{X}) = \max\{I_1(t), I_2(t), I_3(t)\}
-$$
+\end{equation}
 最终优化目标为最大化总有效遮蔽时长$T_{cover}$：
-$$max{J}(\mathbf{X})=T_{cover}=\int_{0}^{T_{end}}I_{total}(t;\mathbf{X})dt$$
+\begin{equation}
+max{J}(\mathbf{X})=T_{cover}=\int_{0}^{T_{end}}I_{total}(t;\mathbf{X})dt
+\end{equation}
 \subsubsection{约束条件}
 根据题目和对于模型速度特征的分析，约束条件如下:
 除了满足问题二中的飞行与高度约束外，本问必须严格满足多枚弹之间的操作间隔约束：\\
 投弹间隔约束： 题目要求每架无人机投放两枚烟幕弹至少间隔 1s。
-$$t_{drop,k+1}-t_{drop,k}\geq1,\quad k=1,2$$
+\begin{equation}
+t_{drop,k+1}-t_{drop,k}\geq1,\quad k=1,2
+\end{equation}
 
+\noindent
 基本边界约束：
-$$
-\left\{\begin{matrix}70\le v_{FY_1}\le140\\0<t_{drop,1}<t_{drop,2}<t_{drop,3}\le12\\1\le t_{delay,k}\le8,\quad k=1,2,3\\\end{matrix}\right.
-$$
+\begin{equation}
+    \left\{\begin{matrix}70\le v_{FY_1}\le140\\0<t_{drop,1}<t_{drop,2}<t_{drop,3}\le12\\1\le t_{delay,k}\le8,\quad k=1,2,3\\\end{matrix}\right.
+\end{equation}
 高度约束：
-$$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
+\begin{equation}
+    z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3
+\end{equation}
+
 
 
 \subsubsection{求解算法}
@@ -556,7 +614,7 @@ $$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
 
 \subsubsection{求解结果}
 根据上述的流程，我们采用灾变机制的改进粒子群算法得到
-无人机FY1航向方向角为180.67°,速度大小为95m/s时对应的最大有效遮挡时间是12.54241s
+无人机FY1航向方向角为180.67°,速度大小为95m/s时,对应的最大有效遮挡时间是12.54241s。
 投放3枚烟幕弹干扰导弹 M1的最优策略见下图\ref{fig:3}，三枚烟幕弹的具体投放策略见下表\ref{tab:3}。
 
 \begin{table}[htbp]
@@ -599,22 +657,36 @@ $$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
 根据题目要求，无人机一旦受领任务，其速度和航向就确定了且不再调整。
 因此在进行任务决策时我们需要决策12维变量：
 系统包含 3 个独立的运动实体（无人机）。定义 $i\in{1,2,3}$分别对应 $FY_1, FY_2, FY_3$。每个实体的决策向量$\mathbf{u}_i$ 包含 4 个参数：
+\begin{equation}
+    \mathbf{u}_i=[v_i,\alpha_i,t_{drop,i},t_{delay,i}]
+\end{equation}
 
-$$\mathbf{u}_i=[v_i,\alpha_i,t_{drop,i},t_{delay,i}]$$
 
-全局决策向量X维12维向量：$$
-\mathbf{X}=[\mathbf{u}_1,\mathbf{u}_2,\mathbf{u}_3]=[v1,α1,tdrop,1,tdelay,1,…,v3,α3,tdrop,3,tdelay,3]^T$$
+\noindent
+全局决策向量X维12维向量：
+\begin{equation}
+    \mathbf{X}=[\mathbf{u}_1,\mathbf{u}_2,\mathbf{u}_3]=[v1,α1,tdrop,1,tdelay,1,…,v3,α3,tdrop,3,tdelay,3]^T
+\end{equation}
+
 \subsubsection{状态方程}
 各无人机的初始位置$ \mathbf{Po}\mathbf{s}_{UAV,i} $不同，第$i$架无人机投放的烟幕弹在$t$刻的中心位置 $P_{S,i}(t) $更新公式如下
 投放点坐标：
-$$P_{drop,i}=\mathbf{Po}\mathbf{s}_{UAV,i}+\mathbf{v}_i(v_i,\alpha_i)\cdot t_{drop,i}$$
+\begin{equation}
+    P_{drop,i}=\mathbf{Po}\mathbf{s}_{UAV,i}+\mathbf{v}_i(v_i,\alpha_i)\cdot t_{drop,i}
+\end{equation}
+
 起爆点坐标
-$$P_{burst,i}=P_{drop,i}+\mathbf{v}_i\cdot t_{delay,i}+\mathbf{G}(t_{delay,i})$$
+\begin{equation}
+    P_{burst,i}=P_{drop,i}+\mathbf{v}_i\cdot t_{delay,i}+\mathbf{G}(t_{delay,i})
+\end{equation}
+
 其中 $\mathbf{G}(t)=[0,0,-\frac{1}{2}gt^2]^T$为重力项。\\
 烟幕云团中心轨迹：
-$$
-P_{S,i}(t)=P_{burst,i}-[0,0,v_{sink}\cdot(t-t_{burst,i})]^T
-$$
+\begin{equation}
+    P_{S,i}(t)=P_{burst,i}-[0,0,v_{sink}\cdot(t-t_{burst,i})]^T
+\end{equation}
+
+
 \subsubsection{目标函数}
 
 
@@ -627,13 +699,19 @@ $$
 
 
 由于 3 个烟幕团可能同时存在并产生遮挡效果，总遮蔽时间不能简单求和，而应计算时间轴上的并集。
-定义第 i个烟幕云团对目标的遮蔽指示函数$I_i(t)$:$$
+定义第 i个烟幕云团对目标的遮蔽指示函数$I_i(t)$:
+\begin{equation}
 I_i(t;\mathbf{X})=\left\{\begin{matrix}1,&\mathrm{if\ \ dist}(P_{S,i}(t),\mathrm{Lin} \mathrm{e}_{M1-Target})\le R_{cloud}\\0,&otherwise\\\end{matrix}\right.
-4）$$
+4）
+\end{equation}
 系统总遮蔽状态为各子状态的逻辑或：
-$$Isys(t)=\max_{i=1,2,3}{I_i(t)}$$
+\begin{equation}
+Isys(t)=\max_{i=1,2,3}{I_i(t)}
+\end{equation}
 最终优化目标函数定义为最小化代价$J(\mathbf{X})$：
-$$\min{J}(\mathbf{X})=-\left(\int_{0}^{T_{end}}I_{sys}(t)dt\right)+\lambda\cdot\sum_{i=1}^{3}{\max(d_{min,i}, R_{cloud})}$$
+\begin{equation}
+\min{J}(\mathbf{X})=-\left(\int_{0}^{T_{end}}I_{sys}(t)dt\right)+\lambda\cdot\sum_{i=1}^{3}{\max(d_{min,i}, R_{cloud})}
+\end{equation}
 其中：
 第一项为总遮蔽时长（取负求最小），
 第二项为惩罚项，$d_{min,i}$ 为第 i枚烟幕弹在其生命周期内距离视线的最近距离，
@@ -641,13 +719,22 @@ $\lambda=0.1$为权重系数。当烟幕完全脱靶时，该项通过惩罚距�
 
 \subsubsection{约束条件}
 速度约束：
-$$70\le v_i\le140,\quad \forall i$$
+\begin{equation}
+    70\le v_i\le140,\quad \forall i
+\end{equation}
 时间窗约束：我们通过物理知识可知，遮蔽的理想状态是烟幕弹之间无缝接力，所以设置时间窗口约束，减小搜索空间：
-$$t_{drop,1}\le15,\quad t_{drop,2}\le35,\quad t_{drop,3}\le55$$
+\begin{equation}
+t_{drop,1}\le15,\quad t_{drop,2}\le35,\quad t_{drop,3}\le55
+\end{equation}
 起爆延时约束：
-$$1\le t_{delay,i}\le8$$
+\begin{equation}
+1\le t_{delay,i}\le8
+\end{equation}
 高度约束：
-$$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
+\begin{equation}
+z_{burst,i}(\mathbf{X})\ge0,\quad i=1,2,3
+\end{equation}
+
 \subsubsection{求解算法}
 由于决策变量维数增加为12维，而且各维度之间差异较大，所以第四问我们选择鲁棒性强的差分进化算法（DE）求解
 
@@ -661,21 +748,26 @@ $$z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3$$
 
     \item 变异:
     采用 DE/rand/1 策略生成变异向量$\mathbf{V}_g$：
-$$\mathbf{V}_{i,g}=\mathbf{X}_{r1,g}+F\cdot(\mathbf{X}_{r2,g}-\mathbf{X}_{r3,g})$$
+    \begin{equation}
+        \mathbf{V}_{i,g}=\mathbf{X}_{r1,g}+F\cdot(\mathbf{X}_{r2,g}-\mathbf{X}_{r3,g})
+        \end{equation}
 其中缩放因子F 采用自适应策略，随迭代次数从 0.5 线性衰减，平衡全局探索与局部开发。
     \item 交叉:
    对变异向量与目标向量进行二项式交叉，生成试验向量$ \mathbf{U}_{i,g}$。交叉概率 $CR=0.9$。
     \item 选择:
     计算试验向量与目标向量的适应度，选择适应度更优的个体进入下一代。采用贪婪策略，若试验向量的适应度优于目标向量，则在下一代中保留试验向量：
-$$\mathbf{X}_{i,g+1}=\left\{\begin{matrix}\mathbf{U}_{i,g},&\mathrm{if\ }J(\mathbf{U}_{i,g})<J(\mathbf{X}_{i,g})\\\mathbf{X}_{i,g},&\mathrm{otherwise}\\\end{matrix}\right.$$
+\begin{equation}
+     \mathbf{X}_{i,g+1}=\left\{\begin{matrix}\mathbf{U}_{i,g},&\mathrm{if\ }J(\mathbf{U}_{i,g})<J(\mathbf{X}_{i,g})\\\mathbf{X}_{i,g},&\mathrm{otherwise}\\\end{matrix}\right.
+\end{equation}
+   
     \item 终止条件:
     	最大迭代次数$G_{max}=800$ 或适应度不再显著提升
 \end{itemize}
 
 \subsubsection{求解结果}
 
-我们通过差分进化算法（DE）用matlab求解得到了最大的总遮蔽有效时间15s，
-并且烟幕弹的遮蔽时间衔接良好，提供较好的遮蔽效果。对应的三机协同投放策略如下表\ref{tab:4}所示，效果如下图\ref{fig:4}所示。
+我们通过差分进化算法（DE）用matlab求解，效果如下图\ref{fig:4}所示，得到了最大的总遮蔽有效时间15s，
+并且烟幕弹的遮蔽时间衔接良好，能够提供较好的遮蔽效果。对应的三机协同投放策略如下表\ref{tab:4}所示。
 
 \begin{table}[H]
 \centering
@@ -702,47 +794,71 @@ FY3 & (6000,\,-3000,\,700) & 135.11 & 106.94 & 18.00 & 6.09 & 24.09 \\
 \end{figure}
 
 \subsection{问题五求解：多机多目标协同拦截}
-在问题五中，作战场景扩展为5架无人机$FY_1-FY_5$协同拦截3枚来袭导弹$M_1--M_3$。
+在问题五中，作战场景扩展为5架无人机$FY_1-FY_5$协同拦截3枚来袭导弹$M_1-M_3$。
 每架无人机最多可携带3枚烟幕弹。问题的核心在于如何在复杂的空间分布下，合理分配无人机的飞行策略和弹药资源，使得对所有导弹的总有效遮蔽时间最大化。
 \subsubsection{决策变量体系}
 考虑到问题规模显著扩大，且受到前几问优化算法的启发，我们将决策变量分为战略层（飞行参数）和战术层（投弹参数）。
 战略决策变量：定义全局飞行决策向量，包含5架无人机的速度和航向：
-$$X_{fly}=[v_1,\alpha_1,v_2,\alpha_2,\ldots,v_5,\alpha_5]^T$$
+\begin{equation}
+    X_{fly}=[v_1,\alpha_1,v_2,\alpha_2,\ldots,v_5,\alpha_5]^T
+\end{equation}
 战术决策变量：对于第i架无人机，其携带的第k枚烟幕弹$（k=1,2,3）$的投放参数由算法在内层生成，不直接作为外层优化变量，但需满足物理约束：
-$$u_{i,k}=\left[t_{drop}^{\left(i,k\right)},t_{delay}^{\left(i,k\right)}\right]$$
+\begin{equation}
+    u_{i,k}=\left[t_{drop}^{\left(i,k\right)},t_{delay}^{\left(i,k\right)}\right]
+\end{equation}
+
 \subsubsection{状态空间}
 多导弹运动模型的建立参考第一问，因为每个导弹的飞行特性为一致，只有初始位置不同。
 多无人机运动模型亦可由之前类比得到。
 \subsubsection{目标函数}
 由于存在3个独立的来袭目标，系统总效益定义为所有导弹被有效遮蔽时长的总和：
-$$S_j\left(t\right)=\bigvee_{i=1}^{5}\bigvee_{k=1}^{3}I_{i,k,j}\left(t\right)$$
+\begin{equation}
+S_j\left(t\right)=\bigvee_{i=1}^{5}\bigvee_{k=1}^{3}I_{i,k,j}\left(t\right)
+\end{equation}
 
 最终优化目标为最大化总效益J：
-$$\max J(X_{fly})=\sum_{j=1}^{3}\left(\int_0^{T_{end}}S_j(t)dt\right)$$
+\begin{equation}
+    \max J(X_{fly})=\sum_{j=1}^{3}\left(\int_0^{T_{end}}S_j(t)dt\right)
+\end{equation}
+
 \subsubsection{约束条件}
 最大载弹量约束：每架无人机投放数量N<=3；
 \\投弹间隔约束：
-$$|t_{drop}^{\left(i,k\right)}-_{drop}^{\left(i,k-1\right)}|\geq1,\forall k>1
-    $$
+\begin{equation}
+    |t_{drop}^{\left(i,k\right)}-_{drop}^{\left(i,k-1\right)}|\geq1,\forall k>1
+\end{equation}
+
 飞行边界约束：
-$$70\le v_i\le140,0\le\alpha_i\le2\pi$$
+\begin{equation}
+    70\le v_i\le140,0\le\alpha_i\le2\pi
+\end{equation}
+
 
 \subsubsection{求解算法}
 针对5机3弹的高维组合优化问题，依旧采用双层优化结构。外层使用遗传算法搜索无人机的最优飞行参数，内层使用贪心启发式算法快速计算给定航迹下的最优投弹方案。
-
+整体流程设计如下图\ref{fig:5}所示，同时我们所提出的双层框架将航迹规划问题与随时间变化的烟雾弹调度问题分离开来。外层的遗传算法专注于无人机的全局定位，而内层的贪心策略则能高效地确定最佳引爆时间，从而显著降低了计算复杂度，同时又不牺牲解决方案的质量。
+\begin{figure}[H]
+    \caption{问题\,5 多机多目标协同拦截求解流程}
+    \centering
+    \includegraphics[width=1\textwidth]{images/firwork.png}
+    \label{fig:5}
+\end{figure}
 \begin{itemize}
     \item 外层：遗传算法全局寻优
     将5架无人机的速度和航向编码为一条染色体。采用实数编码，操作算子采用迷你二进制交叉和多项式变异。
 实现编码$X_{fly}$，则适应度函数为：
-$$Fitness\left(X_{fly}\right)=-J\left(X_{fly}\right)$$
+\begin{equation}
+    Fitness\left(X_{fly}\right)=-J\left(X_{fly}\right)
+\end{equation}
+
 
     \item 内层：贪心策略解算投弹方案
     对于种群中每一个体确定的飞行轨迹，内层算法通过以下步骤计算适应度：
-\\Step 1: 生成候选打击集
+\\Step 1: 生成候选打击集\\
 遍历第i架无人机飞行路径上的离散时间点t，对于每一个t，遍历可能的延时起爆时间，检测生成的烟幕云团能否拦截 M1, M2, M3 中的任意一枚。若能拦截，记录该候选方案。
-\\Step 2: 贪心选择 
+\\Step 2: 贪心选择 \\
 对候选方案集按遮蔽时长降序排列。依次选择遮蔽贡献最大的方案加入最终策略，需满足：该无人机已选弹药数$<3$；与该无人机已选方案的时间间隔$>=1s$。
-\\Step 3: 计算并集效益
+\\Step 3: 计算并集效益\\
 汇总所有无人机的投弹方案，分别计算对M1, M2, M3的遮蔽时间区间并集，求和得到总分。
 此方法的优势在于将复杂的时序配合问题解耦：外层负责“站位”（规划航线），内层负责“输出”（寻找最佳开火时机），在保证解的质量的同时大幅降低了计算复杂度。
 
@@ -750,7 +866,7 @@ $$Fitness\left(X_{fly}\right)=-J\left(X_{fly}\right)$$
 
 \subsubsection{求解结果}
 
-通过该算法求解，得到5机3弹协同拦截3枚导弹的最优策略如下表\ref{tab:5}所示，总有效遮蔽时间为28.763s，效果如图\ref{fig:5}所示。
+通过该算法求解，得到5机3弹协同拦截3枚导弹的最优策略如下表\ref{tab:5}所示，总有效遮蔽时间为28.763s，效果如图\ref{fig:6}所示。
 \begin{table}[htbp]
 \centering
 \label{tab:5}
@@ -788,7 +904,7 @@ FY5 & \#1 & 13.00 & 18.00 & M1 & 4.00 & [19.6--23.6]\\
     \centering
     \includegraphics[width=0.8\textwidth]{images/pro5_2.png}
     \caption{五机协同的最优方案}
-    \label{fig:5}
+    \label{fig:6}
 \end{figure}
 
 
@@ -798,15 +914,25 @@ FY5 & \#1 & 13.00 & 18.00 & M1 & 4.00 & [19.6--23.6]\\
 % 7. 结果分析与评价
 % =============================================
 \section{模型评价}
+本文建立的模型基于问题的物理背景与作战约束，对导弹、无人机及烟幕干扰弹的运动过程进行了合理简化。
+针对问题中高度耦合的多无人机、多烟幕弹、多时间决策问题，本文提出了一种外层遗传算法 + 内层贪心策略的双层优化框架。
+外层遗传算法负责无人机飞行速度与航向的全局搜索，避免了传统局部搜索方法易陷入局部最优的问题；
+内层贪心策略在给定飞行轨迹的条件下，对烟幕弹投放时机进行高效调度，通过候选集生成与约束筛选，快速获得近似最优的投弹方案。
 \subsection{模型的优点}
 \begin{itemize}
     \item 考虑了烟幕弹的物理沉降特性，符合实际战场环境。
     \item 算法具有较强的通用性，可扩展至更多数量的无人机集群。
+    \item 采用分层优化结构，降低了高维组合优化问题的计算复杂度。
+    \item 将真目标简化为关键视线点，避免了不必要的三维几何计算，使得遮蔽判定在保持精度的前提下具备较高的计算效率
 \end{itemize}
-
+\subsection{模型的缺点}
+尽管本文模型在计算效率与策略效果方面表现良好，但仍存在一定局限性。
+例如，模型中未考虑风场对烟幕云团扩散的影响，且假设导弹飞行路径不受干扰保持直线飞行，这在复杂战场环境中可能存在偏差。
 \subsection{模型的改进方向}
 \begin{itemize}
     \item 当前模型假设导弹不机动，未来可增加导弹末端机动的对抗策略。
+    \item 模型中未考虑风场对导弹运动影响，可引入风场模型，对运动进行建模。
+    \item 未来可结合强化学习方法，进一步提升模型的适应性与智能化水平。
 \end{itemize}
 
 % =============================================
@@ -822,73 +948,79 @@ FY5 & \#1 & 13.00 & 18.00 & M1 & 4.00 & [19.6--23.6]\\
 % 附录
 % =============================================
 \newpage
-\section*{附录：主要代码}
-\subsection*{MATLAB 轨迹仿真代码}
-\begin{lstlisting}[language=Matlab,caption={Problem 1}]
+ \section*{附录：主要代码}
+ \subsection*{MATLAB 轨迹仿真代码}
+ \begin{lstlisting}[language=Matlab,caption={Problem 1}]
 clc; clear; close all;
+
 %% 1. 参数设置 
 % 烟幕弹参数
 R_smoke = 10;           % 有效遮蔽半径 (阈值)
 Time_smoke_last = 25;   % 延长一点仿真时间以便看全曲线
 V_smoke_sink = 3;       % 烟雾团下沉速度 
-% 物理常数
+
 g = 9.8; 
+
 % 目标位置
-Pos_FakeTarget = [0, 0, 0];          % 假目标 (导弹飞行的目的地)
-Pos_TrueTarget_Center = [0, 200, 5]; % 真目标 (我们要保护的对象)
+Pos_FakeTarget = [0, 0, 0];          % 假目标 
+Pos_TrueTarget_Center = [0, 200, 5]; % 真目标 
+
 %% 2. 计算烟幕弹起爆初始位置 
 % FY1 初始状态
 Pos_FY1_0 = [17800, 0, 1800];
 V_FY1 = 120; 
+
 % 时间节点
 t_drop = 1.5;          % 投放时刻
 t_delay = 3.6;         % 延时时长
 t_pop = t_drop + t_delay; % 起爆时刻 (5.1s)
-% 1. 投放点位置 (FY1 飞行 1.5s)
+
+% 1. 投放点位置 
 Pos_Drop = Pos_FY1_0 + [-1, 0, 0] * V_FY1 * t_drop;
-% 2. 起爆点初始位置 (平抛运动 3.6s)
+% 2. 起爆点初始位置 
 Delta_X = -1 * V_FY1 * t_delay; 
 Delta_Z = -0.5 * g * t_delay^2;
 Pos_Smoke_Init = Pos_Drop + [Delta_X, 0, Delta_Z];
-fprintf('烟幕弹起爆时刻: t = %.2f s\n', t_pop);
-fprintf('烟幕起爆初始坐标: (%.2f, %.2f, %.2f)\n', Pos_Smoke_Init);
-%% 3. 计算有效遮蔽时长 (并记录数据用于画图)
+
+fprintf('Smoke grenade detonation time: t = %.2f s\n', t_pop);
+
+%% 3. 计算有效遮蔽时长 (并记录数据)
 % M1 初始状态
 Pos_M1_0 = [20000, 0, 2000];
 V_M1 = 300;
-Vec_M1 = Pos_FakeTarget - Pos_M1_0; % 方向指向假目标
+Vec_M1 = Pos_FakeTarget - Pos_M1_0; 
 Dist_M1_Total = norm(Vec_M1);
 Dir_M1 = Vec_M1 / Dist_M1_Total;
+
 % 时间积分设置
-dt = 0.05; % 稍微调大一点点dt，画图不需要太密集
+dt = 0.05; 
 valid_time = 0; 
-% --- 初始化数据记录数组 ---
-t_log = [];    % 记录时间
-dist_log = []; % 记录距离
-fprintf('正在模拟动态遮挡过程...\n');
-% 从 t=0 开始记录导弹位置，但 t<t_pop 时距离设为 NaN 或 到初始点的距离
-Total_Sim_Time = 30; % 总仿真时长 (对应画图横坐标 0-30s)
+t_start_effective = NaN; % 记录开始的时刻
+t_end_effective = NaN;   % 记录结束的时刻
+
+fprintf('Simulating the dynamic occlusion process...\n');
+
+Total_Sim_Time = 30; 
+
 for t_current = 0 : dt : Total_Sim_Time
     
-    % A. 更新导弹位置 (一直飞)
+    % A. 更新导弹位置
     dist_flown = V_M1 * t_current;
     if dist_flown >= Dist_M1_Total
-        Current_M1_Pos = Pos_FakeTarget; % 已经击中假目标
+        Current_M1_Pos = Pos_FakeTarget; 
     else
         Current_M1_Pos = Pos_M1_0 + Dir_M1 * dist_flown;
     end
     
     % B. 更新烟雾位置 & 计算距离
-    % 只有在时间超过起爆时间后，烟雾才存在
     if t_current >= t_pop
         t_relative = t_current - t_pop;
         
-        % 烟雾下沉
         if t_relative <= Time_smoke_last
             Sink_Dist = V_smoke_sink * t_relative;
             Current_Smoke_Pos = Pos_Smoke_Init - [0, 0, Sink_Dist];
             
-            % --- 计算遮挡距离 (核心算法) ---
+            % 计算遮挡距离
             P1 = Current_M1_Pos;
             P2 = Pos_TrueTarget_Center; 
             Q = Current_Smoke_Pos; 
@@ -908,85 +1040,71 @@ for t_current = 0 : dt : Total_Sim_Time
                 dist = norm(Q - Pb);
             end
             
-            % 统计有效时间
+            % --- 捕捉开始和结束时间 ---
             if dist <= R_smoke
+                if isnan(t_start_effective)
+                    t_start_effective = t_current; 
+                end
+                t_end_effective = t_current;      
                 valid_time = valid_time + dt;
             end
             
         else
-            % 烟雾消失了
             dist = NaN; 
         end
     else
-        % 还没起爆，计算导弹到"未来起爆点"的距离 
         dist = norm(Pos_Smoke_Init - Current_M1_Pos); 
     end
-    
-    % C. 记录数据
-    t_log = [t_log, t_current];
-    dist_log = [dist_log, dist];
 end
-fprintf('--------------------------------------\n');
-fprintf('>>> 最终结果：有效遮蔽时长为: %.4f 秒 <<<\n', valid_time);
-%% 4. 绘图 (完全复刻之前的样式)
-figure('Color', 'w', 'Name', '烟幕干扰弹有效遮蔽时间分析');
-hold on; grid on; box on;
-% --- A. 准备填充区域数据 ---
-% 找到距离小于阈值且时间大于起爆时间的索引
-mask = (dist_log <= R_smoke) & (t_log >= t_pop);
-if any(mask)
-    % 提取需要填充的时间段和距离
-    t_fill_data = t_log(mask);
-    dist_fill_data = dist_log(mask);
+fprintf('>>> Effective shielding duration: %.4f seconds <<<\n', valid_time);
+
+%% 4. 绘图 
+figure('Color', 'w', 'Position', [100, 100, 600, 600]); 
+hold on; 
+
+bar_height = 0.6;  
+fy_index = 1;       
+color_fy1 = [100, 100, 255]/255;
+
+if valid_time > 0 && ~isnan(t_start_effective)
+    x_patch = [t_start_effective, t_end_effective, t_end_effective, t_start_effective];
+    y_patch = [fy_index - bar_height/2, fy_index - bar_height/2, fy_index + bar_height/2, fy_index + bar_height/2];
     
-    % 构造多边形：上边缘是阈值线，下边缘是实际曲线
-    % 顶点顺序：[左上 -> 曲线点集 -> 右上]
-    X_poly = [t_fill_data, fliplr(t_fill_data)];
-    Y_poly = [dist_fill_data, ones(size(dist_fill_data)) * R_smoke];
+    patch(x_patch, y_patch, color_fy1, 'EdgeColor', 'k', 'LineWidth', 1, 'FaceAlpha', 0.8);
     
-    % 绘制淡黄色填充
-    h_area = fill(X_poly, Y_poly, [1 1 0.8], 'EdgeColor', 'none', 'FaceAlpha', 0.5);
-    
-    % 找到有效结束时间 (遮蔽区间的最后一个时刻)
-    t_end_effective = t_fill_data(end);
+    text_str = sprintf('Start: %.1fs', t_start_effective);
+    text_y_pos = fy_index - bar_height/2 - 0.2; 
+    text(t_start_effective, text_y_pos, text_str, ...
+        'FontSize', 10, 'Color', 'k', 'FontWeight', 'normal', 'HorizontalAlignment', 'left');
+    % ----------------
 else
-    t_end_effective = t_pop; % 如果没遮住，结束时间就标在起爆点
-    h_area = plot(NaN, NaN, 'y'); % 占位符防止legend报错
+    fprintf('Warning: No effective shielding generated with current parameters.\n');
 end
-% --- B. 绘制主要曲线 ---
-h_dist = plot(t_log, dist_log, 'b-', 'LineWidth', 2); 
-% --- C. 绘制辅助线 (阈值、起爆、结束) ---
-% 1. 阈值红虚线
-h_thresh = plot([0, 30], [R_smoke, R_smoke], 'r--', 'LineWidth', 1); 
-% 2. 起爆时间绿虚线
-h_start = xline(t_pop, 'g--', 'LineWidth', 1.5); 
-% 3. 有效结束绿虚线 (如果有遮蔽的话)
-if any(mask)
-    h_end = xline(t_end_effective, 'g--', 'LineWidth', 1.5);
-    % 标注文字：有效结束
-    text(t_end_effective + 0.5, 60, '有效结束', 'Color', 'g', 'Rotation', 90, 'FontSize', 10);
-else
-    h_end = plot(NaN,NaN,'g--'); % 占位
-end
-% --- D. 添加文字标注 ---
-% 起爆时间
-text(t_pop - 0.8, 60, '起爆时间', 'Color', 'g', 'Rotation', 90, 'FontSize', 10);
-text(25, R_smoke + 2, ['阈值 ' num2str(R_smoke) 'm'], 'Color', 'r', 'FontSize', 10);
-% --- E. 图例与坐标轴设置 ---
-title('烟幕干扰弹有效遮蔽时间分析', 'FontSize', 12);
+
+ax = gca;
+ax.YDir = 'normal'; 
+ylim([0, 4]); 
+yticks([1, 2, 3]);
+yticklabels({'FY1', 'FY2', 'FY3'});
+
+xlim([-10, 50]); 
 xlabel('时间 (s)', 'FontSize', 11);
-ylabel('到导弹路径的垂直距离 (m)', 'FontSize', 11);
-xlim([0, 30]);
-ylim([0, 70]); % 根据你的图片要求定在70，如果数据很大可以改大
-legend([h_dist, h_thresh, h_start, h_end, h_area], ...
-    {'距离曲线', '阈值', '起爆时间', '有效结束', '有效遮蔽区间'}, ...
-    'Location', 'north', 'Orientation', 'vertical');
+
+grid on;
+ax.GridAlpha = 0.3; 
+ax.MinorGridAlpha = 0.1;
+ax.XMinorGrid = 'on'; 
+
+title_str = sprintf('协同遮蔽时序 (总长: %.2fs)', valid_time);
+title(title_str, 'FontSize', 12, 'FontWeight', 'normal');
+
+box on;
+
 hold off;
 \end{lstlisting}
-\begin{lstlisting}[language=Matlab , caption=Problem 2]
-    function Full_Range_PSO_Sweep()
+ \begin{lstlisting}[language=Matlab , caption=Problem 2]
+function Full_Range_PSO_Sweep_GanttOnly()
     clc; close all;
-
     %% 1. 场景基础参数
     Env.g = 9.8; 
     Env.Pos_FakeTarget = [0, 0, 0];           
@@ -1002,117 +1120,162 @@ hold off;
     Env.Time_smoke_last = 25;   
     
     % === 仿真精度设置 ===
-    % 在PSO搜索阶段使用 1ms 精度，足够区分优劣且速度可控
     Env.dt = 0.001; 
-
+    
     %% 2. 扫描设置
-    v_scan_list = 70 : 0.5 : 140; % 您的要求：70-140，步长0.5
+    v_scan_list = 70 : 0.5 : 140; 
     num_scan = length(v_scan_list);
     
     % 结果存储
     results_score = zeros(num_scan, 1);
     results_params = zeros(num_scan, 3); % [航向, 投放, 延时]
-
+    
     fprintf('======================================================\n');
-    fprintf('      FY1 全速域 PSO 暴力扫描 (Grid-PSO)\n');
-    fprintf('      速度: 70-140 m/s | 步长: 0.5 m/s | 核心: PSO\n');
+    fprintf('      正在计算最优解...\n');
     fprintf('======================================================\n');
     
     try
         if isempty(gcp('nocreate')), parpool; end
-        fprintf('>>> 并行计算池已就绪，全速运算中...\n');
     catch
-        fprintf('>>> 并行启动失败，切换为单核运算...\n');
     end
-
-    timer_start = tic;
-
+    
     %% 3. 并行扫描循环
     parfor i = 1 : num_scan
         v_curr = v_scan_list(i);
         
         % --- PSO 配置 ---
-        % 在固定的速度下，寻找最佳的 [航向, 投放, 延时]
-        % 变量维度: 3
-        % 搜索范围: 
-        %   航向: 基准 +/- 30度
-        %   投放: 0 - 12秒
-        %   延时: 1 - 8秒
-        
-        % 计算基准航向
         Vec_Base = Env.Pos_TrueTarget - Env.Pos_FY1_Init;
         Base_Angle = rad2deg(atan2(Vec_Base(2), Vec_Base(1)));
         
         LB = [Base_Angle-30, 0, 1.0];
         UB = [Base_Angle+30, 12, 8.0];
         
-        % 运行内置的微型 PSO
-        % 粒子数: 30 (对3维问题足够)
-        % 迭代: 50
         [best_x, best_val] = Run_Micro_PSO(v_curr, LB, UB, Env);
         
-        % 记录
         results_score(i) = best_val;
         results_params(i, :) = best_x;
-        
-        if mod(i, 10) == 0
-            fprintf('    ...完成速度 %.1f m/s (最佳遮蔽: %.4fs)\n', v_curr, best_val);
-        end
     end
     
-    total_time = toc(timer_start);
-    fprintf('\n>>> 扫描完成！总耗时: %.2f 秒\n', total_time);
-
-    %% 4. 结果分析与可视化
+    %% 4. 提取最优结果
     [max_score, idx_best] = max(results_score);
     best_v = v_scan_list(idx_best);
     best_p = results_params(idx_best, :); 
     
-    fprintf('\n======================================================\n');
-    fprintf('                全局最优解 (Global Optimum)\n');
-    fprintf('======================================================\n');
+    fprintf('>>> 计算完成\n');
     fprintf('>>> 冠军速度: %.1f m/s\n', best_v);
     fprintf('>>> 极限遮蔽: %.5f 秒\n', max_score);
-    fprintf('>>> 战术参数: 航向 %.2f度 | 投放 %.4fs | 延时 %.4fs\n', best_p(1), best_p(2), best_p(3));
+    
+    %% 5. 绘图 
+    fprintf('\n>>> 正在生成时序甘特图...\n');
+    
+    [t_start_opt, t_end_opt, duration_opt] = Recompute_Time_Series(best_v, best_p, Env);
+    
+    if duration_opt > 0
+        figure('Color', 'w', 'Position', [100, 100, 600, 600], 'Name', 'Simulated Gantt Chart');
+        hold on;
+        
+        bar_height = 0.6;
+        fy_index = 1; 
+        color_fill = [100, 100, 255]/255;
+        
+        x_patch = [t_start_opt, t_end_opt, t_end_opt, t_start_opt];
+        y_patch = [fy_index - bar_height/2, fy_index - bar_height/2, fy_index + bar_height/2, fy_index + bar_height/2];
+        patch(x_patch, y_patch, color_fill, 'EdgeColor', 'k', 'LineWidth', 1.5);
+        
+        text_str = sprintf('Start: %.1fs', t_start_opt);
+        text(t_start_opt, fy_index - bar_height/2 - 0.15, text_str, ...
+            'FontSize', 11, 'Color', 'k', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
 
-    % --- 绘制“速度-性能”全景图 ---
-    figure('Color', 'w', 'Name', 'Speed vs Shield Time');
-    plot(v_scan_list, results_score, 'b-', 'LineWidth', 1.5); hold on;
-    scatter(best_v, max_score, 100, 'r', 'filled', 'p');
+        ylim([0, 4]);
+        yticks([1, 2, 3]);
+        yticklabels({'FY1', 'FY2', 'FY3'});
+        xlim([-10, 50]); 
+        xlabel('时间 (s)', 'FontSize', 12);
+ 
+        title(sprintf('协同遮蔽时序 (总长: %.2fs)', duration_opt), 'FontSize', 14);
+        
+        grid on;
+        ax = gca;
+        ax.GridAlpha = 0.3;
+        ax.XMinorGrid = 'on';
+        box on;
+        hold off;
+    else
+        fprintf('警告: 最优解未能形成有效遮蔽，无法绘制甘特图。\n');
+    end
+end
+
+%% --- 辅助函数：重新计算时序以用于绘图 ---
+function [t_start, t_end, valid_dur] = Recompute_Time_Series(v, params, Env)
+    % 解包参数
+    a = params(1); td = params(2); ty = params(3);
+    dt = 0.001; % 高精度
     
-    % 标记关键点
-    xlabel('飞行速度 (m/s)', 'FontSize', 12);
-    ylabel('最大有效遮蔽时长 (s)', 'FontSize', 12);
-    title('全速域战术性能分布图 (PSO搜索)', 'FontSize', 14);
-    grid on;
+    % 物理运动计算
+    ang_rad = deg2rad(a);
+    Vel_Vec = [cos(ang_rad), sin(ang_rad), 0] * v;
+    P_Drop = Env.Pos_FY1_Init + Vel_Vec * td;
+    P_Pop = P_Drop + Vel_Vec * ty;
+    P_Pop(3) = P_Pop(3) - 0.5 * Env.g * ty^2;
     
-    % 自动寻找局部峰值 (比如高速区的峰值)
-    [pks, locs] = findpeaks(results_score);
-    if ~isempty(pks)
-        % 标记除了全局最优外的另一个显著峰值（如果有）
-        sorted_pks = sort(pks, 'descend');
-        if length(sorted_pks) > 1 && sorted_pks(2) > 4.0
-            second_pk = sorted_pks(2);
-            % 找到对应速度
-            idx_sec = find(results_score == second_pk, 1);
-            sec_v = v_scan_list(idx_sec);
-            if abs(sec_v - best_v) > 10 % 确保两个峰隔得够远
-                plot(sec_v, second_pk, 'ko', 'MarkerFaceColor', 'y');
-                text(sec_v, second_pk+0.1, sprintf('次优解\n%.1fm/s', sec_v), 'HorizontalAlignment', 'center');
+    t_pop = td + ty;
+    t_max_sim = Env.Dist_Total_M1 / Env.V_M1;
+    t_vec = 0 : dt : t_max_sim;
+    
+    valid_mask = false(size(t_vec));
+    
+    % 向量化检查每一时刻
+    for k = 1:length(t_vec)
+        t_curr = t_vec(k);
+        
+        % 1. 导弹位置
+        if t_curr * Env.V_M1 >= Env.Dist_Total_M1
+            P_M = Env.Pos_FakeTarget;
+        else
+            P_M = Env.Pos_M1_Init + Env.Dir_M1 * (Env.V_M1 * t_curr);
+        end
+        
+        % 2. 烟雾位置
+        if t_curr >= t_pop && (t_curr - t_pop) <= Env.Time_smoke_last
+            t_rel = t_curr - t_pop;
+            P_Smk = P_Pop - [0, 0, Env.V_smoke_sink] * t_rel;
+            
+            % 3. 遮挡判定
+            P1 = P_M;
+            P2 = Env.Pos_TrueTarget;
+            Q = P_Smk;
+            
+            v_vec = P2 - P1;
+            w_vec = Q - P1;
+            
+            c1 = dot(w_vec, v_vec);
+            c2 = dot(v_vec, v_vec);
+            
+            if c1 <= 0
+                dist = norm(Q - P1);
+            elseif c2 <= c1
+                dist = norm(Q - P2);
+            else
+                b = c1 / c2;
+                Pb = P1 + b * v_vec;
+                dist = norm(Q - Pb);
+            end
+            
+            if dist <= Env.R_smoke
+                valid_mask(k) = true;
             end
         end
     end
     
-    text(best_v, max_score + 0.15, sprintf('全局最优\nV=%.1f\nT=%.4fs', best_v, max_score), ...
-        'Color', 'r', 'HorizontalAlignment', 'center', 'FontWeight', 'bold');
-
-    %% 5. 最终验证 (使用 0.0001s 航天级精度复核冠军参数)
-    fprintf('\n>>> 正在使用 0.1ms 精度复核冠军方案...\n');
-    final_check_score = Tactical_Sim_Engine(best_v, best_p(1), best_p(2), best_p(3), 0.0001, Env);
-    fprintf('>>> 最终复核得分: %.6f 秒\n', -final_check_score); % 注意引擎返回负值
-    
-    % 绘制冠军轨迹
-    Plot_3D_Final(best_v, best_p, Env);
+    % 提取结果
+    if any(valid_mask)
+        idx = find(valid_mask);
+        t_start = t_vec(idx(1));
+        t_end = t_vec(idx(end));
+        valid_dur = sum(valid_mask) * dt;
+    else
+        t_start = NaN; t_end = NaN; valid_dur = 0;
+    end
 end
 
 %% --- 内部微型 PSO 求解器 ---
@@ -1126,24 +1289,21 @@ function [best_pos, best_val] = Run_Micro_PSO(v, lb, ub, Env)
     % 初始化
     pos = repmat(lb, n_part, 1) + rand(n_part, n_vars) .* repmat(ub-lb, n_part, 1);
     
-    % [种子注入] 针对不同速度段注入经验值，加速收敛
+    % [种子注入] 
     if v < 90
-        pos(1,:) = [176.88, 0.01, 2.5]; % 低速经验
+        pos(1,:) = [176.88, 0.01, 2.5]; 
     else
-        pos(1,:) = [178.46, 0.01, 3.3]; % 高速经验
+        pos(1,:) = [178.46, 0.01, 3.3]; 
     end
     
     vel = zeros(n_part, n_vars);
-    
     pbest_pos = pos;
     pbest_val = zeros(n_part, 1);
-    
     gbest_pos = zeros(1, n_vars);
-    gbest_val = -1e9; % 初始化为很小的值
+    gbest_val = -1e9; 
     
     % 评估初始种群
     for i = 1:n_part
-        % 注意：Sim引擎返回的是负值(为了fminsearch)，这里我们取相反数变回正值方便比较
         val = -Tactical_Sim_Engine(v, pos(i,1), pos(i,2), pos(i,3), Env.dt, Env);
         pbest_val(i) = val;
         if val > gbest_val
@@ -1158,8 +1318,6 @@ function [best_pos, best_val] = Run_Micro_PSO(v, lb, ub, Env)
             r1 = rand(1, n_vars); r2 = rand(1, n_vars);
             vel(i,:) = w*vel(i,:) + c1*r1.*(pbest_pos(i,:)-pos(i,:)) + c2*r2.*(gbest_pos-pos(i,:));
             pos(i,:) = pos(i,:) + vel(i,:);
-            
-            % 边界限制
             pos(i,:) = max(pos(i,:), lb);
             pos(i,:) = min(pos(i,:), ub);
             
@@ -1175,38 +1333,25 @@ function [best_pos, best_val] = Run_Micro_PSO(v, lb, ub, Env)
             end
         end
     end
-    
     best_pos = gbest_pos;
     best_val = gbest_val;
 end
 
-%% --- 仿真核函数 (Cost Function) ---
+%% --- 仿真核函数  ---
 function score = Tactical_Sim_Engine(v, a, td, ty, dt, Env)
-    % 返回负值用于最小化，正值代表遮蔽时长
-    
-    % 几何解算
     ang_rad = deg2rad(a);
     Dir_Vec = [cos(ang_rad), sin(ang_rad), 0];
     Vel_Vec = Dir_Vec * v;
-    
     P_Drop = Env.Pos_FY1_Init + Vel_Vec * td;
     P_Pop = P_Drop + Vel_Vec * ty;
     P_Pop(3) = P_Pop(3) - 0.5 * Env.g * ty^2;
-    
-    % 剪枝：地下
-    if P_Pop(3) < 0 
-        score = 0; return;
-    end
+    if P_Pop(3) < 0, score = 0; return; end
     
     t_pop = td + ty;
     t_start = max(0, t_pop);
     t_end = min(Env.Dist_Total_M1/Env.V_M1, t_pop + Env.Time_smoke_last);
+    if t_start >= t_end, score = 0; return; end
     
-    if t_start >= t_end
-        score = 0; return;
-    end
-    
-    % 矢量化计算
     t_vec = t_start : dt : t_end;
     if isempty(t_vec), score=0; return; end
     
@@ -1216,62 +1361,28 @@ function score = Tactical_Sim_Engine(v, a, td, ty, dt, Env)
     
     V_LOS_mat = Env.Pos_TrueTarget' - P_M_mat;
     W_mat = P_Smk_mat - P_M_mat;
-    
     c1 = sum(W_mat .* V_LOS_mat, 1);
     c2 = sum(V_LOS_mat .* V_LOS_mat, 1);
-    
     b = c1 ./ c2;
     
-    % 垂足修正
     Pb = P_M_mat + V_LOS_mat .* b;
     idx_less = b < 0; if any(idx_less), Pb(:, idx_less) = P_M_mat(:, idx_less); end
     idx_more = b > 1; if any(idx_more), Pb(:, idx_more) = repmat(Env.Pos_TrueTarget', 1, sum(idx_more)); end
     
     dists_sq = sum((P_Smk_mat - Pb).^2, 1);
-    
     count = sum(dists_sq <= Env.R_smoke^2);
-    score = -(count * dt); % 返回负值
+    score = -(count * dt);
 end
+ \end{lstlisting}
 
-%% --- 绘图 ---
-function Plot_3D_Final(v, params, Env)
-    a=params(1); td=params(2); ty=params(3);
-    ang_rad = deg2rad(a);
-    Vel_Vec = [cos(ang_rad), sin(ang_rad), 0] * v;
-    P_Drop = Env.Pos_FY1_Init + Vel_Vec * td;
-    P_Pop = P_Drop + Vel_Vec * ty;
-    P_Pop(3) = P_Pop(3) - 0.5 * Env.g * ty^2;
-    
-    figure('Color','w'); hold on; grid on; axis equal; view([-20, 25]);
-    plot3(Env.Pos_TrueTarget(1), Env.Pos_TrueTarget(2), Env.Pos_TrueTarget(3), 'go', 'MarkerSize', 10, 'MarkerFaceColor','g');
-    plot3(Env.Pos_FakeTarget(1), Env.Pos_FakeTarget(2), Env.Pos_FakeTarget(3), 'kp', 'MarkerSize', 10, 'MarkerFaceColor','k');
-    plot3([Env.Pos_FY1_Init(1) P_Drop(1)],[Env.Pos_FY1_Init(2) P_Drop(2)],[Env.Pos_FY1_Init(3) P_Drop(3)],'b-');
-    plot3([P_Drop(1) P_Pop(1)],[P_Drop(2) P_Pop(2)],[P_Drop(3) P_Pop(3)],'k:');
-    plot3(P_Pop(1), P_Pop(2), P_Pop(3), 'rh', 'MarkerFaceColor','r','MarkerSize',14);
-    line([Env.Pos_M1_Init(1) Env.Pos_TrueTarget(1)], [Env.Pos_M1_Init(2) Env.Pos_TrueTarget(2)], [Env.Pos_M1_Init(3) Env.Pos_TrueTarget(3)], 'Color', [0.7 0.7 0.7], 'LineStyle', '--');
-    title(['Global Optimal: V=' num2str(v) ' m/s']);
-    legend('True','Fake','FY1','Bomb','Pop','LOS');
-end
-\end{lstlisting}
-\begin{lstlisting}[language=Matlab, caption=Problem 3]
+ \begin{lstlisting}[language=Matlab, caption=Problem 3]
 clc; clear; close all;
 
 %% 1. 参数初始化
-% 粒子群算法参数
 n_particles = 200;      % 增加粒子数以覆盖更大的搜索空间(8维)
 n_iterations = 300;     % 增加迭代次数
 c1 = 2.0; c2 = 2.0;
 w_max = 0.9; w_min = 0.4; 
-
-% 变量设计 (8维): 
-% x(1): 速度 v (70-140)
-% x(2): 航向 theta (0-2pi)
-% x(3): 第1枚投放时刻 t1 (0-60)
-% x(4): 第1枚与第2枚的时间间隔 dt12 (1-30) -> 保证了间隔>=1s
-% x(5): 第2枚与第3枚的时间间隔 dt23 (1-30) -> 保证了间隔>=1s
-% x(6): 第1枚起爆延时 delay1 (0-15)
-% x(7): 第2枚起爆延时 delay2 (0-15)
-% x(8): 第3枚起爆延时 delay3 (0-15)
 
 lb = [70,  0,    0,  1,  1,  0,  0,  0];
 ub = [140, 2*pi, 60, 20, 20, 15, 15, 15];
@@ -1308,7 +1419,7 @@ for iter = 1:n_iterations
         current_x = max(current_x, lb);
         current_x = min(current_x, ub);
         
-        % 计算适应度 (核心修改：支持3枚弹)
+        % 计算适应度 
         fitness = calculate_fitness_multi(current_x);
         
         % 更新个体最优
@@ -1325,17 +1436,17 @@ for iter = 1:n_iterations
         end
     end
     
-    % --- 灾变机制 (防止陷入局部最优) ---
+    % --- 灾变机制  ---
     if current_gbest_improved
         stagnation_counter = 0;
     else
         stagnation_counter = stagnation_counter + 1;
     end
     
-    % 如果连续20代没有进步，触发“小灾变”：重置部分粒子
+    % 如果连续20代没有进步，重置部分粒子
     if stagnation_counter > 20 && iter < n_iterations - 50
         disp(['    >> 检测到局部最优停滞，触发灾变重置 (Iter ' num2str(iter) ')']);
-        % 保留前 10% 的精英，重置其余 90%
+        % 保留前 10% 的精英
         n_keep = round(n_particles * 0.1);
         [~, sorted_idx] = sort(pbest_val);
         for k = n_keep+1 : n_particles
@@ -1610,12 +1721,12 @@ function [t_explode, explode_pos] = get_bomb_kinematics(v_mag, theta, t_drop, t_
     
     t_explode = t_drop + t_delay;
 end
-\end{lstlisting}
-\begin{lstlisting}[language=Matlab,caption={Problem 4}]
-function Problem4_MultiUAV_Strict()
-    clc; close all;
+ \end{lstlisting}
 
-    %% 1. 全局环境参数 (Env)
+ \begin{lstlisting}[language=Matlab,caption={Problem 4}]
+    function Problem4_MultiUAV_Final_Strategy()
+    clc; close all;
+    %% 1. 全局环境参数
     Env.g = 9.8; 
     Env.Pos_True = [0, 200, 0]; 
     Env.Pos_M1   = [20000, 0, 2000];       
@@ -1632,16 +1743,15 @@ function Problem4_MultiUAV_Strict()
         12000, 1400, 1400;  % FY2
         6000, -3000, 700    % FY3
     ];
-
-    %% 2. 优化参数设置 (已修正速度约束)
     
+    %% 2. 优化参数设置
     % 估算基准航向
     Base_Ang1 = rad2deg(atan2(200 - 0,    0 - 17800)); 
     Base_Ang2 = rad2deg(atan2(200 - 1400, 0 - 12000)); 
     Base_Ang3 = rad2deg(atan2(200 + 3000, 0 - 6000));  
     
-    % === [修正点]：将速度下界从 60 改为 70 ===
     % 变量顺序: [V, Ang, T_drop, T_delay] * 3架
+    % 速度约束 70-140
     LB = [70, Base_Ang1-45, 0, 1,   70, Base_Ang2-45, 0, 1,   70, Base_Ang3-45, 0, 1];
     UB = [140, Base_Ang1+45, 15, 8, 140, Base_Ang2+45, 35, 8, 140, Base_Ang3+45, 55, 8];
     
@@ -1649,112 +1759,147 @@ function Problem4_MultiUAV_Strict()
     de_opts.MaxIter = 800;  
     de_opts.F = 0.5;        
     de_opts.CR = 0.9;       
-
+    
     fprintf('======================================================\n');
-    fprintf('      问题4：三机协同立体封锁 (速度修正版 70-140)\n');
+    fprintf('      问题4：三机协同立体封锁\n');
     fprintf('======================================================\n');
     
     try, if isempty(gcp('nocreate')), parpool; end; end
-
     CostFunc = @(x) CostFunc_3UAV(x, Env);
-
+    
     tic;
-    [best_x, best_val, curve] = Run_DE_3UAV(CostFunc, LB, UB, de_opts);
+    % 运行优化 (无初解)
+    [best_x, best_val] = Run_DE_3UAV(CostFunc, LB, UB, de_opts);
     total_time = toc;
-
-    %% 3. 结果解析与输出
+    
+    %% 3. 结果解析与策略输出
     [~, real_shield_time] = CostFunc_3UAV(best_x, Env);
     Res = Parse_Params(best_x);
-
+    
     fprintf('\n>>> 优化完成！耗时: %.2f 秒\n', total_time);
     fprintf('>>> 🏆 最终最大遮蔽时长: %.4f 秒\n', real_shield_time);
     
-    fprintf('\n[战术指令表]\n');
-    fprintf('| 机号 | 初始位置(X,Y,Z) | 速度(m/s) | 航向(deg) | 投放(s) | 延时(s) | 起爆(s) |\n');
-    fprintf('|------|-----------------|-----------|-----------|---------|---------|---------|\n');
-    fprintf('| FY1  | (%5d,%5d,%4d) | %9.2f | %9.2f | %7.2f | %7.2f | %7.2f |\n', ...
-        Env.Pos_UAVs(1,:), Res(1).v, Res(1).a, Res(1).td, Res(1).ty, Res(1).tp);
-    fprintf('| FY2  | (%5d,%5d,%4d) | %9.2f | %9.2f | %7.2f | %7.2f | %7.2f |\n', ...
-        Env.Pos_UAVs(2,:), Res(2).v, Res(2).a, Res(2).td, Res(2).ty, Res(2).tp);
-    fprintf('| FY3  | (%5d,%5d,%4d) | %9.2f | %9.2f | %7.2f | %7.2f | %7.2f |\n', ...
-        Env.Pos_UAVs(3,:), Res(3).v, Res(3).a, Res(3).td, Res(3).ty, Res(3).tp);
-
+    fprintf('\n================== [最终投弹策略表] ==================\n');
+    fprintf('| 机号 |  飞行速度 |  飞行航向 | 投放时刻(s) | 延时时长(s) | 起爆时刻(s) |\n');
+    fprintf('|------|-----------|-----------|-------------|-------------|-------------|\n');
+    fprintf('| FY1  | %9.2f | %9.2f | %11.4f | %11.4f | %11.4f |\n', ...
+        Res(1).v, Res(1).a, Res(1).td, Res(1).ty, Res(1).tp);
+    fprintf('| FY2  | %9.2f | %9.2f | %11.4f | %11.4f | %11.4f |\n', ...
+        Res(2).v, Res(2).a, Res(2).td, Res(2).ty, Res(2).tp);
+    fprintf('| FY3  | %9.2f | %9.2f | %11.4f | %11.4f | %11.4f |\n', ...
+        Res(3).v, Res(3).a, Res(3).td, Res(3).ty, Res(3).tp);
+    fprintf('======================================================\n');
+    
     %% 4. 绘图
-    Plot_3UAV_Scenario(Res, real_shield_time, curve, Env);
+    Plot_Effective_Gantt(Res, real_shield_time, Env);
     Save_To_Excel(Res, 'result2.xlsx');
 end
 
-%% =================================================================
-%  局部函数库 (保持不变，仅 CostFunc_3UAV 内部也加一道保险)
-% =================================================================
+
+%  辅助函数：精确计算有效时间区间
+function Intervals = Calculate_Exact_Intervals(Res, Env)
+    % 初始化
+    Intervals = repmat(struct('is_effective', false, 'start_time', NaN, 'end_time', NaN), 3, 1);
+    
+    dt = 0.01; 
+    T_max = Env.Dist_M1 / Env.V_M1 + 5; 
+    t_vec = 0 : dt : T_max;
+    
+    % 预计算每架飞机的烟雾位置参数
+    SmokeData = [];
+    for i=1:3
+        ang = deg2rad(Res(i).a);
+        V = [cos(ang), sin(ang), 0] * Res(i).v;
+        P_Drop = Env.Pos_UAVs(i,:) + V * Res(i).td;
+        P_Pop_Init = P_Drop + V * Res(i).ty;
+        P_Pop_Init(3) = P_Pop_Init(3) - 0.5 * 9.8 * Res(i).ty^2;
+        SmokeData(i).P_Pop_Init = P_Pop_Init;
+        SmokeData(i).tp = Res(i).tp;
+    end
+    
+    % 逐帧检测遮挡情况
+    for i = 1:3
+        mask = false(size(t_vec));
+        for k = 1:length(t_vec)
+            t = t_vec(k);
+            % 1. 导弹当前位置
+            if t * Env.V_M1 > Env.Dist_M1
+                P_M = Env.Pos_True; % 已到达
+            else
+                P_M = Env.Pos_M1 + Env.Dir_M1 * (Env.V_M1 * t);
+            end
+            
+            % 2. 判断该飞机的烟雾是否存在
+            if t >= SmokeData(i).tp && t <= SmokeData(i).tp + Env.T_last
+                t_rel = t - SmokeData(i).tp;
+                P_Smk = SmokeData(i).P_Pop_Init - [0, 0, Env.V_sink * t_rel];
+                
+                % 3. 判断是否遮挡
+                v_los = Env.Pos_True - P_M;
+                w_vec = P_Smk - P_M;
+                c1 = dot(w_vec, v_los);
+                c2 = dot(v_los, v_los);
+                if c1 > 0
+                    b = c1 / c2;
+                    Pb = P_M + v_los * b;
+                    dist_sq = sum((P_Smk - Pb).^2);
+                    if dist_sq <= Env.R_smk^2
+                        mask(k) = true;
+                    end
+                end
+            end
+        end
+        
+        % 提取起止时间
+        if any(mask)
+            idx = find(mask);
+            Intervals(i).is_effective = true;
+            Intervals(i).start_time = t_vec(idx(1));
+            Intervals(i).end_time   = t_vec(idx(end));
+        end
+    end
+end
+
 
 function Res = Parse_Params(x)
     for i = 1:3
         idx = (i-1)*4;
-        Res(i).v  = x(idx+1);
-        Res(i).a  = x(idx+2);
-        Res(i).td = x(idx+3);
-        Res(i).ty = x(idx+4);
+        Res(i).v  = x(idx+1); Res(i).a  = x(idx+2);
+        Res(i).td = x(idx+3); Res(i).ty = x(idx+4);
         Res(i).tp = Res(i).td + Res(i).ty;
     end
 end
 
 function [score, pure_time] = CostFunc_3UAV(x, Env)
     Res = Parse_Params(x);
-    
-    % --- [保险修正]：并在内部逻辑中再次检查边界 ---
     for i=1:3
-        if Res(i).v < 70 || Res(i).v > 140 % 严格限制 70-140
-            score = 1e6; pure_time = 0; return; 
-        end
+        if Res(i).v < 70 || Res(i).v > 140, score = 1e6; pure_time = 0; return; end
     end
-    
-    % ... (其余物理计算逻辑与之前完全一致，此处省略以节省篇幅) ...
-    % 您之前复制的 CostFunc_3UAV 代码逻辑在这里保持不变
-    
-    % ---------------- 粘贴之前的 CostFunc_3UAV 逻辑 ----------------
-    P_Pop = zeros(3, 3);
-    Times_Pop = zeros(3, 1);
+    P_Pop = zeros(3, 3); Times_Pop = zeros(3, 1);
     for i = 1:3
         ang_rad = deg2rad(Res(i).a);
         Vel_Vec = [cos(ang_rad), sin(ang_rad), 0] * Res(i).v;
         P_Drop = Env.Pos_UAVs(i,:) + Vel_Vec * Res(i).td;
-        Disp = Vel_Vec * Res(i).ty;
-        Disp(3) = Disp(3) - 0.5 * 9.8 * Res(i).ty^2;
-        P_Pop(i,:) = P_Drop + Disp;
-        Times_Pop(i) = Res(i).tp;
+        Disp = Vel_Vec * Res(i).ty; Disp(3) = Disp(3) - 0.5 * 9.8 * Res(i).ty^2;
+        P_Pop(i,:) = P_Drop + Disp; Times_Pop(i) = Res(i).tp;
         if P_Pop(i,3) < 0, score = 1e5; pure_time = 0; return; end
     end
-    
-    t_start = min(Times_Pop);
-    t_end = min(Env.Dist_M1/Env.V_M1, max(Times_Pop) + Env.T_last);
+    t_start = min(Times_Pop); t_end = min(Env.Dist_M1/Env.V_M1, max(Times_Pop) + Env.T_last);
     if t_start >= t_end, score = 1e5; pure_time = 0; return; end
-    
     Target_Points = [0, 200, 5; 0, 200, 10; 0, 200, 0; -7, 200, 5; 7, 200, 5];
-    num_pts = 5;
-    dt = 0.05; t_vec = t_start : dt : t_end;
-    total_coverage = 0;
-    penalty_dist = 0;
-    min_dists = [1e9, 1e9, 1e9]; 
-    
+    num_pts = 5; dt = 0.05; t_vec = t_start : dt : t_end;
+    total_coverage = 0; penalty_dist = 0; min_dists = [1e9, 1e9, 1e9]; 
     for t = t_vec
-        P_M = Env.Pos_M1 + Env.Dir_M1 * (Env.V_M1 * t);
-        blocked_pts_count = 0;
+        P_M = Env.Pos_M1 + Env.Dir_M1 * (Env.V_M1 * t); blocked_pts_count = 0;
         for p = 1:num_pts
-            TP = Target_Points(p,:);
-            v_los = TP - P_M;
-            len_los_sq = sum(v_los.^2);
-            is_pt_blocked = false;
+            TP = Target_Points(p,:); v_los = TP - P_M; len_los_sq = sum(v_los.^2); is_pt_blocked = false;
             for k = 1:3
                 if t >= Times_Pop(k) && t <= Times_Pop(k) + Env.T_last
                     P_Smk = P_Pop(k,:) - [0, 0, Env.V_sink * (t - Times_Pop(k))];
-                    w_vec = P_Smk - P_M;
-                    c1 = dot(w_vec, v_los);
+                    w_vec = P_Smk - P_M; c1 = dot(w_vec, v_los);
                     if c1 > 0
-                        b = max(0, min(1, c1 / len_los_sq));
-                        Pb = P_M + v_los * b;
-                        d_sq = sum((P_Smk - Pb).^2);
-                        dist = sqrt(d_sq);
+                        b = max(0, min(1, c1 / len_los_sq)); Pb = P_M + v_los * b;
+                        d_sq = sum((P_Smk - Pb).^2); dist = sqrt(d_sq);
                         if p == 1 && dist < min_dists(k), min_dists(k) = dist; end
                         if d_sq <= Env.R_smk^2, is_pt_blocked = true; end
                     end
@@ -1769,25 +1914,18 @@ function [score, pure_time] = CostFunc_3UAV(x, Env)
     score = -total_coverage + 0.1 * penalty_dist;
 end
 
-%% --- DE 求解器 (修正种子速度) ---
-function [best_mem, best_val, curve] = Run_DE_3UAV(cost_func, lb, ub, opts)
+function [best_mem, best_val] = Run_DE_3UAV(cost_func, lb, ub, opts)
     NP = opts.NP; D = length(lb);
     pop = repmat(lb, NP, 1) + rand(NP, D) .* repmat(ub-lb, NP, 1);
-    
-    % === [修正点]：种子的速度也必须符合 70-140 约束 ===
-    % FY1 修正为 73 (低速流最优), FY2/FY3 为 120 (高速流)
-    pop(1,:) = [73, 180, 0, 3,   120, 190, 15, 4,   120, 150, 35, 5];
-    pop(2,:) = [140, 180, 0, 3,  140, 190, 20, 3,   140, 150, 40, 3];
     
     val = zeros(NP, 1);
     parfor i=1:NP, val(i) = cost_func(pop(i,:)); end
     [best_val, idx] = min(val);
     best_mem = pop(idx, :);
-    curve = zeros(opts.MaxIter, 1);
     
-    h = waitbar(0, 'Multi-UAV Optimization...');
+    h = waitbar(0, '正在寻找最优策略...');
     for gen = 1 : opts.MaxIter
-        F = opts.F * (1 - 0.3 * gen/opts.MaxIter);
+        F = opts.F * (1 - 0.2 * gen/opts.MaxIter); 
         pop_new = pop; val_new = val;
         parfor i = 1 : NP
             r = randperm(NP, 3);
@@ -1804,46 +1942,64 @@ function [best_mem, best_val, curve] = Run_DE_3UAV(cost_func, lb, ub, opts)
         pop = pop_new; val = val_new;
         [c_best, idx] = min(val);
         if c_best < best_val, best_val = c_best; best_mem = pop(idx, :); end
-        curve(gen) = -best_val;
+        
         if mod(gen, 50) == 0
             [~, t_real] = feval(cost_func, best_mem);
             waitbar(gen/opts.MaxIter, h, sprintf('Iter %d: %.2fs', gen, t_real));
-            fprintf('    Iter %d: 引导得分 %.4f | 真实遮蔽 %.4fs\n', gen, best_val, t_real);
         end
     end
     close(h);
 end
 
-%% --- 绘图与保存 (保持不变) ---
-function Plot_3UAV_Scenario(Res, score, curve, Env)
-    figure('Color','w', 'Position', [50, 50, 1200, 600]);
-    subplot(1, 2, 1); hold on; grid on; axis equal; view([-30, 30]);
-    plot3(Env.Pos_True(1), Env.Pos_True(2), Env.Pos_True(3), 'go', 'MarkerSize', 12, 'MarkerFaceColor','g');
-    plot3(Env.Pos_M1(1), Env.Pos_M1(2), Env.Pos_M1(3), 'rv', 'MarkerSize', 10, 'MarkerFaceColor','r');
-    colors = {'b', 'm', [0 0.5 0]};
+%  绘图函数
+function Plot_Effective_Gantt(Res, score, Env)
+    figure('Color', 'w', 'Position', [100, 100, 700, 500], 'Name', 'Final Strategy & Schedule');
+    hold on;
+    
+    colors = {
+        [100, 100, 255]/255,   % FY1 蓝
+        [238, 130, 238]/255,   % FY2 紫
+        [100, 200, 100]/255    % FY3 绿
+    };
+    
+    % 计算精确区间
+    Intervals = Calculate_Exact_Intervals(Res, Env);
+    bar_height = 0.5;
+    
     for i = 1:3
-        ang = deg2rad(Res(i).a);
-        V = [cos(ang), sin(ang), 0] * Res(i).v;
-        P0 = Env.Pos_UAVs(i,:);
-        P_Drop = P0 + V * Res(i).td;
-        plot3([P0(1) P_Drop(1)], [P0(2) P_Drop(2)], [P0(3) P_Drop(3)], '-', 'Color', colors{i}, 'LineWidth', 1.5);
-        text(P0(1), P0(2), P0(3)+200, sprintf('FY%d',i), 'Color', colors{i});
-        P_Pop = P_Drop + V * Res(i).ty - [0,0,0.5*9.8*Res(i).ty^2];
-        plot3(P_Pop(1), P_Pop(2), P_Pop(3), 'h', 'MarkerSize', 14, 'MarkerFaceColor', colors{i});
-        plot3([P_Drop(1) P_Pop(1)], [P_Drop(2) P_Pop(2)], [P_Drop(3) P_Pop(3)], 'k:');
+        % 只画有效遮蔽区间
+        if Intervals(i).is_effective
+            t_s = Intervals(i).start_time;
+            t_e = Intervals(i).end_time;
+            
+            x_patch = [t_s, t_e, t_e, t_s];
+            y_patch = [i - bar_height/2, i - bar_height/2, i + bar_height/2, i + bar_height/2];
+            patch(x_patch, y_patch, colors{i}, 'EdgeColor', 'k', 'LineWidth', 1.2, 'FaceAlpha', 0.9);
+           
+            text(t_s, i - bar_height/2 - 0.2, sprintf('Start: %.1fs', t_s), ...
+                'FontSize', 10, 'Color', 'k', 'HorizontalAlignment', 'left');
+                
+            text((t_s+t_e)/2, i, sprintf('Dur: %.2fs', t_e - t_s), ...
+                 'FontSize', 9, 'Color', 'w', 'HorizontalAlignment', 'center', 'FontWeight', 'bold');
+        else
+            t_tp = Res(i).tp; 
+            rectangle('Position', [t_tp, i-0.1, 1, 0.2], 'EdgeColor', [0.8 0.8 0.8], 'LineStyle', '--');
+            text(t_tp, i-0.3, 'Ineffective', 'FontSize', 8, 'Color', 'r');
+        end
     end
-    line([Env.Pos_M1(1) Env.Pos_True(1)], [Env.Pos_M1(2) Env.Pos_True(2)], [Env.Pos_M1(3) Env.Pos_True(3)], ...
-        'Color', [0.6 0.6 0.6], 'LineStyle', '--');
-    xlabel('X'); ylabel('Y'); zlabel('Z');
-    title('三机协同立体封锁示意图');
-    subplot(1, 2, 2); hold on; grid on;
-    for i=1:3
-        tp = Res(i).tp;
-        fill([tp, tp+Env.T_last, tp+Env.T_last, tp], [i-0.3, i-0.3, i+0.3, i+0.3], colors{i}, 'FaceAlpha', 0.6);
-        text(tp, i, sprintf(' Start: %.1fs', tp));
-    end
-    title(['协同遮蔽时序 (总长: ' num2str(score) 's)']);
-    xlabel('时间 (s)'); ylim([0 4]); yticks([1 2 3]); yticklabels({'FY1','FY2','FY3'});
+    
+    ylim([0, 4]);
+    yticks([1, 2, 3]);
+    yticklabels({'FY1', 'FY2', 'FY3'});
+    
+    valid_times = [Intervals.start_time, Intervals.end_time];
+    valid_times = valid_times(~isnan(valid_times));
+    if isempty(valid_times), xlim([0, 30]); else, xlim([min(valid_times)-2, max(valid_times)+5]); end
+    
+    xlabel('时间 (s)', 'FontSize', 12);
+    title(sprintf('三机协同有效遮蔽时序 (Total: %.4fs)', score), 'FontSize', 14);
+    grid on; ax=gca; ax.GridAlpha=0.3; ax.XMinorGrid='on'; box on;
+    hold off;
 end
 
 function Save_To_Excel(Res, filename)
@@ -1856,6 +2012,365 @@ function Save_To_Excel(Res, filename)
         data(i,5) = Res(i).tp;
     end
     try, writematrix(data, filename); catch, end
+end
+
+ \end{lstlisting}
+
+ \begin{lstlisting}[language=Matlab,caption={Problem 5}]
+% 2025 CUMCM Problem A - Question 5 Solver
+% 5 Drones vs 3 Missiles, Max 3 Bombs each, Constant Altitude Flight
+% Strategy: Double-Layer Optimization (GA + Heuristic Scan)
+clear; clc; format shortG;
+
+%% 1. 全局参数定义
+global Mis Drones RealTarget g
+% 真实目标 (保护对象)
+RealTarget = [0, 200, 0];
+% 重力加速度
+g = 9.8;
+
+% --- 导弹参数 M1, M2, M3 ---
+% 初始位置
+M_pos = [20000, 0, 2000; 
+         19000, 600, 2100; 
+         18000, -600, 1900];
+% 假目标位置 (导弹瞄准点)
+FakeTarget = [0, 0, 0];
+% 速度标量
+Vm = 300;
+
+% 构建导弹结构体
+Mis = struct();
+for k = 1:3
+    Mis(k).P0 = M_pos(k, :);
+    dir_vec = FakeTarget - Mis(k).P0;
+    dist = norm(dir_vec);
+    Mis(k).dir = dir_vec / dist; % 单位方向向量
+    Mis(k).flight_time = dist / Vm; % 飞行总时间
+    Mis(k).V = Mis(k).dir * Vm;     % 速度向量
+end
+
+% --- 无人机初始参数 FY1 - FY5 ---
+D_pos = [17800, 0, 1800;
+         12000, 1400, 1400;
+         6000, -3000, 700;
+         11000, 2000, 1800;
+         13000, -2000, 1300];
+Drones = struct();
+for i = 1:5
+    Drones(i).P0 = D_pos(i, :);
+    Drones(i).h = D_pos(i, 3); % 保持固定高度
+end
+
+%% 2. 遗传算法配置 (外层优化)
+% 决策变量：10个 [v1, ang1, v2, ang2, v3, ang3, v4, ang4, v5, ang5]
+% v范围: [70, 140], ang范围: [0, 2*pi]
+nVars = 10;
+lb = repmat([70, 0], 1, 5);
+ub = repmat([140, 2*pi], 1, 5);
+
+% GA 选项 (为演示速度，种群和代数设得较小，比赛时建议加大)
+options = optimoptions('ga', ...
+    'PopulationSize', 150, ...     % 种群大小 (建议 100+)
+    'MaxGenerations', 80, ...     % 最大迭代次数 (建议 100+)
+    'Display', 'iter', ...        % 显示迭代过程
+    'UseParallel', false);        % 如有并行工具箱可设为 true
+
+fprintf('开始遗传算法优化...\n');
+tic;
+[best_vars, best_score] = ga(@fitness_func, nVars, [], [], [], [], lb, ub, [], options);
+solve_time = toc;
+
+%% 3. 结果解析与输出
+fprintf('\n================ 优化结果 ================\n');
+fprintf('求解耗时: %.2f 秒\n', solve_time);
+fprintf('最大总有效遮蔽时长: %.2f 秒\n', -best_score); % 负负得正
+
+% 解析最优解的详细投放策略
+[~, final_plan] = fitness_func(best_vars);
+
+fprintf('\n>>> 无人机飞行策略 <<<\n');
+for i = 1:5
+    v = best_vars(2*i-1);
+    ang = best_vars(2*i);
+    fprintf('FY%d: 速度 %.2f m/s, 航向 %.2f 度 (弧度 %.2f)\n', ...
+        i, v, rad2deg(ang), ang);
+end
+
+fprintf('\n>>> 烟幕弹投放详细方案 (Result3) <<<\n');
+fprintf('%-6s | %-6s | %-8s | %-8s | %-8s | %-15s\n', ...
+    'Drone', 'BombID', 'DropTime', 'ExpTime', 'Target', 'CoverDuration');
+fprintf('--------------------------------------------------------------------\n');
+
+total_M1 = 0; total_M2 = 0; total_M3 = 0;
+
+for i = 1:5
+    drone_plan = final_plan{i};
+    if isempty(drone_plan)
+        continue;
+    end
+    for j = 1:size(drone_plan, 1)
+        % plan row: [t_drop, t_exp, missile_idx, cover_start, cover_end, score]
+        d_time = drone_plan(j, 1);
+        e_time = drone_plan(j, 2);
+        m_idx = drone_plan(j, 3);
+        c_dur = drone_plan(j, 5) - drone_plan(j, 4);
+        
+        fprintf('FY%-4d | #%-5d | %-8.2f | %-8.2f | M%-7d | %.2f s [%.1f-%.1f]\n', ...
+            i, j, d_time, e_time, m_idx, c_dur, drone_plan(j,4), drone_plan(j,5));
+    end
+end
+fprintf('==========================================\n');
+
+
+%% ---------------------------------------------------------
+%  Local Functions (无需单独文件，直接包含在脚本中)
+%  ---------------------------------------------------------
+
+function [score, all_plans] = fitness_func(vars)
+    % 适应度函数：输入 10 个变量，输出总遮蔽时间的负值（求最小化）
+    % all_plans 用于最后输出详细信息
+    
+    global Mis RealTarget
+    
+    % 存储每枚导弹被遮蔽的时间段集合
+    % 结构: cell array {M1_intervals; M2_intervals; M3_intervals}
+    missile_covers = cell(3, 1);
+    all_plans = cell(5, 1);
+    
+    % 遍历 5 架无人机
+    for i = 1:5
+        % 提取当前无人机的决策变量
+        v = vars(2*i-1);
+        ang = vars(2*i);
+        
+        % 计算该无人机的最佳投弹策略 (内层贪心/遍历)
+        [drone_intervals, drone_plan] = calculate_drone_strategy(i, v, ang);
+        
+        % 收集结果
+        all_plans{i} = drone_plan;
+        for k = 1:3
+            if ~isempty(drone_intervals{k})
+                missile_covers{k} = [missile_covers{k}; drone_intervals{k}];
+            end
+        end
+    end
+    
+    % 计算总有效遮蔽时间 (处理并集)
+    total_time = 0;
+    for k = 1:3
+        intervals = missile_covers{k};
+        if isempty(intervals)
+            continue;
+        end
+        % 计算区间并集总长度
+        union_len = calc_union_length(intervals);
+        total_time = total_time + union_len;
+    end
+    
+    % GA 是求最小值，所以取负
+    score = -total_time; 
+end
+
+function [intervals_by_missile, selected_plan] = calculate_drone_strategy(drone_idx, v, ang)
+    % 内层核心函数：给定无人机轨迹，找出最优的3次投弹
+    % 输入：无人机ID，速度，航向
+    % 输出：针对M1-M3的遮蔽区间，以及具体的投弹计划
+    
+    global Drones Mis g
+    
+    P0 = Drones(drone_idx).P0;
+    intervals_by_missile = cell(3, 1);
+    
+    % 1. 生成候选投弹列表
+    % 离散化遍历投弹时间 t_drop
+    % 无人机最长飞行时间估计：导弹最多飞 70秒，取 0-70s
+    t_drops = 0 : 1.0 : 70; 
+    candidates = []; % 格式: [t_drop, t_exp, missile_idx, start_t, end_t, duration]
+    
+    % 无人机速度向量
+    V_drone = [v * cos(ang), v * sin(ang), 0];
+    
+    for t_d = t_drops
+        % 此刻无人机位置
+        P_drop = P0 + V_drone * t_d;
+        
+        % 遍历每枚导弹，看能否拦截
+        for m_id = 1:3
+            % 几何逆推：为了拦截导弹，烟幕弹需要在空中爆炸并形成云团
+            % 烟幕弹水平位置随时间变化: P(t)xy = P_drop_xy + V_drone_xy * (t - t_d)
+            % 烟幕弹垂直位置: Z(t) = P_drop_z - 0.5*g*(t - t_d)^2
+            
+            % 简化逻辑：扫描可能的起爆延迟 delta_t
+            % 延迟范围：1s 到 15s (根据高度差估算，1800m自由落体约19s)
+            for delta_t = 1 : 2 : 15
+                t_e = t_d + delta_t;
+                
+                % 爆炸点位置
+                P_boom = P_drop + V_drone * delta_t; 
+                P_boom(3) = P_drop(3) - 0.5 * g * delta_t^2;
+                
+                % 如果爆炸点已经在地下，跳过
+                if P_boom(3) < 0
+                    continue;
+                end
+                
+                % 检查该爆炸点产生的云团能否遮蔽导弹 m_id
+                [is_block, t_start, t_end] = check_interception(P_boom, t_e, m_id);
+                
+                if is_block
+                    dur = t_end - t_start;
+                    if dur > 0.1
+                        % 记录候选策略
+                        candidates = [candidates; t_d, t_e, m_id, t_start, t_end, dur];
+                    end
+                end
+            end
+        end
+    end
+    
+    % 2. 贪心选择最优的 3 个不冲突的投弹时机
+    selected_plan = []; % [t_drop, t_exp, m_idx, t_start, t_end, dur]
+    
+    if isempty(candidates)
+        return;
+    end
+    
+    % 按遮蔽时长降序排列
+    [~, sort_idx] = sort(candidates(:, 6), 'descend');
+    sorted_cands = candidates(sort_idx, :);
+    
+    count = 0;
+    for i = 1:size(sorted_cands, 1)
+        if count >= 3
+            break;
+        end
+        
+        cand = sorted_cands(i, :);
+        t_d_curr = cand(1);
+        
+        % 检查与已选方案的时间间隔约束 (|t_d1 - t_d2| >= 1)
+        conflict = false;
+        for j = 1:size(selected_plan, 1)
+            if abs(t_d_curr - selected_plan(j, 1)) < 1.0 - 1e-5
+                conflict = true;
+                break;
+            end
+        end
+        
+        if ~conflict
+            selected_plan = [selected_plan; cand];
+            % 将结果加入输出格式
+            m_idx = cand(3);
+            intervals_by_missile{m_idx} = [intervals_by_missile{m_idx}; cand(4), cand(5)];
+            count = count + 1;
+        end
+    end
+end
+
+function [blocked, t_start, t_end] = check_interception(P_boom, t_exp, m_idx)
+    % 检查单个云团对特定导弹的遮蔽情况
+    global Mis RealTarget
+    
+    blocked = false; t_start = 0; t_end = 0;
+    
+    M_struct = Mis(m_idx);
+    
+    % 烟幕有效时间窗口
+    cloud_life_start = t_exp;
+    cloud_life_end = t_exp + 20;
+    
+    % 导弹飞行结束时间
+    mis_end = M_struct.flight_time;
+    
+    % 实际有效检测时间段 (取交集)
+    check_start = max(0, cloud_life_start);
+    check_end = min(mis_end, cloud_life_end);
+    
+    if check_start >= check_end
+        return;
+    end
+    
+    % 离散化检测遮蔽 (步长 0.2s)
+    ts = check_start : 0.2 : check_end;
+    is_cov = false(size(ts));
+    
+    % 云团下沉速度
+    V_sink = [0, 0, -3];
+    
+    for k = 1:length(ts)
+        t = ts(k);
+        % 此刻云团中心
+        P_c = P_boom + V_sink * (t - t_exp);
+        % 此刻导弹位置
+        P_m = M_struct.P0 + M_struct.V * t;
+        
+        % 遮蔽判断核心：
+        % 1. 计算 P_c 到线段 P_m -> RealTarget 的距离
+        dist = point_to_segment_dist(P_c, P_m, RealTarget);
+        
+        % 2. 判断是否在半径 10m 内
+        if dist <= 10
+            % 3. 补充判断：云团是否在导弹前方 (简单判断距离关系)
+            d_m_target = norm(P_m - RealTarget);
+            d_c_target = norm(P_c - RealTarget);
+            if d_c_target < d_m_target % 云团在导弹和目标之间
+                is_cov(k) = true;
+            end
+        end
+    end
+    
+    if any(is_cov)
+        blocked = true;
+        valid_indices = find(is_cov);
+        t_start = ts(valid_indices(1));
+        t_end = ts(valid_indices(end));
+    end
+end
+
+function d = point_to_segment_dist(P, A, B)
+    % 计算点 P 到线段 AB 的最短距离
+    AB = B - A;
+    AP = P - A;
+    
+    % 投影系数
+    t = dot(AP, AB) / dot(AB, AB);
+    
+    if t < 0
+        closest = A; % 投影在 A 外侧
+    elseif t > 1
+        closest = B; % 投影在 B 外侧
+    else
+        closest = A + t * AB; % 投影在线段上
+    end
+    
+    d = norm(P - closest);
+end
+
+function len = calc_union_length(intervals)
+    % 计算多个时间区间的并集总长度
+    % intervals: Nx2 matrix [start, end]
+    if isempty(intervals)
+        len = 0; return;
+    end
+    
+    % 按开始时间排序
+    intervals = sortrows(intervals, 1);
+    
+    merged = intervals(1, :);
+    idx = 1;
+    
+    for i = 2:size(intervals, 1)
+        curr = intervals(i, :);
+        if curr(1) < merged(idx, 2) % 有重叠
+            merged(idx, 2) = max(merged(idx, 2), curr(2));
+        else
+            idx = idx + 1;
+            merged(idx, :) = curr;
+        end
+    end
+    
+    len = sum(merged(:, 2) - merged(:, 1));
 end
 \end{lstlisting}
 \end{document}
