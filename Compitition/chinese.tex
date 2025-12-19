@@ -18,7 +18,8 @@
 \usepackage{listings}       % 代码展示
 \usepackage{xcolor}         % 颜色
 \usepackage{colortbl}        % 表格颜色
-
+\usepackage{multirow}       % 表格中跨行单元格
+\usepackage{tikz}          % 绘图
 % =============================================
 % 格式设置
 % =============================================
@@ -201,22 +202,9 @@ $I_j(t)$ & 第$j$枚导弹的遮蔽指示函数 & - \\
 \section{模型建立}
 
 根据题目描述首先建立统一的三维直角坐标系$Oxyz$。以假目标中心为原点$x$ 轴与 $y$ 轴位于水平面内，
-$z$ 轴竖直向上则假目标位置为$P_O=(0,0,0)$,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T$ 为真目标中心高度。
+$z$ 轴竖直向上则假目标位置为$P_O=(0,0,0)$,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T=5m$ 为真目标中心高度。
 第$j$ 枚导弹的初始位置位于点$P_{M_j}(0) $，
-第$i$ 架无人机的初始位置位于点$P_{FY_i}(0)$，我们可以利用matlab绘制初始时刻的宏观战场态势图，如图\ref{fig:geometry}所示。
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/geometry.png}
-    \caption{宏观战场态势图}
-    \label{fig:geometry}
-\end{figure}
-通过观察此图，我们可以发现，无人机群在导弹群前方按照扇形分布，
-形成了一个闪现拦截带，无人机FY1距离导弹群最近，
-这说明FY1后续可能应该优先对导弹进行拦截。
-同时在高度上，无人机群成梯度配置，可以形成低位前伸烟幕拦截网。
-\subsection{导弹运动模型构建}
-第$j$枚导弹初始位置为$\boldsymbol{P}_{M_j}(0)$,导弹$M_j$以速度 $V_m=300m/s$ 直线飞向假目标$\boldsymbol{P_O}$，其单位方向向量为：
-\begin{equation}
+导弹的飞行方向向量为：\begin{equation}
 \boldsymbol{n_{M_j}}=\frac{\boldsymbol{P_O}-\boldsymbol{P}_{M_j}\left( 0 \right)}{||\boldsymbol{P_O}-\boldsymbol{P_{M_j}}\left( 0 \right) ||}
 \end{equation}
 导弹在任意时刻 $t$的位置为：
@@ -397,9 +385,9 @@ T_{cover}
 & \mathbf{P}_{S}(t)=\mathbf{P}_{B}-(0,0,v_{cloud}(t-t_{burst})) \\
 & r=\frac{\left( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right) \right) ·\left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)}{||\mathbf{P}_T\ -\ \mathbf{P}_M\left( t \right) ||^2}\\
 & D(t)=\begin{cases}
-\|( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right))\| & \text{if } r \leq 0 \text{ (导弹后方)}\\
-\|\left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)\| & \text{if } r \geq 1 \text{ (目标后方)}\\
-\frac{\left( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right) \right) \times \left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)}{||\mathbf{P}_T\ -\ \mathbf{P}_M\left( t \right) ||^2} & \text{if } 0<r<1 \text{ (线段投影内)}
+\|( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right))\| & \text{if } r \leq 0\\
+\|\left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)\| & \text{if } r \geq 1 \\
+\frac{\left( \mathbf{P}_S\left( t \right) -\mathbf{P}_M\left( t \right) \right) \times \left( \mathbf{P}_T-\mathbf{P}_S\left( t \right) \right)}{||\mathbf{P}_T\ -\ \mathbf{P}_M\left( t \right) ||^2} & \text{if } 0<r<1 
 \end{cases} \\
 & I(t)=\begin{cases}1,&\text{if } D(t)\le R_{cloud} \text{ and } t\geq t_{burst}\\0,&\text{otherwise}\end{cases} \\
 & T=\int_0^{T_{end}}{I\left( t \right) dt}
@@ -525,15 +513,11 @@ F\left(x\right)=-T_{cover}\left(x\right)
 
 \subsubsection{决策变量}
 根据题目要求，无人机一旦受领任务，其速度和航向就确定了且不再调整。因此在进行任务决策时我们需要决策以下八个变量：
-\\飞行速度$$v_{FY_1}$$
-飞行航向角$$\alpha$$
-投放时刻1$$t_{drop,1} $$
-投放时刻2$$t_{drop,2} $$
-投放时刻3$$t_{drop,3} $$
-延时起爆时间1$$t_{delay,1} $$
-延时起爆时间2$$t_{delay,2} $$
-延时起爆时间3$$t_{delay,3} $$
-由此定义出决策向量X:
+\\飞行速度$v_{FY_1}$
+\\飞行航向角$\alpha$
+\\投放时刻\quad$t_{drop,i} $
+\\延时起爆时间\quad$t_{delay,i} $
+\\由此定义出决策向量X:
 \begin{equation}
 \mathbf{X}=[v_{FY_1},\alpha,t_{drop,1},t_{drop,2},t_{drop,3},t_{delay,1},t_{delay,2},t_{delay,3}]^T 
 \end{equation}
@@ -619,25 +603,34 @@ t_{drop,k+1}-t_{drop,k}\geq1,\quad k=1,2
 
 \begin{table}[htbp]
 \centering
-\label{tab:3}
-\caption{Problem\,3 最终策略}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}l>{\raggedleft\arraybackslash}Xr@{}}
+\small
+\caption{Problem 3 策略表}
+\label{tab:prob3}
+\begin{tabular}{ccccccc}
 \toprule
-参数 & 数值 \\
+\multirow{2}{*}{烟幕弹序号}
+& \multicolumn{3}{c}{投放坐标 (m)} & \multicolumn{3}{c}{起爆坐标 (m)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+& $X$ & $Y$ & $Z$ & $X$ & $Y$ & $Z$ \\
 \midrule
-最大有效遮蔽时长 & 12.54241\,s \\
-无人机速度 & 95\,m/s \\
-无人机航向 & 3.1533\,rad\ (180.67$^\circ$) \\
-\addlinespace
-\rowcolor{gray!8} \multicolumn{2}{@{}l}{\small 烟幕弹时间链} \\
-\rowcolor{gray!4} 烟弹1投放时刻 & 0.0000\,s \\
-\rowcolor{gray!4} 烟弹1起爆时刻 & 0.0000\,s \\
-\rowcolor{gray!8} 烟弹2投放时刻 & 2.7509\,s \\
-\rowcolor{gray!8} 烟弹2起爆时刻 & 6.4326\,s \\
-\rowcolor{gray!4} 烟弹3投放时刻 & 8.0057\,s \\
-\rowcolor{gray!4} 烟弹3起爆时刻 & 13.3706\,s \\
+\rowcolor{gray!10}
+1 & 17800 & 0 & 1800 & 17800 & 0 & 1800 \\
+2 & 17915.99463 & 13.80460 & 1800 & 17915.99463 & 13.80460 & 1800 \\
+\rowcolor{gray!10}
+3 & 22048.21768 & 505.58318 & 1800 & 23913.0268 & 727.51534 & 533.54687 \\
+\midrule
+\multicolumn{7}{c}{\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cccc}
+
+烟幕弹序号 & 有效干扰时长 (s) & 生效时间 (s) & 失效时间 (s) \\
+\midrule
+\rowcolor{gray!10}
+1 & 2.55600 & 0.79116 & 5.41117 \\
+2 & 4.37985 & 1.00000 & 5.07793 \\
+\rowcolor{gray!10}
+3 & 0.00000 & 0.00000 & 0.00000 \\
 \bottomrule
-\end{tabularx}
+\end{tabular*}} \\
+\end{tabular}
 \end{table}
 
 \begin{figure}[H]
@@ -702,7 +695,7 @@ t_{drop,k+1}-t_{drop,k}\geq1,\quad k=1,2
 定义第 i个烟幕云团对目标的遮蔽指示函数$I_i(t)$:
 \begin{equation}
 I_i(t;\mathbf{X})=\left\{\begin{matrix}1,&\mathrm{if\ \ dist}(P_{S,i}(t),\mathrm{Lin} \mathrm{e}_{M1-Target})\le R_{cloud}\\0,&otherwise\\\end{matrix}\right.
-4）
+）
 \end{equation}
 系统总遮蔽状态为各子状态的逻辑或：
 \begin{equation}
@@ -769,19 +762,20 @@ z_{burst,i}(\mathbf{X})\ge0,\quad i=1,2,3
 我们通过差分进化算法（DE）用matlab求解，效果如下图\ref{fig:4}所示，得到了最大的总遮蔽有效时间15s，
 并且烟幕弹的遮蔽时间衔接良好，能够提供较好的遮蔽效果。对应的三机协同投放策略如下表\ref{tab:4}所示。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
+\caption{问题\,4 三机协同立体封锁最终策略（坐标精简版）}
 \label{tab:4}
-\renewcommand{\arraystretch}{1.25}
-\setlength{\tabcolsep}{6pt}
-\caption{问题\,4 三机协同立体封锁最终策略}
-\begin{tabular}{@{}lccccccc@{}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc cc cc}
 \toprule
-机号 & 初始位置\,(m) & 速度\,(m/s) & 航向\,($^\circ$) & 投放时刻\,(s) & 延时\,(s) & 起爆时刻\,(s) \\
+& & & \multicolumn{2}{c}{投放点 (m)} & \multicolumn{2}{c}{起爆点 (m)} \\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+无人机 & 航向(°)  & $T_{cover}$ & (X,Y,Z) & & (X,Y,Z) & \\
 \midrule
-FY1 & (17800,\,0,\,1800) & 78.65 & 178.42 & 0.67 & 2.87 & 3.55 \\
-FY2 & (12000,\,1400,\,1400) & 119.78 & -129.29 & 6.69 & 7.84 & 14.53 \\
-FY3 & (6000,\,-3000,\,700) & 135.11 & 106.94 & 18.00 & 6.09 & 24.09 \\
+FY1 & 78.65 & 4.65 & $(17747.32,\ 1.45,\ 1800)$ & & $(17521.68,\ 7.68,\ 1760)$ \\
+FY2 & 119.78 & 4.82 & $(11492.56,\ 779.81,\ 1400)$ & & $(10897.90,\ 53.01,\ 1099)$ \\
+FY3 & 135.11 & 5.46 & $(5291.39,\ -673.54,\ 700)$ & & $(5051.65,\ 113.58,\ 518)$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -890,7 +884,7 @@ FY2 & \#2 & 8.00 & 13.00 & M1 & 0.80 & [24.8--25.6]\\
 \multicolumn{7}{@{}l}{\cellcolor{orange!15}\bfseries FY3: 108.05\,m/s, 121.72$^\circ$(2.12\,rad)}\\
 FY3 & \#1 & 28.00 & 35.00 & M2 & 3.40 & [37.8--41.2]\\
 FY3 & \#2 & 25.00 & 32.00 & M3 & 3.00 & [35.6--38.6]\\
-FY3 & \#3 & 26.00 & 33.00 & M  & 1.60 & [49.4--51.0]\\
+FY3 & \#3 & 26.00 & 33.00 & M1 & 1.60 & [49.4--51.0]\\
 \midrule
 \multicolumn{7}{@{}l}{\cellcolor{red!15}\bfseries FY4: 135.80\,m/s, 262.62$^\circ$(4.58\,rad)}\\
 FY4 & \#1 & 1.00 & 12.00 & M2 & 4.40 & [15.0--19.4]\\
