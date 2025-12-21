@@ -77,5 +77,5 @@
 \contentsline {subsubsection}{\numberline {6.5.6}求解结果}{35}{subsubsection.6.5.6}%
 \contentsline {section}{\numberline {7}模型评价}{37}{section.7}%
 \contentsline {subsection}{\numberline {7.1}模型的优点}{37}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}模型的缺点}{38}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}模型的改进方向}{38}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.2}模型的缺点}{37}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}模型的改进方向}{37}{subsection.7.3}%
