@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+
+\bibitem{claude2024}
+{Anthropic}.
+\newblock Claude 3.5 sonnet.
+\newblock anthropic-ai, 2024.
+\newblock 2025-12-19.
+
+\bibitem{chatgpt2024}
+{OpenAI}.
+\newblock Chatgpt (gpt-4o).
+\newblock openai, 2024.
+\newblock 2025-12-19.
+
+\bibitem{ZGMH202304008}
+朱卓、刘琦妍、张策.
+\newblock 基于遗传算法的自主干扰决策方法.
+\newblock {\em 中国民航大学学报}, 41(04):58--64, 2023.
+
+\bibitem{GDYG202206017}
+罗瑞耀、王得霖、罗威、刘武刚、丁枫、万国新、沈镒峰.
+\newblock 烟幕弹应对察打一体无人机的投放策略研究.
+\newblock {\em 光电技术应用}, 37(06):90--98, 2022.
+
+\bibitem{qwen2024}
+{阿里云}.
+\newblock 通义千问 (qwen).
+\newblock aliyun-ai, 2024.
+\newblock 2025-12-19.
+
+\end{thebibliography}
