@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+
+\bibitem{qwen2024}
+{Alibaba Cloud}.
+\newblock Tongyi qianwen (qwen).
+\newblock aliyun-ai, 2024.
+\newblock Accessed: 2025-12-19.
+
+\bibitem{claude2024}
+{Anthropic}.
+\newblock Claude 3.5 sonnet.
+\newblock anthropic-ai, 2024.
+\newblock Accessed: 2025-12-19.
+
+\bibitem{GDYG202206017}
+Ruiyao Luo, Delin Wang, Wei Luo, Wugang Liu, Feng Ding, Guoxin Wan, and Yifeng Shen.
+\newblock Research on deployment strategy of smoke grenades against integrated reconnaissance and strike uavs.
+\newblock {\em Electro-Optic Technology Application}, 37(06):90--98, 2022.
+
+\bibitem{chatgpt2024}
+{OpenAI}.
+\newblock Chatgpt (gpt-4o).
+\newblock openai, 2024.
+\newblock Accessed: 2025-12-19.
+
+\bibitem{ZGMH202304008}
+Zhuo Zhu, Qiyan Liu, and Ce~Zhang.
+\newblock Autonomous jamming decision method based on genetic algorithm.
+\newblock {\em Journal of Civil Aviation University of China}, 41(04):58--64, 2023.
+
+\end{thebibliography}

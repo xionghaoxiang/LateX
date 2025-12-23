@@ -1,16 +1,81 @@
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {1}Problem Restatement}{1}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Problem Background}{1}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Problem Restatement}{1}{subsection.1.2}%
-\contentsline {section}{\numberline {2}Assumptions}{1}{section.2}%
-\contentsline {section}{\numberline {3}Notations}{1}{section.3}%
-\contentsline {section}{\numberline {4}Model Analysis and Construction}{2}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Kinematic Modeling}{2}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Screening Condition}{2}{subsection.4.2}%
-\contentsline {section}{\numberline {5}Solution and Results}{2}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Solution to Problem 1}{2}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Solution to Problem 2}{3}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Solution to Problem 3}{3}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Solution to Problems 4 and 5}{3}{subsection.5.4}%
-\contentsline {section}{\numberline {6}Model Evaluation}{3}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Strengths}{3}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Weaknesses}{3}{subsection.6.2}%
+\contentsline {subsection}{\numberline {1.2}Problem Formulation}{1}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Problem Analysis}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Analysis of Problem 1}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Analysis of Problem 2}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Analysis of Problem 3}{2}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Analysis of Problem 4}{2}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Analysis of Problem 5}{2}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Overall Analysis}{3}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Model Assumptions}{3}{section.3}%
+\contentsline {section}{\numberline {4}Notation}{3}{section.4}%
+\contentsline {section}{\numberline {5}Model establishment}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Missile Motion Model Construction}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Construction of unmanned aerial vehicle motion model}{5}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Construction of smoke screen interference bomb motion model}{6}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Effective Obstruction Determination Model}{7}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Geometric Obstruction Conditions}{7}{subsubsection.5.4.1}%
+\contentsline {paragraph}{Problem Background and Simplifying Assumptions}{7}{section*.2}%
+\contentsline {subsubsection}{\numberline {5.4.2}Point-to-Segment Distance Algorithm}{8}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}Shading Time Model}{9}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Shading Indicator Function}{9}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Total Effective Shading Duration}{9}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Time Discretization Strategy}{10}{subsubsection.5.5.3}%
+\contentsline {section}{\numberline {6}Model Solution}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Problem 1 Solution: Fixed Parameters}{11}{subsection.6.1}%
+\contentsline {paragraph}{Overview of Solution Steps}{11}{section*.3}%
+\contentsline {subsubsection}{\numberline {6.1.1}Parameter Substitution and Scenario Setup}{11}{subsubsection.6.1.1}%
+\contentsline {paragraph}{UAV FY1 Parameters}{11}{section*.4}%
+\contentsline {paragraph}{Missile M1 Parameters}{11}{section*.5}%
+\contentsline {paragraph}{Smoke Grenade Deployment Strategy}{12}{section*.6}%
+\contentsline {paragraph}{Smoke Cloud Physical Parameters}{12}{section*.7}%
+\contentsline {subsubsection}{\numberline {6.1.2}Trajectory Calculation}{12}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}Effective Shading Duration Calculation}{12}{subsubsection.6.1.3}%
+\contentsline {paragraph}{Step-by-Step Shading Determination}{13}{section*.8}%
+\contentsline {paragraph}{Total Duration Statistics}{13}{section*.9}%
+\contentsline {subsubsection}{\numberline {6.1.4}Model Summary}{13}{subsubsection.6.1.4}%
+\contentsline {subsubsection}{\numberline {6.1.5}Solution Results:}{14}{subsubsection.6.1.5}%
+\contentsline {subsection}{\numberline {6.2}Problem 2 Solution: Single Drone Single Grenade Optimization}{14}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Decision Variables}{14}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}State Equations}{15}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Objective Function}{15}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}Constraints}{16}{subsubsection.6.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.5}Model Summary}{16}{subsubsection.6.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.6}Solution Algorithm}{17}{subsubsection.6.2.6}%
+\contentsline {subsubsection}{\numberline {6.2.7}Solution Results}{17}{subsubsection.6.2.7}%
+\contentsline {subsection}{\numberline {6.3}Problem 3 Solution: Multi-Projectile Coordination Strategy}{18}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Decision Variables}{18}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Multi-Projectile Motion State Equations}{19}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Objective Function}{19}{subsubsection.6.3.3}%
+\contentsline {subsubsection}{\numberline {6.3.4}Constraints}{20}{subsubsection.6.3.4}%
+\contentsline {subsubsection}{\numberline {6.3.5}Model Summary}{21}{subsubsection.6.3.5}%
+\contentsline {subsubsection}{\numberline {6.3.6}Solution Algorithm}{21}{subsubsection.6.3.6}%
+\contentsline {paragraph}{Inner Layer Algorithm Improvement}{21}{section*.10}%
+\contentsline {paragraph}{Fitness Function}{22}{section*.11}%
+\contentsline {subsubsection}{\numberline {6.3.7}Solution Results}{22}{subsubsection.6.3.7}%
+\contentsline {subsection}{\numberline {6.4}Problem 4 Solution: Multi-UAV Collaborative Optimization}{23}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Decision Variables}{24}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}State Equations}{24}{subsubsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.3}Objective Function}{25}{subsubsection.6.4.3}%
+\contentsline {subsubsection}{\numberline {6.4.4}Constraints}{25}{subsubsection.6.4.4}%
+\contentsline {subsubsection}{\numberline {6.4.5}Model Summary}{26}{subsubsection.6.4.5}%
+\contentsline {subsubsection}{\numberline {6.4.6}Solution Algorithm}{26}{subsubsection.6.4.6}%
+\contentsline {paragraph}{Algorithm Flow Design}{26}{section*.12}%
+\contentsline {subsubsection}{\numberline {6.4.7}Solution Results}{28}{subsubsection.6.4.7}%
+\contentsline {subsection}{\numberline {6.5}Problem 5 Solution: Multi-Aircraft Multi-Target Collaborative Interception}{29}{subsection.6.5}%
+\contentsline {paragraph}{Strategic Decision Variables (Outer Layer)}{30}{section*.13}%
+\contentsline {paragraph}{Tactical Decision Variables (Inner Layer Generation)}{31}{section*.14}%
+\contentsline {subsubsection}{\numberline {6.5.1}State Space}{31}{subsubsection.6.5.1}%
+\contentsline {paragraph}{Multi-Missile Motion Model}{31}{section*.15}%
+\contentsline {paragraph}{Multi-Drone Motion Model}{31}{section*.16}%
+\contentsline {paragraph}{Smoke Grenade Motion Model}{31}{section*.17}%
+\contentsline {subsubsection}{\numberline {6.5.2}Objective Function}{32}{subsubsection.6.5.2}%
+\contentsline {subsubsection}{\numberline {6.5.3}Constraints}{32}{subsubsection.6.5.3}%
+\contentsline {subsubsection}{\numberline {6.5.4}Model Summary}{33}{subsubsection.6.5.4}%
+\contentsline {subsubsection}{\numberline {6.5.5}Solution Algorithm}{33}{subsubsection.6.5.5}%
+\contentsline {subsubsection}{\numberline {6.5.6}Solution Results}{36}{subsubsection.6.5.6}%
+\contentsline {section}{\numberline {7}Model evaluation}{38}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Advantages of the model}{38}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Disadvantages of the model}{38}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Directions for model improvement}{39}{subsection.7.3}%

@@ -27,6 +27,7 @@
 % 格式设置
 % =============================================
 % 页眉页脚
+\setlength{\headheight}{14.5pt}
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{A题：烟幕干扰弹的投放策略}
@@ -73,34 +74,32 @@
 结合导弹 $M1$ 的运动轨迹，进行\textbf{时间步长离散化}仿真，同时利用\textbf{遮蔽判定指示函数}，从而得出有效遮蔽时长为1.4s。
 
 针对\textbf{问题二}，我们以无人机飞行方向、速度、投放点和起爆点为\textbf{决策变量}，以遮蔽时间为目标函数，
-建立了非线性规划模型。为提高求解效率，我们采用双层优化策略，确定了使得遮蔽时间最长的飞行参数和投放策略。
+建立了\textbf{非线性规划模型}。为提高求解效率，我们采用双层优化策略，确定了使得遮蔽时间最长的飞行参数和投放策略。
 
 针对\textbf{问题三}，在问题二的基础上引入多枚烟幕弹，使问题演化为具有时间顺序约束的\textbf{多变量优化问题}。
 针对传统的优化算法在多变量情况下容易陷入停滞的情况，我们
-引入\textbf{灾变机制}的改进粒子群算法，求得多枚烟幕干扰弹的最优投放时序与起爆方案。
+引入\textbf{灾变机制}的改进粒子群算法，求得多枚烟幕干扰弹的最优投放时序与起爆方案,并将结果存放于result1.xlsx文件中。
 
 针对\textbf{问题四}，任务变更为三架无人机共同拦截一枚导弹，
-那么核心问题在于协调三架处于不同空间位置的无人机的投弹策略。为此我们选择鲁棒性强的\textbf{差分进化算法(DE)}对多无人机联合决策变量求解，
-得到最优策略。
+那么核心问题在于\textbf{协调三架处于不同空间位置的无人机}的投弹策略。为此我们选择鲁棒性强的\textbf{差分进化算法(DE)}对多无人机联合决策变量求解，
+得到最优策略，并将结果存放于result2.xlsx文件中。
 
 针对\textbf{问题五}，
-模型扩展为多机多弹协同对抗多枚导弹，同时涉及无人机飞行轨迹规划与烟幕弹投放时序选择，
+模型扩展为\textbf{多机多弹协同对抗多枚导弹}，同时涉及无人机飞行轨迹规划与烟幕弹投放时序选择，
 具有显著的\textbf{时空耦合特性和高维复杂性}。
 为此，我们沿用问题二中使用的双层优化模型，将轨迹规划与投弹调度问题进行有效解耦。
-外层采用\textbf{遗传算法}对无人机的飞行参数进行优化，以确定合理的空间位姿；
-内层在给定飞行轨迹的条件下，利用\textbf{贪心策略}对烟幕弹投放时机进行高效调度，
-在满足弹药数量及时间间隔约束的前提下最大化对来袭导弹的遮蔽时间。
+\textbf{外层}采用\textbf{遗传算法}对无人机的飞行参数进行优化，以确定合理的空间位姿；
+\textbf{内层}在给定飞行轨迹的条件下，利用\textbf{贪心策略}对烟幕弹投放时机进行高效调度，
+在满足弹药数量及时间间隔约束的前提下最大化对来袭导弹的遮蔽时间。最终得到了协同的最优策略，并保存在result3.xlsx文件中。
+
+
 \vspace{1em}
-
-
 \noindent \textbf{关键词：} 烟幕干扰；动态几何遮蔽；多目标优化；投放策略；多机协同
 \end{abstract}
-
 \newpage
 \tableofcontents % 生成目录
 \newpage
 \setcounter{page}{1} % 正文从第1页开始
-
 % =============================================
 % 1. 问题重述
 % =============================================
@@ -120,7 +119,7 @@
     \item \textbf{问题 1}：对于给定单无人机 $FY1$ 的具体飞行参数，根据运动学建立数学模型
     计算得出导弹 $M1$ 的有效遮蔽时长。
     \item \textbf{问题 2}：从问题一的特殊情况出发拓展到了一般情况，
-    优化单无人机 $FY1$ 投放 1 枚烟幕弹的策略（方向、速度、投放点、起爆点），使遮蔽时间最大。
+    优化单无人机 $FY1$ 投放 1 枚烟幕弹的策略（方向，速度，投放点，起爆点），使遮蔽时间最大。
     \item \textbf{问题 3}：面对单无人机 $FY1$ 投放多枚烟幕弹的情况，规划烟雾弹的投递时序，实现总遮蔽时间的最大化。
     \item \textbf{问题 4}：不同于单机多枚烟雾弹的情形，情况变成了多机协同（$FY1-FY3$）各投 1 枚弹对抗 $M1$ ，需要找到其投放的最优策略。
     \item \textbf{问题 5}：全要素协同场景，需要找到（5架无人机，每架最多3枚弹）对抗 3 枚导弹（$M1-M3$）的最优策略。
@@ -226,7 +225,7 @@ $G_{max}$ & 最大迭代次数 & - \\
 从而降低导弹对目标的识别与锁定能力。
 因此，烟幕干扰效果的本质并不取决于烟幕云团是否“接触”导弹或目标本身，
 而取决于烟幕云团在空间中是否覆盖导弹–目标之间的关键视线区域。
-基于上述认识，本文将烟幕干扰问题的核心抽象为一个随时间变化的空间几何遮挡判定问题，
+基于上述认识，本文将烟幕干扰问题的核心抽象为一个\textbf{随时间变化的空间几何遮挡判定问题}，
 并在此基础上进一步量化有效遮蔽时间。
 根据题目描述首先建立统一的三维直角坐标系$Oxyz$。以假目标中心为原点$x$ 轴与 $y$ 轴位于水平面内，
 $z$ 轴竖直向上则假目标位置为$P_O=(0,0,0)$,真目标位于点$P_T=\left( 0,200,h_T \right) $其中 $h_T=5m$ 为真目标中心高度。
@@ -242,8 +241,7 @@ $z$ 轴竖直向上则假目标位置为$P_O=(0,0,0)$,真目标位于点$P_T=\le
 \boldsymbol{n_{M_j}}=\frac{\boldsymbol{P_O}-\boldsymbol{P}_{M_j}\left( 0 \right)}{||\boldsymbol{P_O}-\boldsymbol{P_{M_j}}\left( 0 \right) ||}
 \end{equation}
 因为导弹以速度$V_m$做匀速直线运动，那么我们就能获取它任意时刻$t$的位置:
-
-\begin{equation}\boldsymbol{P}_{M_j}(t)=\boldsymbol{P}_{M_j}(0)+V_m  \boldsymbol{n}_{M_j}\end{equation}
+\begin{equation}\boldsymbol{P}_{M_j}(t)=\boldsymbol{P}_{M_j}(0)+V_m\cdot t\cdot \boldsymbol{n}_{M_j}\end{equation}
 
 \subsection{无人机运动模型构建}
 
@@ -278,7 +276,7 @@ $t_{delay,k}$，重力加速度为$g$的运动后，
 如下图\ref{fig:smoke_trajectory}所示，
 同时可以得到起爆时刻为：
 \begin{equation}t_{burst,k} = t_{drop,k} + t_{delay,k}\end{equation}
-起爆位置为\begin{equation}\boldsymbol{P}_{B,k}=\boldsymbol{P}_{FY_i}(t_{drop,k})+\boldsymbol{v}_{FY_i}t_{delay,k}-\left( 0,0,\frac{1}{2}gt_{delay,k}^2 \right) \end{equation}
+起爆位置为\begin{equation}\boldsymbol{P}_{burst,k}=\boldsymbol{P}_{FY_i}(t_{drop,k})+\boldsymbol{v}_{FY_i}t_{delay,k}-\left( 0,0,\frac{1}{2}gt_{delay,k}^2 \right) \end{equation}
 烟幕弹在起爆后，形成半径为$R_{cloud}$的球形云团，其中心以恒定速度$v_{cloud}$匀速下沉，那么我们可以得到该枚烟雾弹在起爆后任意时刻的位置为：
 \begin{equation}
 \boldsymbol{P}_{S,k}(t)=\boldsymbol{P}_{burst,k}-(0,0,v_{cloud}(t-t_{burst,k})),\quad t\geq t_{burst,k}
@@ -569,8 +567,6 @@ T_j=\int_0^{T_{end}}{I_j(t) \,dt}
 \end{equation}
 其中$T_{end}$为导弹飞行终止时刻。通过该积分，我们就可以统计出导弹在飞行全程中被烟幕有效遮蔽的累计时间。
 
-
-
 在多枚导弹（$M_1,M_2,\ldots,M_m$）协同拦截的场景中，
 系统的总体优化目标定义为所有导弹的遮蔽时长之和：
 \begin{equation}
@@ -578,7 +574,6 @@ T_j=\int_0^{T_{end}}{I_j(t) \,dt}
 \end{equation}
 
 该目标函数体现了“最大化整体防护效果”的战术需求。
-
 \subsubsection{时间离散化策略}
 由于系统涉及导弹、烟幕云团等多个实体的连续时变运动，
 且遮蔽判定条件包含复杂的几何关系与非线性逻辑，
@@ -654,9 +649,6 @@ T_{cover} \approx \sum_{k=0}^{N} I(t_k) \cdot \Delta t
 % 6. 模型求解
 % =============================================
 \section{模型求解}
-
-
-
 \subsection{问题一求解：固定参数}
 问题一针对的是具体场景在给定所有的参数下(烟幕弹的投放时间，起爆时间)，求解得出单枚烟幕弹对单枚导弹的有效遮蔽时间，
 需要我们利用各个物体的位置函数，结合有效遮挡判据得到有效遮挡时间。
@@ -850,32 +842,24 @@ X=[v_{FY_1},\,\alpha,\,t_{drop},\,t_{delay}]^T\in\mathbb{R}^4
     因此$t_{delay}$的可行域受$v_{FY_1}$、$\alpha$、$t_{drop}$的间接约束
 \end{itemize}
 
-\subsubsection{运动状态方程}
-
-
-
-基于问题一建立的运动学模型，将决策变量$X$参数化地嵌入状态方程：
-
+\subsubsection{状态方程}
+基于问题一建立的运动学模型，将决策变量$X$参数化地嵌入状态方程\\
 将标量速度$v_{FY_1}$和航向角$\alpha$转换为三维速度向量：
 \begin{equation}
 \boldsymbol{v}_{FY_1}(v_{FY_1},\alpha)=[v_{FY_1}\cos\alpha,\,v_{FY_1}\sin\alpha,\,0]^T
 \end{equation}
-
 投放点位置（依赖于$v_{FY_1}$、$\alpha$、$t_{drop}$）
 \begin{equation}
 \boldsymbol{P}_{drop}(X)=\boldsymbol{P}_{FY_1}(0)+\boldsymbol{v}_{FY_1}(v_{FY_1},\alpha)\cdot t_{drop}
 \end{equation}
-
 起爆点位置（依赖于全部四个决策变量）：
 \begin{equation}
 \boldsymbol{P}_{burst}(X)=\boldsymbol{P}_{drop}(X)+\boldsymbol{v}_{FY_1}(v_{FY_1},\alpha)\cdot t_{delay}+[0,0,-\tfrac{1}{2}gt_{delay}^2]^T
 \end{equation}
-
 烟幕云团中心轨迹（$t\geq t_{burst}$）：
 \begin{equation}
 \boldsymbol{P}_S(t;X)=\boldsymbol{P}_{burst}(X)-[0,0,v_{cloud}(t-t_{burst})]^T
 \end{equation}
-
 \subsubsection{目标函数}
 目标是最大化有效遮蔽时长，利用问题一中定义的遮蔽判定指示函数得出目标函数：
 \begin{equation}
@@ -933,7 +917,10 @@ z_{burst}(X)>0
 \subsubsection{求解算法}
 由于目标函数涉及复杂的几何运动及分段逻辑，具有高度的非线性和非凸性，且决策变量相对于一般的单变量优化问题具有高自由度。
 所以为了解决此类问题，本问题采用双层优化策略，外层使用网格扫描，内层使用粒子群优化算法。这样使得我们将优化问题维度从4维降至3维，降低了搜索难度降低问题陷入局部最优的概率。\\
-\textbf{外层循环:}我们采用了网格扫描法，首先将速度$v_{FY_1}$在区间$[70,140]$上以步长$\Delta v=0.5\,\text{m/s}$离散化
+\textbf{外层循环:}
+
+
+我们采用了\textbf{网格扫描法}，首先将速度$v_{FY_1}$在区间$[70,140]$上以步长$\Delta v=0.5\,\text{m/s}$离散化
 \begin{equation}
 v_{FY_1}\in\{70.0,\,70.5,\,71.0,\,\ldots,\,139.5,\,140.0\}
 \end{equation}
@@ -944,16 +931,13 @@ v_{FY_1}\in\{70.0,\,70.5,\,71.0,\,\ldots,\,139.5,\,140.0\}
 记录每个$v_{FY_1}$对应的最优解$(\alpha^*,t_{drop}^*,t_{delay}^*)$及其目标函数值，
 最终选择全局最优。\\
 \textbf{内层循环:}
-我们采用了粒子群优化算法（PSO）\\
-\textbf{粒子编码}:我们将第i个粒子的位置用$x_i=[\alpha_i,t_{drop,i},t_{delay,i}]$,速度用$v_i$来表示；那么每个粒子表示一个候选解$x_i$\\
-\textbf{参数设置}：
-\begin{itemize}
-    \item 种群规模：$N=30$
-    \item 最大迭代次数：$G_{max}=50$
-    \item 惯性权重：$w=0.6$（平衡全局与局部搜索）
-    \item 学习因子：$c_1=c_2=1.5$（个体认知与社会学习）
-\end{itemize}
-\textbf{速度与位置更新公式}：
+
+
+我们采用了粒子群优化算法（PSO）,我们对首先对粒子进行
+\textbf{粒子编码}，将第i个粒子的位置用$x_i=[\alpha_i,t_{drop,i},t_{delay,i}]$,速度用$v_i$来表示；那么每个粒子表示一个候选解$x_i$，
+然后我们进行\textbf{参数设置},将种群规模设置为$N$置为30，最大迭代次数$G_{max}$置为50次，
+惯性权重$w=$设为0.6，从而平衡全局与局部搜索，学习因子$c_1=c_2$设置为1.5，从而平衡个体认知与社会学习。
+同时粒子的\textbf{速度与位置更新公式}为
 \begin{align}
 v_i^{k+1} &= w\cdot v_i^k+c_1r_1\odot(p_{best,i}-x_i^k)+c_2r_2\odot(g_{best}-x_i^k) \\
 x_i^{k+1} &= x_i^k+v_i^{k+1}
@@ -961,11 +945,13 @@ x_i^{k+1} &= x_i^k+v_i^{k+1}
 其中，$r_1,r_2\sim\text{Uniform}(0,1)$为随机数，$\odot$表示逐元素乘法，
 $p_{best,i}$为粒子$i$的历史最优位置，$g_{best}$为全局最优位置。
 
-  
-\noindent \textbf{适应度函数}：
+在每次迭代中，算法通过上述更新公式调整粒子位置，并通过适应度函数评估每个粒子解的优劣，
+从而更新个体历史最优$p_{best,i}$和全局最优$g_{best}$。
+\textbf{适应度函数}$F\left(x\right)$定义为遮蔽时间的负值（转化为最小化问题）：
 \begin{equation}
 F\left(x\right)=-T_{cover}\left(x\right)
 \end{equation}
+算法持续迭代直至达到最大迭代次数或收敛条件，最终输出全局最优解$g_{best}$及对应的最大遮蔽时间。
 \subsubsection{求解结果}
 基于MATLAB实现的双层优化算法（代码见附录）,得到最优投放策略如下：\\
 无人机以176.91°的航向角度，72m/s的速度，0s时刻投放，2.4991s后起爆，有效遮蔽时长为4.738s,如下图\ref{fig:3}所示。
@@ -980,7 +966,6 @@ F\left(x\right)=-T_{cover}\left(x\right)
     \caption{问题二结果}
     \label{fig:3}
 \end{figure}
-
 \subsection{问题三求解：多弹协同策略}
 在本题中，无人机 FY1 需要连续投放3枚烟幕弹以对导弹 M1 实施干扰。
 与投放一枚烟幕弹不同，三枚烟幕弹的投弹策略涉及时序上的配合，核心问题在对多参数的优化使得烟幕弹的遮蔽时间最大
@@ -1113,7 +1098,7 @@ z_{burst,k}(\mathbf{X})>0,\quad k=1,2,3
 内层：改进粒子群算法（PSO with Catastrophe）优化剩余7个变量
 \paragraph{内层算法改进}
 由于8维问题远比4维问题复杂，传统PSO易陷入局部最优或收敛停滞。
-本文引入灾变机制\text{（Catastrophe Mechanism）}增强全局探索能力
+本文引入\textbf{灾变机制}\text{（Catastrophe Mechanism）}增强全局探索能力
 \\
 \textbf{停滞检测}：若全局最优解连续15代未改进，判定为停滞
 \begin{equation}
@@ -1187,13 +1172,6 @@ F(\mathbf{X})=-T_{cover}(\mathbf{X})+\lambda\sum_{k=1}^{3}\max(0,-z_{burst,k})^2
   \caption{Problem\,3 结果}
   \label{fig:4}
 \end{figure}
-
-
-
-
-
-
-
 \subsection{问题四求解：多机协同优化}
 在问题一至问题三中，我们研究的是单架无人机通过调整自身航迹和投弹策略对单枚来袭导弹进行遮蔽拦截的问题。
 在问题四中，任务变更为$FY_1、FY_2、FY_3$ 三架无人机,每架投放一枚烟幕弹共同拦截导弹 $M1$，
@@ -1237,7 +1215,7 @@ $t_{delay,i}$ & 第$i$枚烟幕弹起爆延时 & 控制烟幕云团的生成高�
 \noindent
 全局决策向量X包含12维向量：
 \begin{equation}
-    \mathbf{X}=[\mathbf{u}_1,\mathbf{u}_2,\mathbf{u}_3]=[v1,α1,tdrop,1,tdelay,1,…,v3,α3,tdrop,3,tdelay,3]^T
+    \mathbf{X}=[\mathbf{u}_1,\mathbf{u}_2,\mathbf{u}_3]=[v_1,\alpha_1,t_{drop,1},t_{delay,1},\ldots,v_3,\alpha_3,t_{drop,3},t_{delay,3}]^T
 \end{equation}
 \subsubsection{状态方程}
 各无人机的初始位置$ \mathbf{Po}\mathbf{s}_{UAV,i} $不同，
@@ -1292,7 +1270,7 @@ z_{burst,i}(\mathbf{X})\ge0,\quad i=1,2,3
 \left\{
 \begin{aligned}
 & \text{决策变量:}\quad \mathbf{X}=[\mathbf{u}_1,\mathbf{u}_2,\mathbf{u}_3]^T,\quad \mathbf{u}_i=[v_{FY_i},\alpha_i,t_{drop,i},t_{delay,i}]\\
-& \text{目标函数:}\quad \min\ J(\mathbf{X})=-\int_0^{T_{end}}I_{sys}(t)dt+\lambda\sum_{i=1}^{3}\max(d_{min,i}-R_{cloud},0)\\
+& \text{目标函数:}\quad \min\ J(\mathbf{X})=-\int_0^{T_{end}}S_1(t)dt+\lambda\sum_{i=1}^{3}\max(d_{min,i}-R_{cloud},0)\\
 & \text{状态方程:}\quad \begin{cases}
 \boldsymbol{v}_{FY_i}=[v_{FY_i}\cos\alpha_i,v_{FY_i}\sin\alpha_i,0]^T\\
 P_{drop,i}=\boldsymbol{Pos}_{UAV,i}+\boldsymbol{v}_{FY_i}\cdot t_{drop,i}\\
@@ -1316,6 +1294,7 @@ z_{burst,i}(\mathbf{X})\ge 0,\quad i=1,2,3
 DE算法基于差分向量进行变异，自适应地调整搜索步长，对变量尺度差异不敏感。无需对决策变量进行归一化预处理。
 DE算法通过种群并行评估多个候选解，能够同时探索决策空间的多个区域，适合处理多无人机协同的组合优化问题。
 相比遗传算法（GA），DE算法的变异策略更加高效，通常能在更少的迭代次数内找到高质量解。
+
 \paragraph{算法流程设计}
 
 \begin{itemize}
@@ -1344,7 +1323,7 @@ DE算法通过种群并行评估多个候选解，能够同时探索决策空间
     \end{equation}
     其中 $r_1, r_2, r_3$ 为从当前种群中随机选择的三个互不相同的个体索引（且均不等于 $i$），$F$ 为缩放因子。
     
-\textbf{自适应缩放因子}：为了平衡全局探索与局部开发，缩放因子 $F$ 采用\textbf{线性衰减策略}：
+\textbf{自适应缩放因子}：为了平衡全局探索与局部开发，缩放因子 $F$ 采用\textbf{线性衰减策略}
 \begin{equation}
 F(g) = F_{max} - \frac{(F_{max} - F_{min}) \cdot g}{G_{max}}
 \end{equation}
@@ -1418,7 +1397,6 @@ FY3 & 106.94 & 5.46 & $(5291.39,\ -673.54,\ 700)$ & & $(5051.65,\ 113.58,\ 518)$
     \caption{问题\,4 三机协同立体封锁结果}
     \label{fig:5}
 \end{figure}
-
 \subsection{问题五求解：多机多目标协同拦截}
 问题五将作战场景扩展至\textbf{多对多协同拦截}：5架无人机 $FY_1-FY_5$ 协同拦截3枚来袭导弹 $M_1-M_3$，
 每架无人机最多可携带3枚烟幕弹。相比问题四，问题五的复杂度呈现\textbf{指数级增长}：
@@ -1514,7 +1492,7 @@ I_{i,k,j}(t) = \begin{cases}
 0, & \text{否则}
 \end{cases}
 \end{equation}
-其中 $L_{M_j}(t)$ 为导弹 $M_j$ 指向真目标的视线，$R_{cloud}=10$ m，$T_{life}=20$ s。
+其中 $L_{M_j}(t)$ 为导弹 $M_j$ 指向真目标的视线,$ d(P_{S}^{(i,k)}(t), L_{M_j}(t))$表示第$i$架无人机第$k$枚烟幕弹当前位置与导弹视线的距离，$R_{cloud}=10$ m，$T_{life}=20$ s。
 \subsubsection{目标函数}
 由于存在3个独立的拦截目标，系统总效益定义为\textbf{所有导弹被有效遮蔽时长的总和}。
 对于第$j$枚导弹（$j=1,2,3$），其被遮蔽状态$S_j(t)$为所有可能遮蔽源的\textbf{逻辑或}：
@@ -1774,8 +1752,16 @@ $M_3$ & 1枚 & FY3(\#2) & 3.0 \\
 % 附录
 % =============================================
 \newpage
- \section*{附录：主要代码}
- \subsection*{MATLAB 轨迹仿真代码}
+ \section*{附录：}
+ \subsection*{支撑材料}
+ \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/all.png}
+    \caption{支撑材料目录}
+    \label{fig:all}
+\end{figure}
+\newpage
+ \subsection*{代码}
  \begin{lstlisting}[language=Matlab,caption={Problem 1}]
 clc; clear; close all;
 
@@ -2423,7 +2409,7 @@ function Problem4_MultiUAV_Final_Strategy()
     Res = Parse_Params(best_x);
     
     fprintf('\n>>> 优化完成！耗时: %.2f 秒\n', total_time);
-    fprintf('>>> 🏆 最终最大遮蔽时长: %.4f 秒\n', real_shield_time);
+    fprintf('>>> 最终最大遮蔽时长: %.4f 秒\n', real_shield_time);
     
     fprintf('\n================== [最终投弹策略表] ==================\n');
     fprintf('| 机号 |  飞行速度 |  飞行航向 | 投放时刻(s) | 延时时长(s) | 起爆时刻(s) |\n');
