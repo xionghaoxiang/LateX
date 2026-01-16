@@ -1,0 +1,29 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Restatement of the Problem}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Literature Review}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Our Work}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Assumptions and Justification}{4}{section.2}%
+\contentsline {section}{\numberline {3}Notations}{5}{section.3}%
+\contentsline {section}{\numberline {4}Three stage power-duration models}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The Establishment of power-duration model}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}The Solution of Power-Duration Model}{7}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Piecewise Nonlinear Programming for Time Trial}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The Establishment of Human Energy Expenditure Model}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}The Mathematical Relationship Between Power Output And Speed}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}The Racing Strategy of Self-designed course}{9}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Analysis of Riding Strategies on Curved Roads}{10}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Analysis of Straight Riding Strategy}{10}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.4}The Strategy of 2021 UCI World Championship time trial course}{12}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}The Strategy of Straight and Ramp Riding in Belgium course}{13}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2} The Strategy of Turning in Belgium course}{14}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}The Strategy of 2021 Olympic Time Trial course}{15}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}The Strategy for Regular Road Sections in Japan}{15}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}The Strategy for Special Road Sections in Japan}{16}{subsubsection.5.5.2}%
+\contentsline {section}{\numberline {6}Sensitivity Analysis}{17}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Sensitive Analysis of Weather}{17}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Sensitive Analysis of Rider Deviations}{18}{subsection.6.2}%
+\contentsline {section}{\numberline {7} Further Discussion of The Team Time Trial}{20}{section.7}%
+\contentsline {section}{\numberline {8}Model Evaluation and Further Discussion}{21}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Strengths}{21}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Weaknesses}{22}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Conclusion}{22}{subsection.8.3}%
