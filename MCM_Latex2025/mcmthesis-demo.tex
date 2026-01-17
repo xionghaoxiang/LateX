@@ -266,7 +266,7 @@ Symbol & Definitions & Units \\
 $CP$        & Critical power                                   & $\mathrm{W/kg}$ \\
 $W'$        & Work capacity above critical power               & $\mathrm{J/kg}$ \\
 $\lambda_E$ & The cyclist's remaining energy / upper energy    & / \\
-$P_{\text{out}}$ & The output power of rider                   & $\mathrm{W/kg}$ \\
+$P_{out}  $ & The output power of rider                   & $\mathrm{W/kg}$ \\
 $t_n$       & Completion time                                  & $\mathrm{s}$ \\
 $v_{\text{wind}}$ & Wind speed                                & $\mathrm{m/s}$ \\
 \bottomrule
@@ -503,7 +503,7 @@ F_{\text{wind}} = \frac{1}{2} C_W A \cdot \rho v_{\text{wind}}^2
 \end{equation}
 where \( \rho \) is the air density. Based on the temperature and humidity values in Assumption 1, we get \( \rho = 1.29 \, \text{kg/m}^3 \). \( C_W \) is the wind resistance coefficient. \( A \) is the frontal area, which satisfies \( C_W A = 0.39 \, \text{m}^2 \) and is only valid for the frontal incident flow. Under no wind conditions, \( v_{\text{wind}} = v_{\text{bike}} \).
 
-Combining the above equations, and then by \( m \cdot P_{\text{out}} = F_{\text{total}} \cdot v \), we can obtain the conversion relationship between \( P_{\text{out}} \) and \( v \), as shown in the right of fig. 5.
+Combining the above equations, and then by \( m \cdot P_{out} = F_{\text{total}} \cdot v \), we can obtain the conversion relationship between \( P_{out} \) and \( v \), as shown in the right of fig. 5.
 \subsection{The Racing Strategy of Self-designed course}
 We first design a course that includes basic road conditions such as straights, downhill slopes,
 and sharp turns to obtain the strategies to be adopted in different road conditions. This strategy is
@@ -536,21 +536,21 @@ the straight time when calculating the time and ignore the speed change problem 
 approximated the rider’s power output before and after the turn as a step change. After this is done,
 we complete the optimal passing scheme for each turn.
 \subsubsection{Analysis of Straight Riding Strategy}
-Next, we analyze the straight riding strategy. We assume that there are \( n_i \) sections of horizontal straights (lengths \( L_1, L_2, ..., L_{n_i} \)), \( n_j \) sections of downhill straights (lengths \( D_1, D_2, ... D_{n_j} \)) and \( n_k \) sections of uphill straights (lengths \( U_1, U_2, ..., U_{n_k} \)). The conversion function \( v - P_{\text{out}} \) of the horizontal straight is \( v^{(\text{straight})}(P) \), the function for a downhill straight with an inclination angle \( \theta_j \) is \( v_{\theta_j}^{(\text{downhill})}(P) \), and \( v_{\theta_k}^{(\text{uphill})}(P) \) is the function for a uphill straight with an inclination angle \( \theta_k \). The task then turns into the following planning problem:
+Next, we analyze the straight riding strategy. We assume that there are \( n_i \) sections of horizontal straights (lengths \( L_1, L_2, ..., L_{n_i} \)), \( n_j \) sections of downhill straights (lengths \( D_1, D_2, ... D_{n_j} \)) and \( n_k \) sections of uphill straights (lengths \( U_1, U_2, ..., U_{n_k} \)). The conversion function \( v - P_{out} \) of the horizontal straight is \( v^{(\text{straight})}(P) \), the function for a downhill straight with an inclination angle \( \theta_j \) is \( v_{\theta_j}^{(\text{downhill})}(P) \), and \( v_{\theta_k}^{(\text{uphill})}(P) \) is the function for a uphill straight with an inclination angle \( \theta_k \). The task then turns into the following planning problem:
 \begin{equation}
 \begin{gathered}
 t = \sum_{i=1}^{n_i} \frac{L_i}{v^{(\text{straight})}(P_i)} + \sum_{j=1}^{n_j} \frac{D_j}{v_{\theta_j}^{(\text{downhill})}(P_j)} + \sum_{k=1}^{n_k} \frac{U_k}{v_{\theta_k}^{(\text{uphill})}(P_k)} \\
-find\ P_{\text{out}}(t), \\
-\min \{ t \} \quad \text{s.t.} \quad \int_0^{t_n} \frac{dt^*}{T \left( P_{\text{out}} \left( t^* \right) \right)} = 0.95
+find\ P_{out}(t), \\
+\min \{ t \} \quad \text{s.t.} \quad \int_0^{t_n} \frac{dt^*}{T \left( P_{out} \left( t^* \right) \right)} = 0.95
 \end{gathered}
 \end{equation}
 
 In this map, \( n_i = 7, n_j = 1, n_k = 1 \). The subscript of \( L, D, U \) is marked in an increasing manner from the start point to the end point.
 
-As for this function, we discretize \( P_{\text{out}}(t) \). 
+As for this function, we discretize \( P_{out}(t) \). 
 This makes the numerical calculation of 
-$\int_0^{t_n} \frac{dt^*}{T(P_{\text{out}}(t^*))} $
-easier to implement. And we can use \( P_i, P_j, P_k \) to draw the \( P_{\text{out}}(x) \) graph, which is more helpful for cyclists to judge the output power according to the track landscape.
+$\int_0^{t_n} \frac{dt^*}{T(P_{out}(t^*))} $
+easier to implement. And we can use \( P_i, P_j, P_k \) to draw the \( P_{out}(x) \) graph, which is more helpful for cyclists to judge the output power according to the track landscape.
 \begin{figure}[ht]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -575,7 +575,7 @@ function Minimize. Then get the results shown in the table below:
   \vspace{-0.4cm}
   \begin{tabular}{@{}cccccc@{}}
     \toprule
-    Rider type & Gender & $P_{\text{out}}(L)$ & $P_{\text{out}}(U_1)$ & $P_{\text{out}}(D_1)$ & $t$ \\
+    Rider type & Gender & $P_{out}(L)$ & $P_{out}(U_1)$ & $P_{out}(D_1)$ & $t$ \\
     \midrule
     Sprinter & M & 6.0 & 6.3 & 5.2 & 47.53min \\
              & F & 5.8 & 6.0 & 5.1 & 48.58min \\
@@ -596,7 +596,7 @@ get the following results:  \vspace{-0.4cm}
     \toprule
     Curve number & A & B & C & D & E \\
     \midrule
-    $P_{\text{out}}$\quad\hltext{($w$)} & 2.94 & 7.27 & 4.94 & 3.23 & 12.13 \\
+    $P_{out}$\quad\hltext{($w$)} & 2.94 & 7.27 & 4.94 & 3.23 & 12.13 \\
     $v$\quad\hltext{($m/s$)} & 7.34 & 11.02 & 9.48 & 7.98 & 13.38 \\
     \bottomrule
   \end{tabular}
@@ -611,7 +611,7 @@ down.
 In bicycle competition, the acceleration can reach $2m/s^{2}$ when accelerating and decelerating.
 The time for this process can be ignored.
 
-Combining the results of the straights and corners above, the optimal $P_{\text{out}}(t)$ during the rider’s
+Combining the results of the straights and corners above, the optimal $P_{out}(t)$ during the rider’s
 competition is shown in fig. \ref{fig:image8} (taking a male time trial specialist as an example).
 
 \subsection{The Strategy of 2021 UCI World Championship time trial course}
@@ -659,9 +659,9 @@ the straight strategy, as follows:
 t=\sum_{i=1}^{n_i}\frac{L_i}{v^{(\text{straight})}(P_i)}
  +\sum_{j=1}^{n_j}\frac{D_j}{v^{(\text{downhill})}_{\theta_j}(P_j)}
  +\sum_{k=1}^{n_k}\frac{U_k}{v^{(\text{uphill})}_{\theta_k}(P_k)}\\[4pt]
-find \quad P_{\text{out}}(t),\\
+find \quad P_{out}(t),\\
 \min\{t\}\quad\text{s.t.}\quad
-\int_0^{t_n}\frac{dt^*}{T\!\bigl(P_{\text{out}}(t^*)\bigr)}=0.95
+\int_0^{t_n}\frac{dt^*}{T\!\bigl(P_{out}(t^*)\bigr)}=0.95
 \end{gathered}
 \end{equation}
 where $n_i = 2$, $n_j = 3$, $n_k = 12$.
@@ -684,8 +684,8 @@ After processing, the problem is transformed into the following nonlinear progra
 \begin{equation}
 \begin{gathered}
 t = \sum_{i=1}^{n_i}\frac{L_i}{v^{(\text{straight})}(P_i)} + \sum_{j=1}^{n_j}\frac{D_j}{v^{(\text{downhill})}_{\theta_j}(P_j)} + \sum_{k=1}^{n_k}\frac{U_k}{v^{(\text{uphill})}_{\theta_k}(P_k)} + \frac{U_c}{v^{(\text{uphill})}_{\theta_c}(P_c)}\\[4pt]
-\quad{find }\quad P_{{out}}(t),\\
-\quad\min\{t\}\quad\text{s.t.}\quad \int_0^{t_n}\frac{dt^*}{T\!\bigl(P_{\text{out}}(t^*)\bigr)}=0.95 
+\quad{find }\quad P_{out}(t),\\
+\quad\min\{t\}\quad\text{s.t.}\quad \int_0^{t_n}\frac{dt^*}{T\!\bigl(P_{out}(t^*)\bigr)}=0.95 
  \end{gathered}
 \end{equation}
 
@@ -736,9 +736,9 @@ in the following table:
 
 \subsubsection{ The Strategy of Turning in Belgium course}
 
-After that, we use the formula~(*) and $P_{\text{out}}(v)$ to solve for the maximum power in the turn. The results are shown in the right of fig.\ref{fig:image12}. The scatter in the figure is the maximum turning power of the curve corresponding to $\alpha$, while the broken line is the $P_{\text{out}}(t)$ of the male time-trial specialist. It can be seen from the figure that the power of the cyclists on the straights is less than the maximum turning power, except for the \#23 and \#32 curves that require a slight deceleration.
+After that, we use the formula~(*) and $P_{out}(v)$ to solve for the maximum power in the turn. The results are shown in the right of fig.\ref{fig:image12}. The scatter in the figure is the maximum turning power of the curve corresponding to $\alpha$, while the broken line is the $P_{out}(t)$ of the male time-trial specialist. It can be seen from the figure that the power of the cyclists on the straights is less than the maximum turning power, except for the \#23 and \#32 curves that require a slight deceleration.
 
-In the above calculations, we approximated $P_{\text{out}}(x)$ as a discrete function. We will further analyze the actual output of the players in section~6.2, as shown in fig.\ref{fig:image13}. This would justify our approach in this matter.
+In the above calculations, we approximated $P_{out}(x)$ as a discrete function. We will further analyze the actual output of the players in section~6.2, as shown in fig.\ref{fig:image13}. This would justify our approach in this matter.
 \begin{figure}[ht]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -793,7 +793,7 @@ find\ P_{\mathrm{out}}(t), \tag{17}\\[2pt]
 \end{equation}
 where $\varSigma_T$ represents the integrated-item term.
 
-With the help of \textit{Mathematica}, we obtain the curve of $P_{\text{out}}(x)$, and the result is shown in fig.\ref{fig:image15}. Compared with 2021 UCI, the Tokyo circuit is more complicated; the difficulty of the riders' power-distribution strategy has also increased significantly.
+With the help of \textit{Mathematica}, we obtain the curve of $P_{out}(x)$, and the result is shown in fig.\ref{fig:image15}. Compared with 2021 UCI, the Tokyo circuit is more complicated; the difficulty of the riders' power-distribution strategy has also increased significantly.
 \vspace{-0.5cm}
 \begin{figure}[H]
   \centering
@@ -964,22 +964,22 @@ focus on in Section VII.
 
 \subsection{Sensitive Analysis of Rider Deviations}
 
-In the $P_{\text{out}}(x)$ solution process of 5.3--5.5, we adopt an idealized approximate discrete value model, so the power output of the rider on each small segment remains constant. In practical situations, due to the randomness of the rider's operation, it is difficult to strictly follow the optimal power curve. In this part we will test the sensitivity of the rider deviations from the target power to the model.
+In the $P_{out}(x)$ solution process of 5.3--5.5, we adopt an idealized approximate discrete value model, so the power output of the rider on each small segment remains constant. In practical situations, due to the randomness of the rider's operation, it is difficult to strictly follow the optimal power curve. In this part we will test the sensitivity of the rider deviations from the target power to the model.
 
 First, take the time trial in the 2021 UCI as an example.
 We perform spline interpolation on each segment of the
-discrete $P_{\text{out}}(x)$ based on its endpoint values.
-They are then used as a function $P_{\text{out}}$ of the 
+discrete $P_{out}(x)$ based on its endpoint values.
+They are then used as a function $P_{out}$ of the 
 actual output of the rider. Then, we add random disturbance term 
-$\widetilde{{P}_{\text{out}}} = \sum_{i=1}^{4} A_i \sin(0.1i \cdot t)$,
+$\widetilde{{P}_{out}} = \sum_{i=1}^{4} A_i \sin(0.1i \cdot t)$,
 where $A_i$ is determined by a random number and 
-$0 < A_i < 5\% \cdot P_{\text{out}}^{(\text{max})}$. 
+$0 < A_i < 5\% \cdot P_{out}^{(\text{max})}$. 
 Then the actual power output function of the rider is 
-$P_{\text{out}}^{(\text{real})} = \widetilde{{P}_{\text{out}}} + \overline{P}_{\text{out}}$. 
+$P_{out}^{(\text{real})} = \widetilde{{P}_{out}} + \overline{P}_{out}$. 
 We conduct three experiments and get three
- $P_{\text{out}}^{(\text{real})}(x)$ curves.
+ $P_{out}^{(\text{real})}(x)$ curves.
  Plot them in the same coordinate system as the ideal
-  $P_{\text{out}}(x)$ curve, as shown in the left of fig. \ref{fig:image21}.
+  $P_{out}(x)$ curve, as shown in the left of fig. \ref{fig:image21}.
 \begin{figure}[ht]
     \centering
     \begin{minipage}{0.4\textwidth}
@@ -994,7 +994,7 @@ We conduct three experiments and get three
         \centering
         \includegraphics[width=\textwidth]{figures/image21_3.png}
     \end{minipage}
-\caption{The results of the model. Left: The curve of $P_{\text{out}}(x)$ \& $P_{\text{out}}^{(\text{real})}(x)$. Middle: 1- of different strategies. Right: The Competition time of different strategies}
+\caption{The results of the model. Left: The curve of $P_{out}(x)$ \& $P_{out}^{(\text{real})}(x)$. Middle: 1- of different strategies. Right: The Competition time of different strategies}
   \label{fig:image21}
 \end{figure}
 

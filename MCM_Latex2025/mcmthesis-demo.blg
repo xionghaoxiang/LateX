@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: mcmthesis-demo.aux
+The style file: plain.bst
+Database file #1: reference.bib
+Warning--there's a number but no volume in key6
+Warning--there's a number but no volume in key8
+You've used 12 entries,
+            2118 wiz_defined-function locations,
+            580 strings with 5828 characters,
+and the built_in function-call counts, 3774 in all, are:
+= -- 382
+> -- 150
+< -- 0
++ -- 62
+- -- 48
+* -- 284
+:= -- 639
+add.period$ -- 38
+call.type$ -- 12
+change.case$ -- 60
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 124
+empty$ -- 309
+format.name$ -- 48
+if$ -- 767
+int.to.chr$ -- 0
+int.to.str$ -- 12
+missing$ -- 10
+newline$ -- 65
+num.names$ -- 24
+pop$ -- 50
+preamble$ -- 1
+purify$ -- 48
+quote$ -- 0
+skip$ -- 81
+stack$ -- 0
+substring$ -- 292
+swap$ -- 12
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 48
+warning$ -- 2
+while$ -- 42
+width$ -- 14
+write$ -- 136
+(There were 2 warnings)
