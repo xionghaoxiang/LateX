@@ -16,7 +16,7 @@
 \contentsline {subsection}{\numberline {5.4}The Strategy of 2021 UCI World Championship time trial course}{12}{subsection.5.4}%
 \contentsline {subsubsection}{\numberline {5.4.1}The Strategy of Straight and Ramp Riding in Belgium course}{13}{subsubsection.5.4.1}%
 \contentsline {subsubsection}{\numberline {5.4.2} The Strategy of Turning in Belgium course}{14}{subsubsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.5}The Strategy of 2021 Olympic Time Trial course}{14}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.5}The Strategy of 2021 Olympic Time Trial course}{15}{subsection.5.5}%
 \contentsline {subsubsection}{\numberline {5.5.1}The Strategy for Regular Road Sections in Japan}{15}{subsubsection.5.5.1}%
 \contentsline {subsubsection}{\numberline {5.5.2}The Strategy for Special Road Sections in Japan}{16}{subsubsection.5.5.2}%
 \contentsline {section}{\numberline {6}Sensitivity Analysis}{17}{section.6}%

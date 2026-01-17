@@ -1,13 +1,13 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.25)  17 JAN 2026 15:12
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.25)  17 JAN 2026 15:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo
-(/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.tex
+**/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo
+(/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
-(/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis.cls
+(/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis.cls
 Document Class: mcmthesis 2020/01/18 v6.3 The Thesis Template Designed For MCM/ICM
 The Thesis Template Designed For MCM/ICM
 (/usr/local/texlive/2025/texmf-dist/tex/latex/xkeyval/xkeyval.sty
@@ -737,7 +737,7 @@ Package fontspec Info:
 
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
 (Font)              scaled to size 12.0pt on input line 85.
- (/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.aux
+ (/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.aux
 
 LaTeX Warning: Label `fig:sub1' multiply defined.
 
@@ -816,7 +816,7 @@ LaTeX Font Info:    ... okay on input line 85.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 85.
-(/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.out) (/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.out)
+(/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.out) (/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.out)
 \@outlinefile=\write4
 \openout4 = `mcmthesis-demo.out'.
 
@@ -933,7 +933,7 @@ LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
 (Font)              scaled to size 17.28pt on input line 159.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
 (Font)              scaled to size 17.28pt on input line 159.
- (/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.toc)
+ (/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.toc)
 \tf@toc=\write5
 \openout5 = `mcmthesis-demo.toc'.
 
@@ -1073,7 +1073,7 @@ File: figures/image7.png Graphic file (type bmp)
 File: figures/image8.png Graphic file (type bmp)
 <figures/image8.png>
 
-Overfull \hbox (13.07307pt too wide) in paragraph at lines 550--569
+Overfull \hbox (18.23999pt too wide) in paragraph at lines 550--569
 []\TU/TeXGyreTermesX(0)/m/n/12 As for this function, we discretize $\OML/cmm/m/it/12 P[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 t\OT1/cmr/m/n/12 )$\TU/TeXGyreTermesX(0)/m/n/12 . This makes the numerical calculation of $[][] []$
  []
 
@@ -1234,7 +1234,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[21] (/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.bbl
+[21] (/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.bbl
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1254,7 +1254,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [23] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
-(/home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.aux)
+(/mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
@@ -1271,11 +1271,11 @@ Package rerunfilecheck Info: File `mcmthesis-demo.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  20158 strings out of 473832
- 375428 string characters out of 5729480
- 951431 words of memory out of 5000000
+ 375618 string characters out of 5729480
+ 951428 words of memory out of 5000000
  42788 multiletter control sequences out of 15000+600000
  577569 words of font info for 121 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 87i,20n,131p,826b,669s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 87i,20n,131p,829b,669s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /home/xhx/Desktop/work_Space/LateX/MCM_Latex2025/mcmthesis-demo.pdf (23 pages).
+Output written on /mnt/d/study/computer_practice/Latex_project/MCM_Latex2025/mcmthesis-demo.pdf (23 pages).
