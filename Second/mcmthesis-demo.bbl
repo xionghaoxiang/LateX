@@ -1,0 +1,50 @@
+\begin{thebibliography}{1}
+
+\bibitem{app14219671}
+Christos Alexandris, Panagiotis Papageorgas, and Dimitrios Piromalis.
+\newblock Positioning systems for unmanned underwater vehicles: A comprehensive review.
+\newblock {\em Applied Sciences}, 14(21), 2024.
+
+\bibitem{IMO2021Submersible}
+{International Maritime Organization (IMO)}.
+\newblock Guidelines for the design, construction and operation of passenger submersible craft (msc.1/circ.981).
+\newblock \url{https://wwwcdn.imo.org/localresources/en/MediaCentre/WhatsNew/Documents/MSC.1-Circ.981%20-%20Guidelines%20For%20The%20Design%2C%20Construction%20And%20Operation%20OfPassenger%20Submersible%20Craft%20%281%29.pdf}, 2021.
+\newblock Accessed: 2026-01-22.
+
+\bibitem{rs16010199}
+Yixu Liu, Yongfu Sun, Baogang Li, Xiangxin Wang, and Lei Yang.
+\newblock Experimental analysis of deep-sea auv based on multi-sensor integrated navigation and positioning.
+\newblock {\em Remote Sensing}, 16(1), 2024.
+
+\bibitem{SCORPION}
+Henry~R. Richardson and Lawrence~D. Stone.
+\newblock Operations analysis during the underwater search for scorpions.
+\newblock {\em Naval Research Logistics Quarterly}, 18(2):141--157, 1971.
+
+\bibitem{8943978}
+Wang Rupeng, Li~Ye, Ma~Teng, Cong Zheng, Gong Yusen, and Xu~Pengfei.
+\newblock Improvements to terrain aided navigation accuracy in deep-sea space by high precision particle filter initialization.
+\newblock {\em IEEE Access}, 8:13029--13042, 2020.
+
+\bibitem{AF447}
+Lawrence~D. Stone, Colleen~M. Keller, Thomas~M. Kratzke, and Johan~P. Strumpfer.
+\newblock Search for the wreckage of air france flight af 447.
+\newblock {\em Statistical Science}, 29(1):69--80, 2014.
+
+\bibitem{pmid34883851}
+Kai Sun, Weicheng Cui, and Chi Chen.
+\newblock Review of underwater sensing technologies and applications.
+\newblock {\em Sensors (Basel, Switzerland)}, 21(23), 2021.
+
+\bibitem{USCG2023Titan}
+{U.S. Coast Guard Marine Board of Investigation}.
+\newblock Report of the marine board of investigation: Implosion of the submersible \emph{Titan}.
+\newblock \url{https://www.dco.uscg.mil/Portals/9/DCO%20Documents/5p/CG-5PC/INV/MBOIs/TITAN_7724663_MBIR_Redacted.pdf}, 2023.
+\newblock Accessed: 2026-01-22.
+
+\bibitem{jmse11061119}
+Jing Zhou, Yulin Si, and Ying Chen.
+\newblock A review of subsea auv technology.
+\newblock {\em Journal of Marine Science and Engineering}, 11(6), 2023.
+
+\end{thebibliography}

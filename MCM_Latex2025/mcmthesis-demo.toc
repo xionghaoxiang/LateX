@@ -12,18 +12,22 @@
 \contentsline {subsection}{\numberline {5.2}The Mathematical Relationship Between Power Output And Speed}{8}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}The Racing Strategy of Self-designed course}{9}{subsection.5.3}%
 \contentsline {subsubsection}{\numberline {5.3.1}Analysis of Riding Strategies on Curved Roads}{10}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Analysis of Straight Riding Strategy}{10}{subsubsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.4}The Strategy of 2021 UCI World Championship time trial course}{12}{subsection.5.4}%
-\contentsline {subsubsection}{\numberline {5.4.1}The Strategy of Straight and Ramp Riding in Belgium course}{13}{subsubsection.5.4.1}%
-\contentsline {subsubsection}{\numberline {5.4.2} The Strategy of Turning in Belgium course}{14}{subsubsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.5}The Strategy of 2021 Olympic Time Trial course}{15}{subsection.5.5}%
-\contentsline {subsubsection}{\numberline {5.5.1}The Strategy for Regular Road Sections in Japan}{15}{subsubsection.5.5.1}%
-\contentsline {subsubsection}{\numberline {5.5.2}The Strategy for Special Road Sections in Japan}{16}{subsubsection.5.5.2}%
-\contentsline {section}{\numberline {6}Sensitivity Analysis}{17}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Sensitive Analysis of Weather}{17}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Sensitive Analysis of Rider Deviations}{19}{subsection.6.2}%
-\contentsline {section}{\numberline {7} Further Discussion of The Team Time Trial}{20}{section.7}%
-\contentsline {section}{\numberline {8}Model Evaluation and Further Discussion}{21}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Strengths}{21}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Weaknesses}{22}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Conclusion}{22}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {5.3.2}improvement of the Strategies on Curved Roads}{10}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Analysis of Straight Riding Strategy}{12}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}The Strategy of 2021 UCI World Championship time trial course}{13}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}The Strategy of Straight and Ramp Riding in Belgium course}{14}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2} The Strategy of Turning in Belgium course}{15}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}The Strategy of 2021 Olympic Time Trial course}{16}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}The Strategy for Regular Road Sections in Japan}{16}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}The Strategy for Special Road Sections in Japan}{17}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}The Improved Strategies}{18}{subsubsection.5.5.3}%
+\contentsline {section}{\numberline {6}Sensitivity Analysis}{20}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Sensitive Analysis of Weather}{20}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Slope Gradient Sensitivity Analysis}{21}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Sensitive Analysis of Rider Deviations}{22}{subsection.6.3}%
+\contentsline {section}{\numberline {7} Further Discussion of The Team Time Trial}{22}{section.7}%
+\contentsline {section}{\numberline {8} Further Discussion of The Team Time Trial}{23}{section.8}%
+\contentsline {section}{\numberline {9}Model Evaluation and Further Discussion}{25}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Strengths}{25}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Weaknesses}{25}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Conclusion}{25}{subsection.9.3}%

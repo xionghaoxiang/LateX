@@ -1,0 +1,141 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{shapes,arrows,positioning,decorations.pathmorphing,backgrounds,fit,calc}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    >=stealth,
+    force/.style={->,line width=2pt},
+    velocity/.style={->,line width=1.5pt,dashed},
+    axis/.style={->,line width=1.5pt},
+    label/.style={font=\small\bfseries},
+    note/.style={font=\footnotesize},
+    box/.style={rectangle,draw,thick,rounded corners,fill=white,opacity=0.95,text opacity=1}
+]
+
+% 背景海洋渐变效果
+\fill[top color=blue!20,bottom color=blue!50,opacity=0.3] (-8,-6) rectangle (8,6);
+
+% 标题
+\node[font=\Large\bfseries] at (0,5.5) {潜水器动力学系统示意图};
+
+% ===== NED坐标系 (左上角) =====
+\begin{scope}[shift={(-6,3.5)}]
+    \node[above,font=\small\bfseries] at (0,0.3) {NED惯性坐标系};
+    % X轴 (North)
+    \draw[axis,red!70!black] (0,0) -- (1.5,0) node[right,label,red!70!black] {$x$ (N)};
+    % Y轴 (East)
+    \draw[axis,green!60!black] (0,0) -- (0,-1.5) node[below,label,green!60!black] {$y$ (E)};
+    % 原点
+    \fill (0,0) circle (2pt);
+    \node[above left,note] at (0,0) {$O$ (原点)};
+\end{scope}
+
+% Z轴标注 (向下为正)
+\begin{scope}[shift={(-6,3.5)}]
+    \draw[axis,blue!70!black,densely dashed] (0,0) -- (0,-2.5) node[below,label,blue!70!black] {$z$ (D)};
+    \node[right,note,blue!70!black] at (0.1,-2.2) {深度增加};
+\end{scope}
+
+% ===== 潜水器主体 =====
+\begin{scope}[shift={(0,0)}]
+    % 潜水器椭圆体
+    \draw[fill=gray!60,draw=black,line width=2pt] (0,0) ellipse (2cm and 1.2cm);
+    % 内部椭圆细节
+    \draw[gray!40,line width=0.8pt,dashed] (0,0) ellipse (1.7cm and 1cm);
+    % 观察窗
+    \draw[fill=cyan!40,draw=black,line width=1pt] (-0.8,0.2) circle (0.3cm);
+    % 标签
+    \node[font=\bfseries] at (0,0) {AUV};
+    
+    % 位置矢量标注
+    \node[left,note] at (-2.5,0.8) {$\mathbf{x} = [x, y, z]^T$};
+\end{scope}
+
+% ===== 重力 F_G =====
+\draw[force,purple!70!black] (0,-1.2) -- (0,-3) node[midway,right,label,purple!70!black] {$\mathbf{F}_G$};
+\node[right,note,purple!70!black] at (0.5,-2.5) {$[0, 0, Mg]^T$};
+
+% ===== 浮力 F_B =====
+\draw[force,teal!70!black] (0,1.2) -- (0,3) node[midway,right,label,teal!70!black] {$\mathbf{F}_B(\mathbf{x})$};
+\node[right,note,teal!70!black] at (0.5,2.3) {$[0, 0, -g\rho(z)V(z)]^T$};
+
+% ===== 洋流速度 =====
+\draw[velocity,orange!80!black] (-4,0.5) -- (-2.2,0.5) node[midway,above,label,orange!80!black] {$\mathbf{v}_{\text{current}}(z)$};
+\node[below,note,orange!80!black] at (-3.1,0.3) {(洋流)};
+
+% ===== 潜水器速度 =====
+\draw[velocity,blue!70!black] (0,0) -- (2.5,0) node[midway,above,label,blue!70!black] {$\dot{\mathbf{x}}$};
+\node[below,note,blue!70!black] at (1.25,-0.2) {(潜水器速度)};
+
+% ===== 流体阻力 F_D =====
+\draw[force,red!70!black] (2.2,0) -- (4.2,0) node[midway,above,label,red!70!black] {$\mathbf{F}_D$};
+\node[below,note,red!70!black] at (3.2,-0.3) {$\mathbf{v}_{\text{rel}} = \mathbf{v}_{\text{current}} - \dot{\mathbf{x}}$};
+
+% ===== 参数说明框 =====
+\node[box,text width=7cm,below] at (-3.5,-4.2) {
+    \textbf{关键参数}
+    
+    \textbf{质量矩阵} $\mathbf{M}_{\text{sys}}$:
+    
+    $\mathbf{M}_{\text{sys}} = \begin{bmatrix}
+    M+m_{a,xy} & 0 & 0 \\
+    0 & M+m_{a,xy} & 0 \\
+    0 & 0 & M+m_{a,z}
+    \end{bmatrix}$
+    
+    • 各向异性(水平$\neq$垂直)
+    
+    \textbf{海水密度} $\rho(z)$:
+    
+    $\rho \approx 1000 + 0.8(S-35) - 0.2(T-20) + 0.004z$
+    
+    • 与盐度$S$、温度$T$、深度$z$相关
+    
+    \textbf{体积修正} $V(z)$:
+    
+    $V(z) = V_0(1 - \gamma z)$
+    
+    • $\gamma$为极小量,考虑压缩效应
+    
+    \textbf{流体阻力} $\mathbf{F}_D$:
+    
+    $\mathbf{F}_D = \frac{1}{2}\rho(z)\mathbf{C}_D \odot \mathbf{A} \odot (|\mathbf{v}_{\text{rel}}| \circ \mathbf{v}_{\text{rel}})$
+    
+    • 二次阻尼,与相对速度平方成正比
+};
+
+% ===== 动力学方程框 =====
+\node[box,text width=6.5cm,below] at (3.5,-4.2) {
+    \textbf{总动力学方程}
+    
+    \begin{equation*}
+    \boxed{\mathbf{M}_{\text{sys}} \cdot \ddot{\mathbf{x}} = \mathbf{F}_G + \mathbf{F}_B(\mathbf{x}) + \mathbf{F}_D(\mathbf{x},\dot{\mathbf{x}})}
+    \end{equation*}
+    
+    其中:
+    
+    • $\mathbf{F}_G$: 重力(常量)
+    
+    • $\mathbf{F}_B$: 浮力(位置相关)
+    
+    • $\mathbf{F}_D$: 阻力(速度相关)
+    
+    \vspace{0.3cm}
+    
+    \textbf{真实海洋数据}
+    
+    爱奥尼亚海 2025年8月1-7日
+    
+    盐度、温度、洋流场数据
+};
+
+% ===== 深度指示箭头 =====
+\draw[->,line width=1.5pt,gray!70] (-7.5,2) -- (-7.5,-2) node[midway,left,rotate=90,note,gray!70] {深度 $z$ 增加};
+
+\end{tikzpicture}
+
+\end{document}

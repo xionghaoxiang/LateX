@@ -1,0 +1,272 @@
+% ============================================
+% 自行车弯道受力分析图 (TikZ 简化版)
+% 需要在导言区加：\usepackage{tikz}
+% ============================================
+
+\documentclass{ctexart}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{float}
+\begin{document}
+
+% ============================================
+% 图1：俯视图 - 力的分解
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % 弯道曲线（使用贝塞尔曲线）
+    \draw[gray!30, line width=2pt] (0,0) to[bend left=30] (2,3);
+    \draw[gray!30, line width=2pt] (0.5,0.5) to[bend left=30] (2.5,3.5);
+    
+    % 自行车位置
+    \filldraw[red] (1.2, 1.5) circle (3pt) node[above right] {自行车};
+    
+    % 速度向量（切向）
+    \draw[->, thick, blue] (1.2, 1.5) -- (2.0, 2.3);
+    \node[above] at (1.6, 1.9) {$\vec{v}$};
+    
+    % 向心力（指向圆心）
+    \draw[->, thick, red] (1.2, 1.5) -- (0.4, 1.5);
+    \node[left] at (0.4, 1.5) {$F_c$};
+    
+    % 驱动力（沿速度方向）
+    \draw[->, thick, green] (1.2, 1.5) -- (2.0, 2.3);
+    \node[left] at (1.5, 1.8) {$F_x$};
+    
+    % 摩擦圆
+    \draw[orange, dashed, line width=1.5pt] (1.2, 1.5) circle (0.8cm);
+    \node[right=1.0cm] at (1.2, 1.5) {\small 摩擦圆};
+    
+    % 标题
+    \node[below] at (1.2, -0.5) {\textbf{图1：俯视图 - 力的分解}};
+  \end{tikzpicture}
+  \caption{弯道中的摩擦力分解：切向驱动力 $F_x$ 与横向向心力 $F_c$ 在摩擦圆约束下的矢量合成}
+  \label{fig:force_decomposition}
+\end{figure}
+
+% ============================================
+% 图2：侧视图 - 受力分析
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % 地面
+    \draw[thick] (-0.5,0) -- (4,0);
+    \foreach \x in {0,1,2,3} {
+      \draw (\x,-0.15) -- (\x,0.15);
+    }
+    
+    % 自行车与骑手
+    \filldraw[red!20] (1.5,0) rectangle (2,1.2);
+    \filldraw[red] (1.75,1.5) circle (4pt);
+    \node[above] at (1.75,1.7) {$m$};
+    
+    % 重力
+    \draw[->, very thick, purple] (1.75,1.5) -- (1.75,0.8);
+    \node[right] at (1.75,1.1) {$mg$};
+    
+    % 法向力
+    \draw[->, very thick, black] (1.75,0) -- (1.75,-0.8);
+    \node[right] at (1.75,-0.4) {$N=mg$};
+    
+    % 摩擦力（向前）
+    \draw[->, very thick, blue] (2,0.5) -- (3.2,0.5);
+    \node[above] at (2.6,0.6) {$F_x$（驱动力）};
+    
+    % 标题
+    \node[below] at (1.75,-1.3) {\textbf{图2：侧视图 - 垂直力平衡}};
+  \end{tikzpicture}
+  \caption{侧视图：自行车在路面上的垂直力平衡，法向力 $N = mg$ 决定最大摩擦力 $f_{\max} = \mu mg$}
+  \label{fig:side_view}
+\end{figure}
+
+% ============================================
+% 图3：摩擦圆约束
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=2]
+    % 坐标轴
+    \draw[->, thick] (-1.5,0) -- (1.5,0) node[right] {$F_x/(\mu mg)$};
+    \draw[->, thick] (0,-1.5) -- (0,1.5) node[above] {$F_c/(\mu mg)$};
+    
+    % 摩擦圆
+    \filldraw[red!10] (0,0) circle (1);
+    \draw[thick, red] (0,0) circle (1);
+    
+    % 可行域标注
+    \node[red, font=\Large] at (0, 0) {可行域};
+    
+    % 操纵点1：纯向心力
+    \filldraw[blue] (0, 1) circle (2.5pt);
+    \node[above] at (0,1.15) {纯转向};
+    \node[right=0.2cm] at (0,1) {$(0, \mu mg)$};
+    
+    % 操纵点2：纯驱动力
+    \filldraw[green] (1, 0) circle (2.5pt);
+    \node[above] at (1,0.15) {纯加速};
+    \node[right] at (1,0) {$(\mu mg, 0)$};
+    
+    % 操纵点3：混合
+    \filldraw[orange] (0.6, 0.8) circle (2.5pt);
+    \draw[dashed, thin] (0,0) -- (0.6, 0.8);
+    \node[above right] at (0.6,0.8) {混合};
+    
+    % 标题
+    \node[below] at (0,-1.8) {\textbf{图3：摩擦圆（Friction Circle）约束}};
+  \end{tikzpicture}
+  \caption{摩擦圆约束：所有可行的 $(F_x, F_c)$ 组合都必须落在圆盘内部}
+  \label{fig:friction_circle}
+\end{figure}
+
+% ============================================
+% 图4：驱动力-速度关系曲线
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.5]
+    % 坐标轴
+    \draw[->, thick] (0,0) -- (5.5,0) node[right] {速度 $v$ (m/s)};
+    \draw[->, thick] (0,0) -- (0,4.5) node[above] {最大驱动力 $F_{x,\max}$};
+    
+    % 网格
+    \draw[thin, gray] (0,0) grid (5,4);
+    
+    % 简化的曲线（用折线近似）
+    \draw[thick, blue] (0,4) -- (1,3.9) -- (2,3.5) -- (3,2.8) -- (4,1.8) -- (5,0);
+    
+    % 特殊点标注
+    \draw[dashed, gray] (0,4) -- (5,4);
+    \node[left] at (-0.2,4) {$\mu mg$};
+    \filldraw[red] (0,4) circle (2pt) node[above left] {$v=0$：纯驱动};
+    
+    \draw[dashed, gray] (5,0) -- (5,4);
+    \node[below] at (5,-0.3) {$v_{\max}$};
+    \filldraw[red] (5,0) circle (2pt) node[below right] {$v=v_{\max}$：纯转向};
+    
+    % 混合操纵点
+    \filldraw[orange] (3, 2.8) circle (2pt);
+    \node[above right] at (3, 2.8) {混合操纵};
+    
+    % 标题
+    \node[below] at (2.5,-1) {\textbf{图4：驱动力-速度关系}};
+  \end{tikzpicture}
+  \caption{弯道中的驱动力-速度关系：$F_{x,\max}(v) = \sqrt{(\mu mg)^2 - (mv^2/R)^2}$}
+  \label{fig:fx_vs_v}
+\end{figure}
+
+% ============================================
+% 图5：离散赛道与动力学约束
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.3]
+    % 赛道
+    \draw[thick, gray!50] (0,2) -- (1.5,2.5) -- (3,2) -- (4,1) -- (5,1.5) -- (6,0.5);
+    
+    % 路段点
+    \foreach \i/\x/\y in {1/0.75/2.25, 2/2.25/2.25, 3/3.5/1.5, 4/4.5/1.25, 5/5.5/1}{
+      \filldraw[red] (\x,\y) circle (2.5pt);
+      \node[below=0.3cm] at (\x,\y) {$i=\i$};
+      \node[above=0.2cm] at (\x,\y) {$v_\i$};
+    }
+    
+    % 加速度向量
+    \draw[->, thick, green] (0.75,2.25) -- (1.15,2.40);
+    \node[above] at (0.95,2.35) {$a_1$};
+    
+    \draw[->, thick, green] (2.25,2.25) -- (2.70,2.15);
+    \node[above] at (2.48,2.20) {$a_2$};
+    
+    % 约束框
+    \node[rectangle, draw=blue, very thick, rounded corners, inner sep=0.5cm] at (3.5,-0.8) {
+      \begin{minipage}{5cm}
+        \small \centering
+        \textbf{动力学约束：} $v_{i+1}^2 - v_i^2 = 2a_i \cdot ds_i$
+        
+        \textbf{摩擦圆约束：} $\sqrt{F_x^2 + F_c^2} \leq \mu mg$
+        
+        \textbf{目标函数：} $\min T = \sum_i \frac{ds_i}{v_i}$
+      \end{minipage}
+    };
+    
+    \node[below] at (3.5,-2.2) {\textbf{图5：离散赛道与约束}};
+  \end{tikzpicture}
+  \caption{离散赛道模型：每段路段受到运动学约束和摩擦圆约束}
+  \label{fig:discrete_track}
+\end{figure}
+
+% ============================================
+% 图6：配速策略对比
+% ============================================
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % 轨迹
+    \draw[very thick, black!30] (0,1) -- (2,2) -- (4,1) -- (5,0.5);
+    
+    % 传统方法（虚线）
+    \draw[thick, blue, dashed] (0,1) -- (2,2) -- (4,1) -- (5,0.5);
+    \node[blue, above] at (1.5,1.8) {传统：$v=v_{\max}$};
+    \filldraw[blue] (0,1) circle (2pt);
+    \filldraw[blue] (2,2) circle (2pt);
+    \filldraw[blue] (4,1) circle (2pt);
+    
+    % 改进方法（实线，略有变化）
+    \draw[thick, red, solid] (0,1) -- (1.2,1.7) -- (2,2) -- (3.2,1.5) -- (4,1) -- (5,0.5);
+    \node[red, below] at (1.5,1.3) {改进：动态驱动};
+    \filldraw[red] (0,1) circle (2pt);
+    \filldraw[red] (1.2,1.7) circle (2pt);
+    \filldraw[red] (2,2) circle (2pt);
+    \filldraw[red] (3.2,1.5) circle (2pt);
+    \filldraw[red] (4,1) circle (2pt);
+    
+    % 加速度注释
+    \draw[->, green, thick] (1.2,1.7) -- (1.5,1.85);
+    \node[right] at (1.5,1.85) {$a>0$};
+    
+    \draw[->, orange, thick] (3.2,1.5) -- (3.4,1.6);
+    \node[right] at (3.4,1.6) {$a \approx 0$};
+    
+    \node[below] at (2.5,-0.5) {\textbf{图6：配速策略对比}};
+  \end{tikzpicture}
+  \caption{配速策略对比：改进方法在弯道中动态调整驱动力和速度，实现能量优化}
+  \label{fig:strategy_comparison}
+\end{figure}
+
+% ============================================
+% 表：符号说明
+% ============================================
+
+\begin{table}[H]
+  \centering
+  \caption{符号说明}
+  \label{tab:symbols}
+  \begin{tabular}{|c|l|c|}
+    \hline
+    \textbf{符号} & \textbf{含义} & \textbf{单位} \\
+    \hline
+    $m$ & 自行车与骑手总质量 & kg \\
+    $v$ & 速度 & m/s \\
+    $R$ & 弯道曲率半径 & m \\
+    $\mu$ & 摩擦系数 & — \\
+    $g$ & 重力加速度 & m/s$^2$ \\
+    $F_x$ & 切向（纵向）摩擦力 & N \\
+    $F_c$ & 横向（向心）摩擦力 & N \\
+    $a$ & 加速度 & m/s$^2$ \\
+    $T$ & 总用时 & s \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\end{document}

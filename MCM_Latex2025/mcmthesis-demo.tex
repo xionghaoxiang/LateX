@@ -72,7 +72,8 @@
 \usepackage{graphicx}
 \usepackage{gensymb}
 \usepackage{xcolor}
-
+\usepackage{soul}
+\sethlcolor{yellow!40}
 \newcommand{\hltext}[1]{\colorbox{yellow!40}{#1}}
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
@@ -107,17 +108,19 @@ with the champion, our model lags within 6\%, reflecting the model’s accuracy.
 \begin{table}[H]
   \centering
   \label{tab:sprint-time}
-  \begin{tabular}{lcccc}
+  \begin{tabularx}{\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
     \toprule
-    & \multicolumn{2}{c}{Male sprinter} & \multicolumn{2}{c}{Female sprinter} \\
+    \multirow{2}{*}{\textbf{Course}} & 
+    \multicolumn{2}{c}{\textbf{Male}} & 
+    \multicolumn{2}{c}{\textbf{Female}} \\
     \cmidrule(lr){2-3} \cmidrule(lr){4-5}
-    Course / Region & trial specialist & Self-designed & trial specialist & Self-designed \\
+    & \textbf{Sprinter} & \textbf{Time Trial} & \textbf{Sprinter} & \textbf{Time Trial} \\
     \midrule
-    Time overall & 47.53min & 48.58min & 46.48min & 48.20min \\
-    In Japan     & 62.68min & 40.97min & 56.03min & 33.63min \\
-    In Belgium   & 58.15min & 59.62min & 53.03min & 54.05min \\
+    Self-designed & 48.58 & 46.48 & 48.58 & 47.53 \\
+    Japan & 40.97 & 62.68 & 33.63 & 56.03 \\
+    Belgium & 59.62 & 58.15 & 54.05 & 53.03 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 \vspace{-0.5cm}
 After the model is solved, we perform sensitivity analysis in \textbf{Task 3} and\textbf{ Task 4}. For weather
@@ -136,13 +139,13 @@ Inspired by the model’s high sensitivity to headwind, we develop a team time t
 \begin{table}[H]
   \centering
   \label{tab:stage-config}
-  \begin{tabular}{lccc}
+  \begin{tabularx}{\textwidth}{lXXX}
     \toprule
     Stage & Balance (48\%) & Storage (27\%) & Sprint (25\%) \\
     \midrule
     Formation & Pyramid formation & Linear array & Shield formation \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 \vspace{-0.5cm}
 Finally, we write to Directeur Sportif with a race guidance for time trial specialists and sprinters.
@@ -157,7 +160,7 @@ Finally, we write to Directeur Sportif with a race guidance for time trial speci
 %% Generate the Table of Contents, if it's needed.
 % \renewcommand{\contentsname}{\centering Contents}
 \tableofcontents        % 若不想要目录, 注释掉该句
-\thispagestyle{empty}
+\thispagestyle{fancy}
 
 \newpage
 
@@ -253,13 +256,12 @@ etc.) causes a small amount of loss, usually around 5\% \cite{key8}, assuming th
 nicely lubricated drivetrain.
 \section{Notations}
 The key mathematical notations used in this paper are listed in \autoref{tab:notations}
-\vspace{-0.4cm}
 \begin{table}[htbp]
 \centering
 \caption{Notations used in this paper}
 \vspace{-0.4cm}
 \label{tab:notations}
-\begin{tabular}{lll}
+\begin{tabularx}{0.8\textwidth}{lll}
 \toprule
 Symbol & Definitions & Units \\
 \midrule
@@ -270,7 +272,7 @@ $P_{out}  $ & The output power of rider                   & $\mathrm{W/kg}$ \\
 $t_n$       & Completion time                                  & $\mathrm{s}$ \\
 $v_{\text{wind}}$ & Wind speed                                & $\mathrm{m/s}$ \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 \vspace{-0.4cm}
 \section{Three stage power-duration models}
@@ -301,14 +303,17 @@ the calculation formulas of $CP$ and $W'$
 are as follows:
 \begin{equation}
     CP = \frac{12 \cdot P_{12} - 3 \cdot P_{3}}{9}
+    \label{eq:cp}
 \end{equation}
 \begin{equation}
     W' = 0.24s \cdot \left( P_{3} - P_{12} \right)
+    \label{eq:wprime}
 \end{equation}
 where $P_3$ is the average power of a cyclist who rides hard for three minutes divided by his mass,
-while $P_{12}$ is the same as $P_3$ but for 12 minutes.And we also have the formulas of $MAP_{T T F}$
+while $P_{12}$ is the same as $P_3$ but for 12 minutes. And we also have the formula of $MAP_{TTF}$:
 \begin{equation}
     MAP_{TTF} = \frac{W'}{P - CP} + \frac{W'}{P_{\max} - CP}
+    \label{eq:mapttf}
 \end{equation}
 where $P_{\max}$ is ultimate power. According to relevant information \cite{key9}, we estimate that $P_{\max} \approx P_{5s}$.
 Integrating the formulas above, we get the following table:
@@ -370,9 +375,8 @@ III.Heavy & Omni power duration model & $P_{(t)} = \frac{W'}{t} \cdot \left(1 - 
 \end{tabularx}
 \end{table}
 \subsection{The Solution of Power-Duration Model}
-Then we combine formula (1), formula (2) and the data in Table \ref{tab:power_profile_I} together with the data in Table
-\ref{tab:power_profile_II}, and substitute them into the formula in Table \ref{tab:power_model}. We use Mathematica to calculate and draw the
-curve to get the following power curve in Figure \ref{fig:main}.
+Then we combine \autoref{eq:cp}, \autoref{eq:wprime} and the data in \autoref{tab:power_profile_I} together with the data in \autoref{tab:power_profile_II}, and substitute them into the formula in \autoref{tab:power_model}. We use Mathematica to calculate and draw the
+curve to get the following power curve in \autoref{fig:main}.
 \begin{figure}[ht]
   \centering
   \begin{subfigure}[b]{0.3\textwidth}
@@ -433,13 +437,13 @@ $P_{out}$ is the output power per unit mass of the cyclist.
 \end{figure}
 
 According to Assumption 2, we calculate in proportion to the total energy consumed. For the
-power discrete values shown in the middle of Fig\ref{fig:The illustration of Task 2}, the ratio of the cyclist’s remaining energy to the
+power discrete values shown in the middle of \autoref{fig:The illustration of Task 2}, the ratio of the cyclist's remaining energy to the
 upper energy limit is expressed as follows:
 \begin{equation}
     \lambda_E = \frac{E_R}{E_m} = 1 - \sum_i \frac{\Delta t_i}{T_i}
 \end{equation}
 where $T_i$ is the longest holding time of the current power when the body is full of energy. In the
-middle of fig\ref{fig:The illustration of Task 2}, the result of $λ_E$ is $λ_E = 1 −
+middle of \autoref{fig:The illustration of Task 2}, the result of $λ_E$ is $λ_E = 1 −
 \frac{10s}{20s} −\frac{5s}{10s} = 0$.
 
 However, when solving practical problems, it is impossible for cyclists to strictly follow a detailed
@@ -447,7 +451,7 @@ plan of the optimization solution. This can lead to cyclists hitting their fitne
 finish the race. Therefore, we reduce the 1 on the right side of the equation to 0.95, leaving 5\% of
 the remaining stamina to deal with the above situation.
 
-Change the discrete model to continuous. For the continuity \( P_{out}(t) \) shown in the right of fig. \ref{fig:The illustration of Task 2}, cut an approximate rectangle with a width of \( dt \), and the height of the rectangle is \( T(P_{out}) \). Next, replace the summation with the integral to get the formula for \( \lambda_E \) at time \( t \)
+Change the discrete model to continuous. For the continuity \( P_{out}(t) \) shown in the right of \autoref{fig:The illustration of Task 2}, cut an approximate rectangle with a width of \( dt \), and the height of the rectangle is \( T(P_{out}) \). Next, replace the summation with the integral to get the formula for \( \lambda_E \) at time \( t \)
 \begin{equation}
 \lambda_E(t) = 1 - \int_0^t \frac{d\tau}{T(P_{out}(\tau))}
 \end{equation}
@@ -464,7 +468,7 @@ plan of the optimization solution. This can lead to cyclists hitting their fitne
 finish the race. Therefore, we reduce the 1 on the right side of the equation to 0.95, leaving 5\% of
 the remaining stamina to deal with the above situation.
 \subsection{The Mathematical Relationship Between Power Output And Speed}
-We conduct a dynamic analysis on the bicycle, the force diagram is shown in the fig.\ref{fig:5sub1}, and the following formula is established:
+We conduct a dynamic analysis on the bicycle, the force diagram is shown in the \autoref{fig:5sub1}, and the following formula is established:
 \begin{equation}
 F_{\text{total}} = \left( F_{\text{roll}} + F_{\text{slope}} + F_{\text{accel}} + F_{\text{wind}} \right) / \eta 
 \end{equation}
@@ -503,7 +507,8 @@ F_{\text{wind}} = \frac{1}{2} C_W A \cdot \rho v_{\text{wind}}^2
 \end{equation}
 where \( \rho \) is the air density. Based on the temperature and humidity values in Assumption 1, we get \( \rho = 1.29 \, \text{kg/m}^3 \). \( C_W \) is the wind resistance coefficient. \( A \) is the frontal area, which satisfies \( C_W A = 0.39 \, \text{m}^2 \) and is only valid for the frontal incident flow. Under no wind conditions, \( v_{\text{wind}} = v_{\text{bike}} \).
 
-Combining the above equations, and then by \( m \cdot P_{out} = F_{\text{total}} \cdot v \), we can obtain the conversion relationship between \( P_{out} \) and \( v \), as shown in the right of fig. 5.
+Combining the above equations, and then by \( m \cdot P_{out} = F_{\text{total}} \cdot v \), we can obtain the conversion relationship between \( P_{out} \) and \( v \), 
+as shown in the right of \autoref{fig:5sub2}.
 \subsection{The Racing Strategy of Self-designed course}
 We first design a course that includes basic road conditions such as straights, downhill slopes,
 and sharp turns to obtain the strategies to be adopted in different road conditions. This strategy is
@@ -517,7 +522,7 @@ then used to solve complex course problems in two real races.
 \vspace{-0.5cm}
 We use Webots software to build the track scene,
  and draw the plan and 3D map of the selfdesigned course, 
- as shown in fig.\ref{fig:6}. Section AB is a short uphill,
+ as shown in \autoref{fig:6}. Section AB is a short uphill,
   section CD is a long uphill and
 section EF is a long downhill.
 \subsubsection{Analysis of Riding Strategies on Curved Roads}
@@ -528,13 +533,66 @@ We set the inner diameter of the curve as \( r \), the road width as \( d \), an
 \end{figure}
 Integrating, we get the maximum speed of cornering
 \begin{equation}
-    v_{\max} = \sqrt{\frac{\mu g \cdot \cos \alpha \cdot \left[ d + r - r \cos \frac{\theta}{2} \right]}{1 - \cos \frac{\theta}{2}}} \tag{*}
+    v_{\max} = \sqrt{\frac{\mu g \cdot \cos \alpha \cdot \left[ d + r - r \cos \frac{\theta}{2} \right]}{1 - \cos \frac{\theta}{2}}} 
+    \label{eq:vmax}
 \end{equation}
 Since the total length of the curves of the self-designed track is 0.185km, it can be ignored
 compared with the total length of the straight track of 36.5km. Therefore, we first only consider
 the straight time when calculating the time and ignore the speed change problem in the turn. We
-approximated the rider’s power output before and after the turn as a step change. After this is done,
+approximated the rider's power output before and after the turn as a step change. After this is done,
 we complete the optimal passing scheme for each turn.
+\subsubsection{improvement of the Strategies on Curved Roads}
+\hl{In a cycling time trial, corners often pose a decisive constraint. Unlike on straight sections, riders in corners must not only provide the driving force (or braking force) in the direction of travel but also generate sufficient lateral force to maintain the turning motion. Due to the physical limit of the friction between the tire and the road surface, the force distribution of the rider in the corner directly restricts their feasible speed and acceleration strategy. 
+Traditional pacing models typically assume that riders pass through corners at a constant maximum safe speed, simplifying the corner into a pure speed constraint. However, this approach overlooks a crucial fact: within the limits of friction, riders can achieve acceleration or deceleration in corners by rationally distributing driving force, thereby obtaining a more optimal overall pacing strategy. 
+Let the total mass of the bicycle and rider be $m$, the acceleration due to gravity be $g$, and the coefficient of friction between the tire and the road be $\mu$. 
+Then, the maximum frictional force that the tire can provide is $f_{\max} = \mu m g .$
+During the process of driving through a curve, the frictional force of the tires can be decomposed into two mutually orthogonal components: 
+}\begin{itemize}
+\item\hl{ Tangential friction force $F_x$ along the direction of travel, used for driving or braking;}
+\item \hl{Lateral friction force $F_c$ perpendicular to the direction of travel, used to provide centripetal force.}
+ \end{itemize}
+\hl{According to the Friction Circle constraint, the resultant force of the total frictional force must not exceed the friction limit, thus there is 
+}\begin{equation}
+\sqrt{F_x^2 + F_c^2} \leq \mu m g .
+\label{eq:friction_circle}
+\end{equation}
+\hl{The radius of curvature of the bend be $R$. 
+The centripetal acceleration required for a rider traveling at a speed of $v$ is $a_c = \frac{v^2}{R},$
+The corresponding centripetal force is given by $F_c = m \frac{v^2}{R}.$ 
+Substituting this relationship } \autoref{eq:friction_circle},\hl{ we obtain 
+the upper bound of the velocity under the given tangential force $F_x$ condition 
+}
+\begin{equation}
+v_{max} =
+\sqrt[4]{\left( \mu g R \right)^2 - \left( \frac{F_x \cdot R}{m} \right)^2 }.
+\label{eq:vmax_corner}
+\end{equation}
+
+\hl{This constraint indicates that the greater the braking force applied by the rider in a turn, the smaller the friction margin available to provide centripetal force, thereby limiting the maximum feasible speed. 
+To obtain the shortest time to pass through this curve, we will discretize the track along the arc length into $N$ small sections, each of length $ds$, and the radius of curvature corresponding to the $i$th section is $R_i$. 
+Let the speed and tangential force of the $i$th section be defined as $v_i$ and $F_{i,x}$ respectively, then each discrete section must satisfy 
+}\begin{equation}
+v_i \leq
+\sqrt[4]{\left( \mu g R_i \right)^2 - \left( \frac{F_{i,x}\cdot R_i}{m} \right)^2 }.
+\end{equation}
+
+\hl{The speed variation between adjacent sections is determined by the tangential acceleration $a_x$, and it satisfies the one-dimensional kinematic relationship. $
+v_{i+1}^2 - v_i^2 = 2 \cdot a_x\cdot ds.
+\label{eq:kinematics}
+$However, $a_x$ is not a freely variable value.
+On the one hand, the total tire friction force must be within the friction circle. On the other hand,
+considering the rider's maximum output power limit $P_{\text{out}} \leq P_{\max}.$
+Finally, aiming to minimize the total time taken, the objective function is obtained as follows:}
+\begin{equation}
+T = \sum_{i=1}^{N} \frac{ds}{v_i}.
+\end{equation}
+
+
+
+
+
+
+
 \subsubsection{Analysis of Straight Riding Strategy}
 Next, we analyze the straight riding strategy. We assume that there are \( n_i \) sections of horizontal straights (lengths \( L_1, L_2, ..., L_{n_i} \)), \( n_j \) sections of downhill straights (lengths \( D_1, D_2, ... D_{n_j} \)) and \( n_k \) sections of uphill straights (lengths \( U_1, U_2, ..., U_{n_k} \)). The conversion function \( v - P_{out} \) of the horizontal straight is \( v^{(\text{straight})}(P) \), the function for a downhill straight with an inclination angle \( \theta_j \) is \( v_{\theta_j}^{(\text{downhill})}(P) \), and \( v_{\theta_k}^{(\text{uphill})}(P) \) is the function for a uphill straight with an inclination angle \( \theta_k \). The task then turns into the following planning problem:
 \begin{equation}
@@ -543,6 +601,7 @@ t = \sum_{i=1}^{n_i} \frac{L_i}{v^{(\text{straight})}(P_i)} + \sum_{j=1}^{n_j} \
 find\ P_{out}(t), \\
 \min \{ t \} \quad \text{s.t.} \quad \int_0^{t_n} \frac{dt^*}{T \left( P_{out} \left( t^* \right) \right)} = 0.95
 \end{gathered}
+\label{eq:time_trial_optimization}
 \end{equation}
 
 In this map, \( n_i = 7, n_j = 1, n_k = 1 \). The subscript of \( L, D, U \) is marked in an increasing manner from the start point to the end point.
@@ -586,8 +645,8 @@ function Minimize. Then get the results shown in the table below:
     \label{tab:time_trial_results}
 \end{table}
 
-We next solve for the turn time. We use the formula (*) and the conversion function to solve, and
-get the following results:  \vspace{-0.4cm}
+We next solve for the turn time. We use the\ \autoref{eq:vmax} and the conversion function to solve, and
+get the following results: 
 \begin{table}[ht]
   \centering
   \caption{The results of each turn}
@@ -630,9 +689,9 @@ competition is shown in fig. \ref{fig:image8} (taking a male time trial speciali
     \label{fig:image10}
   \end{minipage}
 \end{figure}
-According to the data on UCI’s official website, we determined the terrain and route characteristics
+According to the data on UCI's official website, we determined the terrain and route characteristics
 of the area of the course on Google Earth. And we divide the track into 32 parts by analyzing the
-similarities and differences of the road sections (as shown in fig. \ref{fig:image9}). Among them, 15 sections are
+similarities and differences of the road sections (as shown in \autoref{fig:image9}). Among them, 15 sections are
 curves, 2 sections are horizontal straights, 3 sections are downhill straights, and 12 sections are uphill
 straights.
 \begin{figure}[H]
@@ -644,12 +703,12 @@ straights.
 It is worth noting that the competition area is located in northwestern Belgium. It is in the
 High Flanders Plain with small undulations. The maximum slope angle in the uphill section of this
 area is \(1.66^\circ\), while in the downhill section is \(0.69^\circ\). Besides, there are sufficiently long straights to
-transition between adjacent turns. The shortest straight is our section numbered 25 (shown in fig. \ref{fig:image11}
+transition between adjacent turns. The shortest straight is our section numbered 25 (shown in \autoref{fig:image11}
 ). Section \#25 is about 400m long, which is enough for cyclists to maintain the optimum for a long
-time. Therefore, the rider’s passing time is hardly affected by turning, and the piecewise discrete
+time. Therefore, the rider's passing time is hardly affected by turning, and the piecewise discrete
 programming model is still applicable.
 Different from the Olympic Time Trial course in Tokyo, this competition has relatively low
-requirements on players’ driving skills and cornering skills and focuses on physical distribution and
+requirements on players' driving skills and cornering skills and focuses on physical distribution and
 endurance.
 \subsubsection{The Strategy of Straight and Ramp Riding in Belgium course}
 Based on the above analysis, we can still use the method of self-designed track. First, we solve
@@ -667,7 +726,7 @@ find \quad P_{out}(t),\\
 where $n_i = 2$, $n_j = 3$, $n_k = 12$.
 
 Considering that there are many uphill sections and different slope angles. It makes the model
-difficult to converge, which is extremely unfavorable for the computer’s nonlinear programming
+difficult to converge, which is extremely unfavorable for the computer's nonlinear programming
 solution. Due to the small undulating terrain in this area, we selected 9 road sections with slope
 angles below \(1^\circ\)
 (\#1, 3, 5, 7, 11, 17, 29, 30, 32) and group them together. Then we can weight the
@@ -714,7 +773,7 @@ turn}
   \label{fig:image12}
 \end{figure}\vspace{-0.4cm}
 We use Mathematica to solve the optimal output power of each section of the road. The athlete
-curves are shown in the left and middle of fig.\ref{fig:image12}. The four types of riders’ complete time are shown
+curves are shown in the left and middle of \autoref{fig:image12}. The four types of riders' complete time are shown
 in the following table:
 \begin{table}[ht]
 \centering
@@ -736,9 +795,9 @@ in the following table:
 
 \subsubsection{ The Strategy of Turning in Belgium course}
 
-After that, we use the formula~(*) and $P_{out}(v)$ to solve for the maximum power in the turn. The results are shown in the right of fig.\ref{fig:image12}. The scatter in the figure is the maximum turning power of the curve corresponding to $\alpha$, while the broken line is the $P_{out}(t)$ of the male time-trial specialist. It can be seen from the figure that the power of the cyclists on the straights is less than the maximum turning power, except for the \#23 and \#32 curves that require a slight deceleration.
+After that, we use \autoref{eq:vmax} and $P_{out}(v)$ to solve for the maximum power in the turn. The results are shown in the right of \autoref{fig:image12}. The scatter in the figure is the maximum turning power of the curve corresponding to $\alpha$, while the broken line is the $P_{out}(t)$ of the male time-trial specialist. It can be seen from the figure that the power of the cyclists on the straights is less than the maximum turning power, except for the \#23 and \#32 curves that require a slight deceleration.
 
-In the above calculations, we approximated $P_{out}(x)$ as a discrete function. We will further analyze the actual output of the players in section~6.2, as shown in fig.\ref{fig:image13}. This would justify our approach in this matter.
+In the above calculations, we approximated $P_{out}(x)$ as a discrete function. We will further analyze the actual output of the players in section~\ref{sec:regular-road-japan}, as shown in \autoref{fig:image13}. This would justify our approach in this matter.
 \begin{figure}[ht]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -755,24 +814,24 @@ In the above calculations, we approximated $P_{out}(x)$ as a discrete function. 
   \end{minipage}
 \end{figure}
 \subsection{The Strategy of 2021 Olympic Time Trial course}
-As can be seen from fig.\ref{fig:image14}, the Tokyo Circuit is located near the city of Toyama, which is
+As can be seen from \autoref{fig:image14}, the Tokyo Circuit is located near the city of Toyama, which is
 surrounded by the treacherous Northern Alps Tateyama Mountains on three sides. The terrain here
 changes greatly and the turns are sharp, which is significantly different from the Belgian track. This
 event had high requirements on the slope skills of the cyclists. Besides, male cyclists need to circle
 the track twice while female cyclists only need once.
 We divided the Tokyo circuit into 68 segments and 2 zones (large circle and small circle) based
-on the terrain and ramp characteristics of the area. The division situation is shown in fig. 14. Among
+on the terrain and ramp characteristics of the area. The division situation is shown in \autoref{fig:image14}. Among
 them, most road sections in the large circle and some sections in the small circle can still be calculated
-by the previous model. For the other two road sections (the \#24-27 big climbing curve in fig. 16 and
-the \#55-56 sharp curve in fig. 17), we will analyze them separately later.
+by the previous model. For the other two road sections (the \#24-27 big climbing curve in \autoref{fig:image14} and
+the \#55-56 sharp curve in \autoref{fig:image14}), we will analyze them separately later.
 
 
 \subsubsection{The Strategy for Regular Road Sections in Japan}
-
+\label{sec:regular-road-japan} 
 Based on our segmentation of the track, in the remaining 62 regular road segments,
 $n_i=20$, $n_j=25$, $n_k=17$. Because $1-\cos2^\circ<7\times10^{-4}$ and
 $\cos2^\circ-\cos4^\circ<2\times10^{-3}$, we apply the weighted-simplification 
-method in section~5.4 to the slopes whose angle satisfies $\theta<2^\circ$ and 
+method in \autoref{sec:regular-road-japan} to the slopes whose angle satisfies $\theta<2^\circ$ and 
 $2^\circ<\theta<4^\circ$ respectively. The set of road-segment numbers that
 meet the conditions is ${T}_{U2}$, ${T}_{D2}$, ${T}_{U4}$,
 ${T}_{D4}$, with cardinalities $|{T}_{U2}|=8$, $|{T}_{D2}|=9$, $|{T}_{U4}|=9$, $|{T}_{D4}|=11$.
@@ -793,7 +852,7 @@ find\ P_{\mathrm{out}}(t), \tag{17}\\[2pt]
 \end{equation}
 where $\varSigma_T$ represents the integrated-item term.
 
-With the help of \textit{Mathematica}, we obtain the curve of $P_{out}(x)$, and the result is shown in fig.\ref{fig:image15}. Compared with 2021 UCI, the Tokyo circuit is more complicated; the difficulty of the riders' power-distribution strategy has also increased significantly.
+With the help of \textit{Mathematica}, we obtain the curve of $P_{out}(x)$, and the result is shown in \autoref{fig:image15}. Compared with 2021 UCI, the Tokyo circuit is more complicated; the difficulty of the riders' power-distribution strategy has also increased significantly.
 \vspace{-0.5cm}
 \begin{figure}[H]
   \centering
@@ -820,7 +879,7 @@ needs to be solved separately)}
 
 \end{figure}
 \subsubsection{The Strategy for Special Road Sections in Japan}
-
+\label{sec:special-road-japan}
 \textbf{(1)Huge hill turn of section \#24-27}
 
 
@@ -843,7 +902,10 @@ Section & Length & Turning radius & Slope angle & Turning angle \\
 \vspace{-0.4cm}
 The straight part here is steep, such as section \#63 with a slope angle of $4.4°$. The cyclist speed here is 6.83m/s and the output power is 5.5W/kg. We will base our straights strategy around this data.
 
-Next, we analyze the turning strategy. The curve is a sharp turn with continuous climbing. We use formula (*) to calculate. The best turning speed of section\#25 is $6.0m/s$, with $P^{(\#25)} = 6.32\ W/kg$. And the speed of section\#27 is $6.4\ m/s$, $P_{\max}^{(\#27)} = 5.31\ W/kg$. In this way, the time used for this section is 31.2s.
+Next, we analyze the turning strategy. 
+The curve is a sharp turn with continuous climbing.
+ We use \autoref{eq:vmax} to calculate. 
+ The best turning speed of section \#25 is $6.0m/s$, with $P^{(\#25)} = 6.32\ W/kg$. And the speed of section \#27 is $6.4\ m/s$, $P_{\max}^{(\#27)} = 5.31\ W/kg$. In this way, the time used for this section is 31.2s.
 
 \noindent\textbf{(2)Sharp turn of section\#55-56}
 
@@ -851,6 +913,7 @@ The parameters of these four sections are shown in the table below:
 \begin{table}[H]
 \centering
 \caption{The data of section \#55-56}\vspace{-0.4cm}
+\label{tab:parameter}
 \begin{tabular}{ccccc}
 \hline
 Section & Length & Turning radius & Slope angle & Turning angle \\
@@ -868,7 +931,7 @@ $v_{\max}^{(\#56)} = 5.806\ m/s$, $P_{\max}^{(\#56)} = 4.32\ W/kg$. On the strai
     \includegraphics[width=0.8\textwidth]{figures/image17.png}
     \caption{Detail of section \#55-56}
 \end{figure}
-Combining 5.5.1 and 5.5.2, the results of the four players under the optimization strategy are
+Combining \ref{sec:regular-road-japan} and \ref{sec:special-road-japan}, the results of the four players under the optimization strategy are
 shown in the following table:
 \begin{table}[H]
 \centering
@@ -883,9 +946,47 @@ Complete time & 62.68min & 56.03min & 40.97min & 33.63min \\
 \end{tabular}
 \end{table}
 \vspace{-0.4cm}
-It can be seen that the nontrivial road condition increases the test of the cyclist’s climbing
-ability and endurance. The sprinter’s performance was significantly lower than that of the time trial
+It can be seen that the nontrivial road condition increases the test of the cyclist's climbing
+ability and endurance. The sprinter's performance was significantly lower than that of the time trial
 specialist. This disparity is larger than that of UCI.
+\subsubsection{The Improved Strategies}
+\hl{To verify the rationality and superiority of our curve speed optimization model,
+ we tested it on curves from Japan's 56th section, whose parameters are listed in }\autoref{tab:parameter}.\hl{ Using the improved dynamic and kinematic curve models, 
+ we solved the optimization problem with MATLAB's fmincon optimizer. Results are presented in }\autoref{fig:comparison}.
+\begin{figure}[H]
+\begin{subfigure}{0.3\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{figures/image_c1.png}
+  \label{fig:c1}
+\end{subfigure}\hfill
+\begin{subfigure}{0.3\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{figures/image_c2.png}
+  \label{fig:c2}
+\end{subfigure}\hfill
+\begin{subfigure}{0.3\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{figures/image_c3.png}
+  \label{fig:c3}
+\end{subfigure}
+\caption{Comaparison of Effects}
+\label{fig:comparison}
+\end{figure}
+\hl{The results show that the traditional model adopts a uniform speed passing strategy at the maximum safe speed in the curve, and its curve speed is solely constrained by the centripetal force, with the calculated limit speed being approximately 5.8 m/s. In contrast, the model established in this paper allows for a reasonable distribution of the tangential force and centripetal force under the premise of satisfying the friction circle constraint, thereby achieving non-uniform motion within the curve.
+The limit speed of the optimized model at the curve can be increased to 9.64 m/s. 
+
+The power output curve further reveals the essential differences in the cornering strategies of the two models. In the traditional model, the rider maintains a constant speed within the corner, corresponding to a tangential force close to zero, and the power output drops significantly, making the cornering phase a "pure loss period". In contrast, in the optimized model, the rider actively decelerates and reduces power output before entering the corner, maintaining a moderate power level within the core cornering area while strictly adhering to the maximum power constraint. $P_{{out}} \leq P_{\max} .$
+Control. After exiting the corner, it quickly returns to the maximum power acceleration state. This strategy achieves a redistribution of power before and after, avoiding "power waste" in the corner and shortening the lap time overall. 
+
+The tire friction utilization curve indicates that the optimization model fully utilized the friction circle constraint within the core section of the curve, 
+with the friction utilization rate once approaching 100\%, suggesting that the model was operating near the physical limit at this stage. 
+However, in the straight sections and the exit of the curve, 
+the friction utilization rate significantly decreased, 
+indicating that the constraints at this time were mainly dominated by power rather than tire grip.
+
+In summary, by improving the dynamic model of the curve, we achieved a reasonable distribution of tangential force and centripetal force in the curve, thereby obtaining a better overall power distribution plan. Compared with the traditional model's curve time of 21.7 seconds,
+the optimized curve time only requires 6.78 seconds, an improvement of 68.7\%. This shows that allowing acceleration and deceleration decisions within the curve under the premise of maintaining physical feasibility can significantly improve the efficiency of passing through the stage, verifying the significant advantage of the improved model in the problem of pace optimization.
+}
 \section{Sensitivity Analysis}
 \subsection{Sensitive Analysis of Weather}
 Weather conditions include temperature, humidity, wind speed, wind direction, etc.
@@ -894,7 +995,7 @@ humidity have little effect on the physical fitness of athletes. From Assumption
 be further proved reasonable.
 
 Secondly, rain has little effect on the rolling friction coefficient of the asphalt track. Rain only
-increases the demands on the driver’s turning skills. The literature \cite{key11} indicates that the negative
+increases the demands on the driver's turning skills. The literature \cite{key11} indicates that the negative
 impact of rain can be eliminated to a certain extent through training.
 In conclusion, our analysis of the sensitivity to weather factors will focus on wind speed and
 direction.
@@ -912,7 +1013,7 @@ speed in this part.
 According to the wind speed requirements of cycling events, as well as the average wind speed
 of Japan and Belgium in July, we selected the wind speed to be around 2m/s for analysis.
 We use Python to draw the maximum output power curve and the wind resistance influence power
-curve within the range of ±1\% deviation of wind speed. The results are shown in fig. \ref{fig:image18}.
+curve within the range of ±1\% deviation of wind speed. The results are shown in \autoref{fig:image18}.
 
 
 \begin{figure}[ht]
@@ -930,7 +1031,7 @@ curve within the range of ±1\% deviation of wind speed. The results are shown i
     \label{fig:image19}
   \end{minipage}
 \end{figure}
-fig. \ref{fig:image19} shows the changes of and curves (moving from bottom to top) when the wind speed
+\autoref{fig:image19} shows the changes of and curves (moving from bottom to top) when the wind speed
 changes from $1m/s$ to $4m/s$.
 From the figure, when the cyclist rides at a constant speed on the straight, the deviation is 10\%.
 Therefore, the model is more sensitive to wind speed in straight sections.
@@ -940,7 +1041,7 @@ Therefore, the model is more sensitive to wind speed in straight sections.
 Next, we analyze the model's sensitivity to wind speed and direction during turning. 
 We use \textit{Python} to perturb the model within 10\% of
  the deviation from the wind speed and direction.
-  The results are shown in fig. \ref{fig:image20}. where $\gamma$ is the local wind angle.
+  The results are shown in \autoref{fig:image20}. where $\gamma$ is the local wind angle.
 
 During the turning sections, the effect of wind direction change on the rider's maximum output power is on the order of 0.1\%, while the effect of wind speed changes is on the order of 0.01\%. Both effects are much smaller than the straight sections. Therefore, the model is less sensitive to wind speed and direction in the turning sections.
 
@@ -960,12 +1061,31 @@ In conclusion, the change of wind direction and speed within a certain range wil
 \end{figure}
 
 In addition, this phenomenon provides ideas for the strategy of team time trial, which we will
-focus on in Section VII.
+focus on in \autoref{sec:team-time-trial}.
+\subsection{Slope Gradient Sensitivity Analysis}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/image_slope.png}
+    \caption{Slope Gradient Sensitivity Analysis}
+    \label{fig:image_slope}
+\end{figure}
 
+\hl{In actual cycling competitions, the design variations across different racecourses typically lead to significant fluctuations in gradient. Changes in slope affect the magnitude of the gravitational component along the inclined surface, thereby altering the power output required from the cyclist and ultimately influencing race performance. Therefore, conducting a sensitivity analysis on how gradient variations impact model outcomes is of considerable importance.
+We selected three typical track slope conditions for analysis:  a flat segment ($0°$),an uphill segment ($4°$),   and a downhill segment ($-2°$).
+Using MATLAB, parameter perturbations within a range of $±1\%$ were applied, 
+yielding the results illustrated in}\hltext{ \autoref{fig:image_slope}.}
+
+\hl{The analysis results show that the model's anti-interference ability against slope disturbances varies under different road conditions:
+It performs best on horizontal roads, with the error controlled within 0.2\%; secondly, on uphill roads;
+and relatively weak on downhill roads. However, overall, the errors in all three road conditions are controlled within 1\%,
+and the model's performance is relatively stable. This indicates that the model is insensitive to certain ranges of slope changes,
+has good robustness, and will not significantly affect the accuracy of the final result, thereby not affecting the power distribution during the entire competition period.}
 \subsection{Sensitive Analysis of Rider Deviations}
+In the $P_{out}(x)$ solution process of \autoref{sec:regular-road-japan}--\autoref{sec:special-road-japan}, we adopt an idealized approximate discrete value model, so the power output of the rider on each small segment remains constant. In practical situations, due to the randomness of the rider's operation, it is difficult to strictly follow the optimal power curve. In this part we will test the sensitivity of the rider deviations from the target power to the model.
 
-In the $P_{out}(x)$ solution process of 5.3--5.5, we adopt an idealized approximate discrete value model, so the power output of the rider on each small segment remains constant. In practical situations, due to the randomness of the rider's operation, it is difficult to strictly follow the optimal power curve. In this part we will test the sensitivity of the rider deviations from the target power to the model.
-
+In the model, the rider's power output is calculated based on the gradient of the road.
+\section{ Further Discussion of The Team Time Trial}
+\label{sec:team-time-trial}
 First, take the time trial in the 2021 UCI as an example.
 We perform spline interpolation on each segment of the
 discrete $P_{out}(x)$ based on its endpoint values.
@@ -979,30 +1099,33 @@ $P_{out}^{(\text{real})} = \widetilde{{P}_{out}} + \overline{P}_{out}$.
 We conduct three experiments and get three
  $P_{out}^{(\text{real})}(x)$ curves.
  Plot them in the same coordinate system as the ideal
-  $P_{out}(x)$ curve, as shown in the left of fig. \ref{fig:image21}.
+  $P_{out}(x)$ curve, as shown in the left of \autoref{fig:image21}.
 \begin{figure}[ht]
     \centering
-    \begin{minipage}{0.4\textwidth}
+    \begin{subfigure}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/image21_1.png}
-    \end{minipage}\hfill
-    \begin{minipage}{0.3\textwidth}    
+        \caption{The curve of $P_{out}(x)$ \& $P_{out}^{(\text{real})}(x)$}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.3\textwidth}    
         \centering
         \includegraphics[width=\textwidth]{figures/image21_2.png}
-    \end{minipage}\hfill
-    \begin{minipage}{0.3\textwidth}
+        \caption{1- of different strategies.}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.3\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/image21_3.png}
-    \end{minipage}
-\caption{The results of the model. Left: The curve of $P_{out}(x)$ \& $P_{out}^{(\text{real})}(x)$. Middle: 1- of different strategies. Right: The Competition time of different strategies}
+        \caption{The Competition time of different strategies}
+    \end{subfigure}
+\caption{The results of the model. }
   \label{fig:image21}
 \end{figure}
 
 We put the four curves into the energy constraints, and it turned out that all riders could finish the
 race. In terms of whether it can finish the race, the stability of the model is excellent. The specific
 
-results are shown in the middle of fig. \ref{fig:image21}.
-Next, we calculated the time it took for the rider to reach the finish line (see the right of fig. \ref{fig:image21}).
+results are shown in the middle of \autoref{fig:image21}.
+Next, we calculated the time it took for the rider to reach the finish line (see the right of \autoref{fig:image21}).
 Rider results are all below the ideal output curve. But the lag time is within 2.5\% of the optimal
 time. Therefore, the sensitivity of the race performance to the actual strategy of the rider is low. We
 recommend that riders maintain an ideal power curve at the end of each segment, which helps reduce
@@ -1048,7 +1171,7 @@ We will mainly analyze the formation strategy of the cycling team to deal with t
 For the 6-person cycling team, 
 we have two formations, the snake and the pyramid. 
 For the 4-person sprint cycling team, we designed the shield
- formation as shown in the left of fig. \ref{fig:image22}. The numbers 
+ formation as shown in the left of \autoref{fig:image22}. The numbers 
  in the heat map represent the ratio of the wind resistance
   of the individual in the team competition to that in the same state of the individual competition$K_f$.
 \begin{figure}[H]
@@ -1071,7 +1194,7 @@ Storage, and Sprint. The lengths are $L_B$, $L_S$, $L_R$ and
 \item \textbf{Sprint:} According to the simulation results of literature \cite{key12}, we choose the shield formation with the smallest drag coefficient.
 \end{itemize}
 
-Next, take the data of male time trial specialists as an example to calculate. The result is that the Balance section accounts for 48\%, the Storage section accounts for 27\%, and the sprint section accounts for 25\%, as shown in Figure \ref{fig:image23}. The 20 km straight individual race was 24.8 min, and the team race was 21.2 min. The team competition results are significantly better than the individual competition. Compared with the average speed of the Tour de France 2018 Stage3 champion BMC team of 56.1 km/h, the average rate of our model on the straights is 56.6 km/h, proving the model's accuracy.
+Next, take the data of male time trial specialists as an example to calculate. The result is that the Balance section accounts for 48\%, the Storage section accounts for 27\%, and the sprint section accounts for 25\%, as shown in \autoref{fig:image23}. The 20 km straight individual race was 24.8 min, and the team race was 21.2 min. The team competition results are significantly better than the individual competition. Compared with the average speed of the Tour de France 2018 Stage3 champion BMC team of 56.1 km/h, the average rate of our model on the straights is 56.6 km/h, proving the model's accuracy.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/image23.png}
@@ -1079,7 +1202,7 @@ Next, take the data of male time trial specialists as an example to calculate. T
     \label{fig:image23}
 \end{figure}
 In addition, for the case of crosswind, we take the wind coming from the right front as an example.
-The formation should be adjusted to the diagonal array, as shown in fig. \ref{fig:image23}. It is beneficial to reduce
+The formation should be adjusted to the diagonal array, as shown in \autoref{fig:image23}. It is beneficial to reduce
 drag coefficient and reduce crosswind disturbance.
 \section{Model Evaluation and Further Discussion}
 \subsection{Strengths}
