@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.25)  24 JAN 2026 22:23
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.25)  25 JAN 2026 16:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1053,52 +1053,53 @@ LaTeX Info: Redefining \ohm on input line 88.
 Package gensymb Info: Using \textohm for \ohm on input line 88.
 Package gensymb Info: Using \textmu for \micro on input line 88.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 10.53937pt on input line 97.
+(Font)              scaled to size 10.53937pt on input line 141.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 26.09749pt on input line 97.
+(Font)              scaled to size 26.09749pt on input line 141.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 18.06749pt on input line 97.
-LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
-(Font)              scaled to size 10.53937pt on input line 97.
+(Font)              scaled to size 18.06749pt on input line 141.
 LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/n' will be
-(Font)              scaled to size 10.53937pt on input line 97.
+(Font)              scaled to size 18.06749pt on input line 141.
+LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
+(Font)              scaled to size 10.53937pt on input line 141.
+LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/n' will be
+(Font)              scaled to size 10.53937pt on input line 141.
+LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
+(Font)              scaled to size 7.0pt on input line 141.
+LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
+(Font)              scaled to size 5.0pt on input line 141.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 141.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 141.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 141.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
+)
+
+LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <10.53937> not available
+(Font)              size <10.95> substituted on input line 141.
+
+LaTeX Font Info:    Trying to load font information for TS1+TeXGyreTermesX(0) on input line 141.
+LaTeX Font Info:    No file TS1TeXGyreTermesX(0).fd. on input line 141.
+
+LaTeX Font Warning: Font shape `TS1/TeXGyreTermesX(0)/m/n' undefined
+(Font)              using `TS1/cmr/m/n' instead on input line 141.
+
 
 
 [1
 
 ]
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 15.05624pt on input line 101.
+(Font)              scaled to size 15.05624pt on input line 145.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 15.05624pt on input line 101.
- (/home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.toc
-LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 1.
-LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 1.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 1.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/jknapltx/ursfs.fd
-File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
-)
-
-LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 1.
-
-LaTeX Font Info:    Trying to load font information for TS1+TeXGyreTermesX(0) on input line 1.
-LaTeX Font Info:    No file TS1TeXGyreTermesX(0).fd. on input line 1.
-
-LaTeX Font Warning: Font shape `TS1/TeXGyreTermesX(0)/m/n' undefined
-(Font)              using `TS1/cmr/m/n' instead on input line 1.
-
-)
+(Font)              scaled to size 15.05624pt on input line 145.
+ (/home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.toc)
 \tf@toc=\write5
 \openout5 = `mcmthesis-demo.toc'.
 
@@ -1106,17 +1107,17 @@ LaTeX Font Warning: Font shape `TS1/TeXGyreTermesX(0)/m/n' undefined
 
 [2]
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 12.045pt on input line 114.
+(Font)              scaled to size 12.045pt on input line 158.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 12.045pt on input line 114.
+(Font)              scaled to size 12.045pt on input line 158.
 File: figures/background.png Graphic file (type bmp)
 <figures/background.png>
 
 
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 151.
+(Font)              scaled to size 12.0pt on input line 195.
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 9.03374pt on input line 151.
+(Font)              scaled to size 9.03374pt on input line 195.
 
 Package fontspec Info: 
 (fontspec)             Script 'CJK' not explicitly supported within font
@@ -1157,82 +1158,105 @@ File: figures/our.png Graphic file (type bmp)
 
 
 [4]
-LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
-(Font)              scaled to size 15.05624pt on input line 223.
-
 
 [5]
-Missing character: There is no ρ ("3C1) in font cmmi10!
-LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 7.0pt on input line 264.
-LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 5.0pt on input line 264.
+LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
+(Font)              scaled to size 15.05624pt on input line 272.
 
 
 [6]
-LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
-(Font)              scaled to size 12.045pt on input line 320.
+Missing character: There is no ρ ("3C1) in font cmmi10!
+LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
+(Font)              scaled to size 7.0pt on input line 332.
+LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
+(Font)              scaled to size 5.0pt on input line 332.
 
 
 [7]
+LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/b/n' will be
+(Font)              scaled to size 12.045pt on input line 392.
+
+
+[8]
+Missing character: There is no ^^F (U+0006) in font [TeXGyreTermesX-Bold.otf]/OT:script=latn;language=dflt;-ss05;+tnum;+lnum;mapping=tex-text;!
 File: figures/image3.png Graphic file (type bmp)
 <figures/image3.png>
 LaTeX Font Info:    Font shape `TU/FandolSong-Regular(0)/m/n' will be
-(Font)              scaled to size 9.03374pt on input line 407.
+(Font)              scaled to size 9.03374pt on input line 554.
 File: figures/image4.png Graphic file (type bmp)
 <figures/image4.png>
 File: figures/image_p1.png Graphic file (type bmp)
 <figures/image_p1.png>
+
+Overfull \hbox (6.8429pt too wide) in paragraph at lines 571--574
+ [][] 
+ []
+
+
+
+[9]
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/n' will be
-(Font)              scaled to size 7.52812pt on input line 433.
+(Font)              scaled to size 7.52812pt on input line 586.
 File: figures/image_before.png Graphic file (type bmp)
 <figures/image_before.png>
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/b/n' will be
-(Font)              scaled to size 7.52812pt on input line 440.
+(Font)              scaled to size 7.52812pt on input line 593.
 
 
 LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <7.52812> not available
-(Font)              size <8> substituted on input line 440.
+(Font)              size <8> substituted on input line 593.
 
 File: figures/image_after.png Graphic file (type bmp)
 <figures/image_after.png>
 
 
-[8]
-
-[9]
-Overfull \hbox (2.8512pt too wide) in paragraph at lines 516--526
+[10]
+Overfull \hbox (2.8512pt too wide) in paragraph at lines 667--677
  [][] 
  []
 
+
+
+[11]
 File: figures/image_p2.png Graphic file (type bmp)
 <figures/image_p2.png>
 
 
-[10]
+[12]
+
+[13]
 File: figures/image_p3_1.png Graphic file (type bmp)
 <figures/image_p3_1.png>
 File: figures/image_p3_2.png Graphic file (type bmp)
 <figures/image_p3_2.png>
 
 
-[11]
+[14]
 
-[12]
+[15]
 File: figures/image.png Graphic file (type bmp)
 <figures/image.png>
 
 
-[13]
+[16]
 File: figures/image_p4.png Graphic file (type bmp)
 <figures/image_p4.png>
 File: figures/image_p42.png Graphic file (type bmp)
 <figures/image_p42.png>
+File: figures/image_p4_duo.png Graphic file (type bmp)
+<figures/image_p4_duo.png>
 
 
-[14]
+[17]
+File: figures/image _sense1.png Graphic file (type bmp)
+<figures/image _sense1.png>
 
-[15] (/home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.bbl
+
+[18]
+
+[19]
+
+[20] (/home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.bbl
 LaTeX Font Info:    Font shape `TU/TeXGyreTermesX(0)/m/it' will be
 (Font)              scaled to size 10.53937pt on input line 6.
 
@@ -1276,7 +1300,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--13
 
 )
 
-[16] 
+[21]
+
+[22]
+
+[23] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (/home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.aux)
  ***********
@@ -1292,15 +1320,15 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `mcmthesis-demo.out' has not changed.
-(rerunfilecheck)             Checksum: 65BDC2D3E22128E84C052A62484CF6D8;3400.
+(rerunfilecheck)             Checksum: A65A14D770FF47C4BE549BD48A976853;3449.
  ) 
 Here is how much of TeX's memory you used:
- 23262 strings out of 473832
- 475030 string characters out of 5729480
- 1021608 words of memory out of 5000000
- 45821 multiletter control sequences out of 15000+600000
- 575751 words of font info for 135 fonts, out of 8000000 for 9000
+ 23301 strings out of 473832
+ 476801 string characters out of 5729480
+ 1020941 words of memory out of 5000000
+ 45857 multiletter control sequences out of 15000+600000
+ 575759 words of font info for 136 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 87i,14n,131p,589b,706s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 87i,17n,131p,589b,773s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.pdf (16 pages).
+Output written on /home/xhx/Desktop/work_Space/LateX/Second/mcmthesis-demo.pdf (23 pages).
