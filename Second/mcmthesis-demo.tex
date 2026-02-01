@@ -57,11 +57,10 @@
 %% The Current Maintainer of this work is Liam Huang.
 %%
 \documentclass{mcmthesis}
-\mcmsetup{CTeX = true,    % 使用 CTeX 套装时，设置为 true
+\mcmsetup{CTeX = false,    % 使用 CTeX 套装时，设置为 true
           tcn = {5049}, problem = \textcolor{red}{B},
           sheet = true, titleinsheet = true, keywordsinsheet = true,
           titlepage = false, abstract = false}
-        
 \usepackage{newtxtext}     % \usepackage{palatino}
 \usepackage[numbers]{natbib}
 \usepackage{tocloft}
@@ -73,14 +72,28 @@
 \usepackage{gensymb}
 \usepackage{xcolor}
 \usepackage{soul}
-\usepackage{ctex}
+\usepackage{hyperref}
+\usepackage{etoolbox}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,   % 正文交叉引用（\ref, \autoref）为蓝色
+  citecolor=red,
+  urlcolor=black
+}
+
+
+
+
+% Force English abstract heading even when ctex is loaded.
+%\ctexset{abstractname = {Summary}}
+\renewcommand{\abstractname}{Summary}
 
 \sethlcolor{yellow!40}
 \newcommand{\hltext}[1]{\colorbox{yellow!40}{#1}}
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
-\title{深海探险：载人潜水器的定位与搜救}
+\title{Deep-Sea Exploration: Positioning, Search, and Rescue of Manned Submersibles}
 % \author{\small \href{http://www.latexstudio.net/}
 %   {\includegraphics[width=7cm]{mcmthesis-logo}}}
 \date{\today}
@@ -88,63 +101,60 @@
 \begin{document}
 
 \begin{abstract}
-当载人潜水器发生故障，与母船失去联系后，
-建立一个用于预测其位置，规划搜索轨迹的模型，
-并立即制定相应的搜救策略，能够显著提升搜救的成功率，从而保障相关人员的生命安全。
-为此，本文根据潜水器在深海中的动力学特性、面对不同的故障情况，建立预测位置与搜索模型，
-为海上救援提供相应策略，有力的促进海底探险产业的发展。
+The Greek company MCMS aims to deploy its manufactured submersibles for manned deep-sea exploration missions.
+To ensure the safety of the personnel involved in this project, this paper develops \textbf{a position prediction and search planning framework}
+based on the dynamic characteristics of submersibles operating in deep-sea environments
+under different failure scenarios,
+providing actionable guidance for rescue operations and promoting the sustainable development of deep-sea exploration projects.
 
-针对问题一，
-首先，我们收集了爱奥尼亚海域的地形与洋流数据，
-构建了重力、浮力、阻力与深度相关洋流的潜水器漂移动力学模型，
-并以蒙特卡罗方法刻画洋流预测误差、
-湍流扰动与系统级建模误差对位置分布的影响，
-生成潜水器潜在位置的概率场分布。
-确认了相关的不确定因素主要由于洋流的预测偏差。
-因此为潜水器配备ADCP、USBL、IMU 传感器
-定期向母船发送自身位置与速度和周围的洋流信息，能够显著降低不确定性。
+\textbf{For Problem 1}, we collected data on Ionian Sea seawater depth and ocean currents to construct a \textbf{drift dynamics model} that includes gravity, buoyancy, and hydrodynamic resistance.
+Subsequently, we used \textbf{Monte Carlo simulations} to quantify the impact of current prediction errors, turbulence, and model uncertainties on position dispersion. 
+The results show that under neutral buoyancy conditions, \textbf{the positioning uncertainty is highly sensitive to the deviation in current prediction}. 
+By equipping the submersible with a \textbf{USBL} (Ultra Short Baseline) system and an \textbf{IMU} (Inertial Measurement Unit) to transmit position and speed data to the support vessel, and using an \textbf{ADCP} (Acoustic Doppler Current Profiler) system to measure surrounding ocean currents, this uncertainty can be effectively reduced.
 
-针对问题二，
-我们结合成本—效益分析给出了母船装备配置至少需要一台拖曳声纳与一台High-end AUV
+\textbf{For Problem 2}, \textbf{a multi-objective optimization model} balancing performance, cost, and engineering constraints was established to minimize deployment cost while maximizing 
+detection probability. We found that a configuration consisting of \textbf{a towed sonar and a high-end AUV} (Autonomous Underwater Vehicle) achieves 
+\textbf{a $99.87\%$ rescue success rate within a $90{,}000$ budget}, while additional sonar systems further enhance reliability in high-risk missions.
 
+\textbf{For Problem 3}, we introduced \textbf{Bayesian search theory}, incorporating the observations of the support vessel and sensor scanning results into consideration,
+to continuously update the posterior probability distribution of the underwater vehicle's position.
+Then, based on the criterion of maximizing the probability of detecting the underwater vehicle per unit time, \textbf{an adaptive heading decision-making strategy} was implemented.
+Under conditions of limited time and budget, this method significantly improved the detection efficiency,
+\textbf{achieving a rescue success rate of 70\% within 10 hours and 90\% within 30 hours.}
 
-对于问题三，我们受前人研究的启发，
-引入贝叶斯搜索理论，将母船观测与传感器扫测结果用于实时更新 后验概率分布，
-并以“单位时间内最大化发现潜水器概率”为准则进行自适应航向决策，
-从而在有限时间与预算约束下提升探测效率，能够在$10$小时内实现$70\%$的搜救成功率，
-$30$小时达成90\%的搜救成功率。
-
-针对问题四，需要搜索多个目标，
-我们进一步地提出分层搜索机制。
-上层基于高概率目标中心的路径优化
-以降低目标切换时间，
-下层采用与扫宽匹配的螺旋覆盖实现置信区域的系统性清扫，
-避免贪婪策略导致的振荡与局部最优。
-
-
-
-
-
-
-
-
-
-
-
+\textbf{For Problem 4}, the search task was expanded from \textbf{a single-target scenario to a multi-target scenario}.
+ We proposed \textbf{a hierarchical search mechanism}.
+At the upper level, path optimization based on the high-probability target center was used to reduce the target switching time;
+At the lower level, a spiral coverage mode matching the sensor scanning width was adopted to systematically clear the confidence region.
+This method avoided \textbf{oscillations and local optima caused by greedy strategies},
+and dynamically reduced the search space through Bayesian updates.
+The results showed that when searching for three underwater targets,
+\textbf{the success probability could be increased to 87\% within 11 hours}.
+Furthermore, the proposed mechanism showed a gradually increasing trend in success probability in multi-target scenarios,
+indicating its \textbf{strong scalability}.
 
 
 \begin{keywords}
-蒙特卡洛\quad 贝叶斯搜索\quad 载人潜水器\quad 深海探险 \quad 定位搜寻
+Monte Carlo \quad Bayesian search \quad manned submersible \quad deep-sea exploration \quad localization and search
 \end{keywords}
 \end{abstract}
 
 \maketitle
 
 %% Generate the Table of Contents, if it's needed.
-% \renewcommand{\contentsname}{\centering Contents}
-\tableofcontents        % 若不想要目录, 注释掉该句
-\newpage
+% \renewcommand{\contentsname}{\centering Contents}.
+\pretocmd{\tableofcontents}{%
+  \hypersetup{linkcolor=black}%
+}{}{}
+\apptocmd{\tableofcontents}{%
+  \hypersetup{linkcolor=blue}%
+}{}{}
 \thispagestyle{fancy}
+\tableofcontents        % 若不想要目录, 注释掉该句
+
+
+
+\newpage
 
 
 
@@ -156,62 +166,44 @@ $30$小时达成90\%的搜救成功率。
 
 \section{Introduction}
 \subsection{Restatement of the Problem}
-现如今，人们热衷于前往深海进行探险旅程，以满足其永无止尽的好奇心，同时彰显其一往无前的勇气。
-因而MCMS公司希望他们制造的潜水器能够帮助人们实现探索爱奥尼亚海的海底，找到沉船的旅程。
+Nowadays, people are keen on embarking on deep-sea exploration journeys to satisfy their endless curiosity and pursue adventurous experiences.
+Therefore, MCMS hopes that the submersibles they manufacture can help people explore the seabed of the Ionian Sea and find shipwrecks.
 \begin{figure}[H]
   \centering  
   \includegraphics[width=0.4\textwidth]{figures/background.png}
-  \caption{深海潜水器}
+  \caption{Deep-sea Submersible}
 \end{figure}
-在被母船运送到指定位置后，潜水器将独立的在深海中运动，
-但是受到洋流、海洋中不同的密度以及海底地形的影响，在深海探险的过程中，它可能遇到包括通信中断，推进系统故障在内的一系列挑战。
-因此，确保潜水器在旅途中安全，为母船配备合适的搜索设备与搜索算法；
-为潜水器装备通信设备与建立位置预测模型，是解决该问题的关键。
-基于上述的理解，本研究将尝试解决以下问题：
+\vspace{-0.4cm}
+
+After being transported to the designated location by the mother ship, the submersible will operate independently in the deep sea.
+However, influenced by ocean currents, varying densities in the ocean, and seabed topography, it may encounter a series of challenges during deep-sea exploration, including communication interruptions and propulsion system failures.
+Therefore, ensuring the safety of the submersible during its journey, equipping the mother ship with appropriate search equipment and algorithms;
+equipping the submersible with communication devices and establishing location prediction models are key to solving this problem.
+Based on the above understanding, this study will attempt to address the following issues:
 \begin{itemize}
-  \item \textbf{问题一} 建立一个用于预测潜水器随时间的变化位置的模型，同时评估该预测的不确定性，
-        并确定潜水器需要定期发送什么信息来降低这种不确定性 
-  \item \textbf{问题二}考虑到额外搜索设备可用性、维护、准备和使用相关的成本，推荐出合适的额外搜索设备
-  \item \textbf{问题三}利用已建立的位置信息模型，为设备推荐初始部署点与搜索模式，从而使得潜水器丢失时间最小，同时
-       建立起以时间流逝与搜索结果积累的潜水器被找到的概率函数。
-  \item \textbf{问题四}将模型扩展到其他旅游地，如加勒比海。以及将模型进行调整与变化以适应多个潜水器在同一个大致区域运动。
+  \item \textbf{Problem 1} Establish a model to predict the changing position of the submersible over time, while assessing the uncertainty of this prediction,
+        and determine what information the submersible needs to send periodically to reduce this uncertainty.
+  \item \textbf{Problem 2} Considering the availability, maintenance, preparation, and usage costs of additional search equipment, recommend suitable additional search equipment.
+  \item \textbf{Problem 3} Using the established location information model, recommend initial deployment points and search patterns for the equipment to minimize the time the submersible is lost, while
+       establishing a probability function for the submersible being found as time elapses and search results accumulate.
+  \item \textbf{Problem 4} Extend the model to other tourist destinations, such as the Caribbean Sea.
+  Additionally, adjust and modify the model to accommodate multiple submersibles operating within the same general area.
 \end{itemize}
 
 
 
 \subsection{Literature Review}
-早期有关水下搜索模型可以追溯到搜索潜艇“蝎子”号残骸时的作业分析，在这个搜寻工作中，Richardson 引入了基于概率学的理论，将失联潜水器视为概率目标
-用运筹学指导深海搜索工作\cite{SCORPION}。该研究将失联潜水器视为概率目标，其位置作为未知变量，
-并使用概率来描述其分布。
-为用概率研究水下的搜索奠定了重要基础。
+Early underwater search models originated from operational research applied during the search for the wreckage of the submarine Scorpion, 
+where Richardson first applied probabilistic theory, treating the lost submersible as a probabilistic target with an unknown location, thereby laying the foundation for probability-based underwater search methods \cite{SCORPION}.
 
-该想法在大规模搜寻法航航班 AF 447 的残骸过程中得到了进一步的完善和发展。\cite{AF447}
-Lawrence D. Stone and Colleen M.等人采用贝叶斯框架，通过整合包括最后已知位置、漂移模型以及之前多次搜寻未果的结果等多种信息来源，
-来构建并不断更新残骸位置的概率分布。他们首先用不同的粒子来表示目标位置，
-其中的每个粒子都对应着残骸可能的时空轨迹。接着，随着搜索行动的进行，
-通过应用贝叶斯更新来减少那些虽已进行过搜索但未获成功的区域的概率分布，
-最终将未来的搜索精力集中于最有可能取得成效的区域。
-这些研究表明，概率运动建模与贝叶斯搜索更新相结合，为在严重不确定性条件下定位失联的水下航行器提供了一个可靠且实用的框架。
+This framework was further refined during the search for Air France Flight AF 447. Stone and Colleen M. Lawrence adopted a Bayesian approach to integrate heterogeneous information sources, including the last known position, drift models, and the outcomes of previous unsuccessful searches, in order to iteratively update the posterior probability distribution of the wreckage location \cite{AF447}. By representing potential trajectories with particles and suppressing probabilities in searched areas through Bayesian updating, their work demonstrated that probabilistic motion modeling combined with Bayesian search provides a robust and practical framework for underwater target localization under severe uncertainty.
 
-在搜寻过程中，配备的仪器与设备尤为重要。由于GPS信号无法穿透水体，
-水下环境需要依赖专门的传感器和定位系统来实现精确导航\cite{pmid34883851}。
-其中惯性导航系统(INS)是潜水器最基础的导航设备之一，它通过加速度计和陀螺仪测量载体的加速度和方向信息，
-然后进行积分计算获得速度和位置\cite{app14219671}。
-由于它不依赖外部信号，因此可以在GPS无法使用的环境(如水下)中独立工作。
-然而，INS的误差随时间增长，需要人们定期校准和修正。\cite{8943978}
-而多普勒速度对数仪(DVL)是通过发射声波并分析反射信号的多普勒频移
-从而测量出潜水器相对于海底或水体的速度。研究表明，DVL与INS的组合系统已被证明能显著提高定位精度。
-同时，超短基线系统(USBL)也在发挥着重要的作用。它使用安装在水面船只上的单个高灵敏度换能器，
-通过声学信号的角度和距离计算潜水器位置，能够进行实时跟踪，但它随着距离的增加，精度会下降\cite{rs16010199}。
-为了获取不同深度层的海流速度和方向、探测涡旋、密度流，为潜水器漂移轨迹预测提供环境参数
-声学多普勒流速剖面仪(Acoustic Doppler Current Profiler, ADCP)
-也在现今的水下工作中得到广泛运用。
-
+Effective underwater search also relies critically on appropriate sensing and navigation equipment, as GPS signals cannot propagate underwater \cite{pmid34883851}.
+The Inertial Navigation System (INS) serves as a fundamental navigation solution by integrating acceleration and angular rate measurements to estimate position and velocity, though its errors accumulate over time and require periodic correction \cite{app14219671,8943978}. 
+To mitigate drift, Doppler Velocity Logs (DVLs) are commonly integrated with INS, significantly improving localization accuracy. In addition, Ultra Short Baseline (USBL) systems enable real-time tracking of underwater vehicles from surface vessels, albeit with accuracy degradation over long distances \cite{rs16010199}. 
+Furthermore, Acoustic Doppler Current Profilers (ADCPs) are widely employed to measure depth-dependent ocean currents, providing essential environmental inputs for predicting underwater vehicle drift trajectories.
 \subsection{Our Work}
-受到上述研究的启发，我们采用蒙特卡洛漂移模型
-生成潜水器位置的不确定性分布图以及使用贝叶斯搜索来最小化搜索时间。
-这将为后面预测位置，搜索潜水器与资源的分配提供重要依据。
-我们的流程如 \autoref{fig:Workflow}所示。
+Inspired by the aforementioned research and in order to address the aforementioned issues, our specific workflow is illustrated in \autoref{fig:Workflow}.
 \vspace{-0.5cm}
 \begin{figure}[H]
     \centering
@@ -220,193 +212,197 @@ Lawrence D. Stone and Colleen M.等人采用贝叶斯框架，通过整合包括
     \label{fig:Workflow}
 \end{figure}
 \section{Assumptions and Justification}
-\textbf{Assumption 1:}我们假设失踪潜水器在失踪前，每15分钟向母船汇报一次状态，且忽略信号从潜水器传播到母船的延迟时间时间.
+\textbf{Assumption 1:}
+The missing submersible is assumed to have reported its status to the mother ship every 15 minutes prior to loss of contact, and signal transmission delay is neglected.
 
-根据相关潜水器的设计制造标准\cite{IMO2021Submersible}与2023年泰坦号事故的调查报告\cite{USCG2023Titan}，
-我们设定我们的潜水器通信间隔为15min；同时假设母船与潜水器的距离为10km，那么信号传输的延迟时间约为$10000/1500=6.67s$，
-假设潜水器失去动力漂移速度为3节（1.5m/s），带来的位置偏差为10m，与声纳的扫描宽度相比，可以忽略不计。
+According to relevant design standards \cite{IMO2021Submersible} and 
+the 2023 Titan incident investigation \cite{USCG2023Titan}, 
+the communication interval is set to 15 minutes. With a maximum separation of 10 km and an acoustic speed of 1500 m/s, 
+the transmission delay is about $6.67,\text{s}$. Assuming a drift speed of $1.5,\text{m/s}$ after power loss, the induced position error is approximately 10 m, which is negligible relative to the sonar scanning width.
 
-\textbf{Assumption 2:}我们假设潜水器在海里视为质点
+\textbf{Assumption 2:}
+The motion of the submersible is modeled as a three-degree-of-freedom translational system, while its attitude dynamics are neglected.
 
-由于潜水器的尺寸相较于搜索区域的范围相差几个数量级，同时在位置估计和搜索建模中,潜水器的详细形状对其漂移轨迹的影响远小于洋流，因而我们主要关注
-质心的运动轨迹，整体的位移速度与加速度，而不需要考虑，潜水器的姿态变化，不同部位受力的差异与内部质量分布的影响。
+Only translational motion is considered, since post-failure attitude effects are passively stabilized and negligible relative to ocean currents and buoyancy.
 
-\textbf{Assumption 3:}我们假设在潜水器发生机械故障之后，潜水器的密度视为定值。
+\textbf{Assumption 3:}
+After mechanical failure and loss of communication, the submersible is assumed to be either drifting under near-neutral buoyancy or resting on the seabed.
 
-潜水器发生机械故障后,动力系统和压载水控制系统失效,
-无法主动排水或注水。同时，我们忽略了温度、压力导致的微小形变效应以及可能的结构破损情况。
-因此，在结构完整性保持的前提下,潜水器的总质量和总体积
-保持不变,因此密度可视为定值 $\rho_s = \text{const}$。
+Following power loss, the motion rapidly becomes passive and dominated by buoyancy and environmental forces. The transient phase is short, allowing the long-term behavior to be simplified into two mutually exclusive steady-state scenarios: depth-level drifting or continuous sinking until seabed settlement.
 
-\textbf{Assumption 4:}我们假设部署与搜索潜水器的时候，天气条件良好，海况等级$\leq3$级。风速较小,表面波浪对深层海流和潜水器运动的影响可忽略。
+\textbf{Assumption 4:}
+Search operations are conducted under favorable weather conditions with the sea state not exceeding Level~3.
 
-为了最大化保障人员安全，
-搜救船只和设备的部署必须在安全的海况下进行，
-才能满足潜水器更好的工作与搜索设备可以正常部署和工作。这样的假设是合理的。
+Under this condition, the influence of surface wind on the mother ship is negligible, and the effects of surface waves on deep-sea currents and submersible motion are ignored.
+To maximize personnel safety,
+the deployment of rescue ships and equipment must be carried out under safe sea conditions,
+to ensure better operation of the submersible and normal deployment and operation of the search equipment.
+\vspace{-0.1cm}
 \section{Notations}
+\vspace{-0.3cm}
 \begin{table}[H]
 \centering
 \caption{Notations used in this paper}
+\vspace{-0.4cm}
 \begin{tabularx}{0.8\textwidth}{cXc}
 \toprule
-符号 & 描述 & 单位 \\
+Symbol & Description & Unit \\
 \midrule
-$(x,y,z,t)$ & 北-东-地（NED）坐标及时间 & m, m, m, s \\
-$\bm{X}=[x,y,z]^T$ & 潜水器位置向量 & m \\
-$\dot{\bm{X}}$ & 潜水器速度向量 & m/s \\
-$g$ & 重力加速度 & m/s$^2$ \\
-$\rho_s$ & 潜水器密度 & kg/m$^3$ \\
-$\rho_o$ & 海洋密度 & kg/m$^3$ \\
-$\lambda$ & 浮力状态& - \\
-$\bm{F}_G$ & 重力 & N \\
-$\bm{F}_D(z,\dot{\bm{x}})$ & 阻力（与相对速度相关） & N \\
-$\bm{v}_{\mathrm{current}}(z)$ & 洋流速度场（随深度变化） & m/s \\
-$H(x, y)$ & 海底地形 & m \\
-$Sp$ & 搜索路径 & - \\
-$P_d$ & 设备探测到目标的概率 & - \\
-$P_s(t)$ & 累计搜索成功率 & - \\
-$T$ & 搜索的时间 & h \\
+$(x,y,z,t)$ & North-East-Down (NED)  and time & m, m, m, s \\
+$\bm{X}=[x,y,z]^T$ & Submersible position vector & m \\
+$\dot{\bm{X}}$ & Submersible velocity vector & m/s \\
+$g$ & Gravitational acceleration & m/s$^2$ \\
+$\rho_s$ & Submersible density & kg/m$^3$ \\
+$\rho_o$ & Ocean density & kg/m$^3$ \\
+$\bm{F}_G$ & Gravitational force & N \\
+$\bm{F}_D(z,\dot{\bm{x}})$ & Drag force & N \\
+$\bm{v}_{\mathrm{current}}(z)$ & Ocean current velocity field & m/s \\
+$H(x, y)$ & Seafloor topography & m \\
+$Sp$ & Search path & - \\
+$P_d$ & Probability of device detecting the target & - \\
+$P_s(t)$ & Cumulative search success rate & - \\
+$T$ & Search time & h \\
 \bottomrule
 \end{tabularx}
 \end{table}
-\section{潜水器在深海中的动力学模型}
-在真实海洋环境中，海底地形、海峡与岛屿的空间分布会显著影响水体的流动与交换过程。
-同时，海洋深度的变化会导致不同区域接受的太阳辐射强度不同，
-从而引起海水温度与盐度在空间上的非均匀分布。
-上述因素共同作用，使得海水密度呈现出随深度、温度与盐度变化的特性。
+\section{Dynamics Model of the Submersible in the Deep Sea}
+In the real ocean environment, the spatial distribution of seafloor topography, straits, and islands significantly affects the flow and exchange processes of the water body.
+Variations in ocean depth lead to different regions receiving varying intensities of solar radiation,
+resulting in spatial heterogeneity in seawater temperature and salinity.
+These factors collectively result in seawater density to vary with depth, temperature, and salinity.
 
-海水密度的计算采用 EOS-80（Equation of State 1980） 状态方程。
-在标准大气压条件下，纯水密度可表示为温度 $T$ 的五次多项式形式：
+The calculation of seawater density uses the EOS-80 (Equation of State 1980) state equation.
+Under standard atmospheric pressure conditions, the density of pure water can be expressed as a fifth-degree polynomial of temperature $T$:
 \begin{equation}
 \rho_w = a_0 + a_1 T + a_2 T^2 + a_3 T^3 + a_4 T^4 + a_5 T^5 ,
 \end{equation}
-在此基础上，标准大气压下海水的密度可表示为盐度 $S$ 与温度 $T$ 的函数：
+On this basis, the density of seawater under standard atmospheric pressure can be expressed as a function of salinity $S$ and temperature $T$:
 \begin{equation}
-\rho(S,T,0)=\rho _w
-S \left( b_0 + b_1 T + b_2 T^2 + b_3 T^3 + b_4 T^4 \right)
-S^{3/2} \left( c_0 + c_1 T + c_2 T^2 \right)
-d_0 S^2 ,
+\rho(S,T,0)=\rho_w
++ S \left( b_0 + b_1 T + b_2 T^2 + b_3 T^3 + b_4 T^4 \right)
++ S^{3/2} \left( c_0 + c_1 T + c_2 T^2 \right)
++ d_0 S^2 ,
 \end{equation}
-其中 $S$ 表示海水盐度。
+where $S$ represents the salinity of seawater.
 
-进一步考虑深海环境下的压力效应，引入压力修正项，海水密度可表示为：
+Further considering the pressure effects in the deep-sea environment, a pressure correction term is introduced, and the seawater density can be expressed as:
 \begin{equation}
 \rho(S,T,p)=\frac{\rho(S,T,0)}{1-\dfrac{p}{K(S,T,p)}} ,
 \end{equation}
-其中 $p$ 为静水压力，$K(S,T,p)$ 为体积模量（切变模量），用于表征海水对压缩的抵抗能力，其数值随压力的增加而增大。
+where $p$ is the hydrostatic pressure, and $K(S,T,p)$ is the bulk modulus (shear modulus), which characterizes seawater's resistance to compression and increases with pressure.
+To closely approximate real conditions, this paper selects measured ocean environmental data from the Ionian Sea from August 1 to August 7, 2025, as input conditions to characterize the submersible's motion behavior in the actual deep-sea environment.
 
-为尽量贴近真实工况，本文选取 爱奥尼亚海 2025 年 8 月 1 日至 8 月 7 日的实测海洋环境数据作为输入条件，以刻画潜水器在实际深海环境下的运动行为。
-
-在研究区域尺度较小、环境参数变化相对平缓的前提下，我们对海水状态方程在局部范围内进行线性化处理，从而得到海水密度关于盐度 $S$、温度 $T$ 及深度 $z$ 的近似线性关系，用以支持后续潜水器动力学与漂移模型的计算。
+Under the premise of a relatively small study area scale and relatively gentle environmental parameter changes, we linearize the seawater equation of state within a local range to obtain an approximate linear relationship of seawater density with salinity $S$, temperature $T$, and depth $z$, to support subsequent calculations of the submersible's dynamics and drift models.
 \begin{equation}
   \rho(z)\approx1000+0.8(S-35)-0.2(T-20)+0.004z
 \end{equation}
 
-潜水器在深海中，受到压强与温度的影响，体积可表示为:
+In the deep sea, the submersible's volume is affected by pressure and temperature, and can be expressed as:
 \begin{equation}
   V(z)=V_0(1-\alpha\cdot P(z)-\beta\cdot\Delta T(z))
 \end{equation}
- 其中 $V_0$ 为初始体积，$\alpha\approx9.1\times10^{-11}\mathrm{\ P}a^{-1}$ 为潜水器使用的钛合金材料的压缩系数，
-$\beta\approx2.6\times10^{-5}\mathrm{\ K}^{-1}$ 为潜水器使用的钛合金材料的体膨胀系数。
-由此我们可以得到潜水器的浮力随深度的变化关系为：
+where $V_0$ is the initial volume. $\alpha\approx9.1\times10^{-11}\,\mathrm{Pa}^{-1}$ is the compressibility coefficient of the titanium alloy material used in the submersible.
+$\beta\approx2.6\times10^{-5}\,\mathrm{K}^{-1}$ is the thermal expansion coefficient of the titanium alloy material used in the submersible.
+From this, we can obtain the relationship between the submersible's buoyancy and depth as:
 \begin{equation}
-  \bm{F}_{B}({z})=[0,0,-g⋅ρ(z)⋅V(z)]^T
+  \bm{F}_{B}({z})=[0,0,-g\cdot\rho(z)\cdot V(z)]^{\mathrm{T}}
 \end{equation}
 
-我们用一个参数$M$代表潜水器自身的重量（干重+压载水），
-由于潜水器在水平方向与垂直方向上的几何形状存在差异，
-其与周围流体相互作用时所产生的附加质量亦具有方向相关性。
-因此，本文采用各向异性的质量模型，其等效质量矩阵表示为
+We use a parameter $M$ to represent the weight of the submersible (including dry weight and ballast water).
+Due to the differences in the geometric shapes of the submersible in the horizontal and vertical directions,
+the additional mass generated when it interacts with the surrounding fluid also has directionality.
+Therefore, this paper adopts an anisotropic mass model, and its equivalent mass matrix is expressed as
 \begin{equation}
-  M_{sys}=[\begin{matrix}M+m_{a,xy}&0&0\\0&M+m_{a,xy}&0\\0&0&M+m_{a,z}\\\end{matrix}]
+  M_{sys} = \left[
+  \begin{matrix}
+    M + m_{a,xy} & 0 & 0 \\
+    0 & M + m_{a,xy} & 0 \\
+    0 & 0 & M + m_{a,z}
+  \end{matrix}
+  \right]
 \end{equation}
-其中：$m_{a,xy},m_{a,z}$代表水平和垂直方向的附加质量，以体现各向异性。
+where $m_{a,xy},m_{a,z}$ represent the added mass in the horizontal and vertical directions, respectively, reflecting anisotropy.
 
-潜水器在失去推进能力后的漂移主要由海洋洋流所驱动。
-同样地，本文基于爱奥尼亚海 2025 年 8 月 1 日至 7 日的实际洋流数据，
-构建随深度变化的洋流速度场 $\bm{v}_{current}(z)$。
-由于潜水器的绝对速度与周围流体速度之间存在相对运动，
-该相对速度将引起流体阻力。
-根据二次阻力定律，阻力可表示为
+The drift of the submersible after losing propulsion is mainly driven by ocean currents.
+Similarly, this paper constructs a depth-varying ocean current velocity field $\bm{v}_{current}(z)$ based on actual ocean current data from the Ionian Sea from August 1 to 7, 2025.
+Due to the relative motion between the submersible's absolute velocity and the surrounding fluid velocity,
+this relative velocity induces fluid drag.
+According to the quadratic drag law, the drag force can be expressed as
 \begin{equation}
   \begin{matrix}\bm{F}_D&=\frac{1}{2}\rho(z)\mathbf{C}_D\odot\mathbf{A}\odot(|\mathbf{v}_{rel}|\circ\mathbf{v}_{rel})\\\end{matrix}
 \end{equation}
+where
+$\odot$ represents Hadamard product (multiplication of corresponding elements).
+$\mathbf{v}_{rel}$ represents the velocity vector of the submersible relative to the ocean current. $\mathbf{v}_{rel}=\bm{v}_{current}(z)-\dot{\bm{X}}$,
+$\bm{v}_{current}(z)$ represents the ocean current field related to depth.
+$\mathbf{A}$ is the characteristic reference area vector.
+$\mathbf{C}_D$ is the drag coefficient vector.
 
-其中：
-$\odot$代表哈达玛积（元素对应相乘）。
-$\mathbf{v}_{rel}$代表相潜水器相对于洋流的速度向量,
-$\mathbf{v}_{rel}=\bm{v}_{current}(z)-\dot{x}$,
-$\bm{v}_{current}(z)$为和深度有关的洋流场。
-$\mathbf{A}$为特征参考面积矢量。
-$\mathbf{C}_D$为阻力系数矢量。
-
-我们用$F_G=[0,0,Mg]^T$表示潜水器的重力，以潜水器初始位置为原点，建立北-东-地（NED）惯性坐标系，
-并定义潜水器位置向量为$\bm{X}=[x,y,z]^T$，
-最终根据牛顿第二定律，可以得到潜水器的运动方程表示如下：
+We use $F_G=[0,0,Mg]^T$ to represent the weight of the submersible. Taking the initial position of the submersible as the origin, we establish a North-East-Down (NED) inertial coordinate system,
+and define the position vector of the submersible as $\bm{X}=[x,y,z]^T$.
+Finally, according to Newton's second law, the equation of motion of the submersible can be expressed as:
 \begin{equation}
 M_{\mathrm{sys}}\dot{\bm{X}} = \bm{F}_{G} + \bm{F}_{B}(z) + \bm{F}_{D}({z},\dot{\bm{X}}) 
 \end{equation}
 
 
-\section{问题一的求解}
-我们采用了一个现实存在的titan型号潜水器，
-将其外形和质量作为我们研究的参考,并以此构建潜水器的动力学模型。
-该潜水器的参数如\autoref{tab:sub_parameters}所示。
+\section{Solution to Problem 1}
+We utilized a real-world Titan submersible model as our reference, taking its shape and weight as the basis for our study, and thereby constructing the dynamics model of the submersible.
+The parameters of this submarine are shown in \autoref{tab:sub_parameters}.
 \begin{table}[htbp]
 \centering
-\caption{潜水器主要物理参数}
-\vspace{-0.4cm}
-\label{tab:sub_parameters}
+\caption{Main Physical Parameters of the Submersible}
+\vspace{-0.4cm} \label{tab:sub_parameters}
 \begin{tabularx}{\linewidth}{XXXX}
 \toprule
-参数名称 & 符号 & 数值 & 单位 \\
+Parameter Name & Symbol & Value & Unit \\
 \midrule
-总质量 (Mass) & $m$ & 10\,432 & kg \\
-长度 (Length) & $L$ & 6.7 & m \\
-宽度 (Width) & $W$ & 2.8 & m \\
-高度 (Height) & $H$ & 2.5 & m \\
-最大速度 (Max Speed) & $v_{\max}$ & 3 (约 1.5) & knots (m/s)  \\
-下潜速度  & $v_{\text{desc}}$ & 50 & m/min \\
-载人数 (Capacity) & $N_{\text{pax}}$ & 5 &  - \\
-生命维持  & $T_{\text{lim}}$ & 96 & hours \\
+Total Mass & $m$ & 10,432 & kg \\
+Length  & $L$ & 6.7 & m \\
+Width  & $W$ & 2.8 & m \\
+Height & $H$ & 2.5 & m \\
+Maximum Speed & $v_{\max}$ & 1.5& m/s  \\
+Diving Speed & $v_{\text{desc}}$ & 50 & m/min \\
+Passenger Capacity & $N_{\text{pax}}$ & 5 & - \\
+Life Support & $T_{\text{lim}}$ & 96 & hours  \\
 \bottomrule
 \end{tabularx}
 \end{table}
-这些参数主要用于估计潜水器在流体中的受力特性、
-迎流参考面积以及系统惯性，为后续动力学与轨迹预测模型提供基础输入。
-根据题目设定，潜水器在发生故障后的最终运动状态主要包括
-中性浮力悬浮与沉入海底两种情形。
+These parameters are mainly used to estimate the force characteristics of the submersible in the fluid,
+the reference area facing the flow, and the system inertia, providing basic input for subsequent dynamics and trajectory prediction models.
+According to the problem statement, the final motion states of the submersible after failure mainly include
+neutral buoyancy suspension and sinking to the seabed.
 
-当潜水器最终处于中性浮力状态时，
-其平均密度不足以继续下沉，
-潜水器将在某一稳定深度处悬浮。
-此时，在竖直方向上潜水器所受浮力与其重力达到平衡，
-$F_G=F_B(z)$而水平方向因洋流影响保持运动。
+When the submersible is ultimately in a state of neutral buoyancy,
+its average density is insufficient to continue sinking,
+and the submersible will hover at a certain stable depth.
+At this time, the buoyancy acting on the submersible in the vertical direction balances its weight,
+$F_G=F_B(z)$, while it continues to move horizontally due to the influence of ocean currents.
+Another scenario is that the submersible experiences flooding due to mechanical failure during underwater operations,
+resulting in a significant increase in its overall density,
+causing its weight to exceed buoyancy and continue sinking,
+eventually contacting the seabed and causing a grounding accident.
+In this case, the submersible no longer undergoes significant displacement after reaching the seabed,
+and the grounding position becomes the final resting place of the faulty submersible.
+\subsection{Stochastic Lagrangian Particle Tracking Model}
+The problem requires predicting the spatial position of the submersible after losing contact from the perspective of safety and search and rescue.
+Therefore, the core of this problem is to characterize the stochastic motion trajectory of the submersible without propulsion capability in three-dimensional space.
+Based on the aforementioned dynamic model, this paper further introduces probabilistic methods to handle environmental uncertainty and fault randomness.
+The outcomes after submersible failure can be categorized into two types:
+one is hovering at a certain neutral depth,
+and the other is continuous sinking and eventually settling on the seabed.
+However, the specific depth and type of failure of the submersible are random in practice,
+making it difficult to directly provide deterministic solutions.
+Therefore, we introduce probabilistic modeling ideas in the trajectory prediction process,
+constructing a stochastic Lagrangian particle tracking model
+that combines deterministic ocean flow fields with random disturbances to simulate possible motion paths of the submersible in a complex marine environment.
 
-另一种情形是潜水器在水下作业过程中因机械故障发生进水，
-导致其整体密度显著增大，
-从而使重力超过浮力并持续下沉，
-最终与海底接触并发生沉底事故。
-在该情况下，潜水器在到达海底后不再发生显著位移，
-沉底位置即为故障潜水器的最终停留点。
-\subsection{随机拉格朗日粒子追踪模型}
-题目要求从安全与搜救角度出发，对潜水器失联后的空间位置进行预测。
-因此，本问题的核心在于刻画无推进能力潜水器在三维空间中的随机运动轨迹。
-在前述动力学模型的基础上，本文进一步引入概率方法以处理环境不确定性与故障随机性。
-潜水器故障后的结果可归纳为两类：
-一类为在某一中性深度处悬浮，
-另一类为持续下沉并最终沉入海底。
-然而，潜水器发生故障的具体深度及故障类型在实际中均具有随机性，
-难以通过确定性方法直接给出。
-因此，我们在轨迹预测过程中引入概率建模思想，构建了一个随机拉格朗日粒子追踪模型，
-将确定性的海洋流场与随机扰动相结合，以模拟潜水器在复杂海洋环境中的可能运动路径。
-
-\textbf{不确定性初始化：}
-为刻画潜水器故障发生深度的不确定性，
-我们采用高斯混合模型（Gaussian Mixture Model, GMM）
-对潜水器在不同故障模式下的初始深度分布进行建模，
-以区分中性悬浮与沉底两类典型情形。
-其概率密度函数表示为
+\textbf{Uncertainty Initialization:}
+To characterize the uncertainty of the submersible failure depth,
+we use a Gaussian Mixture Model (GMM)
+to model the initial depth distribution of the submersible under different failure modes,
+distinguishing between the two typical scenarios of neutral hovering and sinking.
+Its probability density function is expressed as
 \begin{equation}
 P(z)
 =
@@ -418,17 +414,17 @@ w_{\mathrm{sink}}
 \cdot
 \mathcal{N}\!\left(z \mid \mu_s, \sigma_s^2 \right),
 \end{equation}
-其中
-$\mathcal{N}(z \mid \mu, \sigma^2)$ 表示均值为 $\mu$、方差为 $\sigma^2$ 的一维正态分布，
-$w_{\mathrm{hover}}$ 与 $w_{\mathrm{sink}}$ 分别对应潜水器最终悬浮与沉底状态的权重系数，
-并满足
-$w_{\mathrm{hover}} + w_{\mathrm{sink}} = 1$。
+where
+$\mathcal{N}(z \mid \mu, \sigma^2)$ denotes a one-dimensional normal distribution with mean $\mu$ and variance $\sigma^2$,
+$w_{\mathrm{hover}}$ and $w_{\mathrm{sink}}$ correspond to the weight coefficients for the submersible's final hovering and sinking states, respectively,
+and satisfy
+$w_{\mathrm{hover}} + w_{\mathrm{sink}} = 1$.
 
 \vspace{0.5em}
-\textbf{轨迹积分模型：}
-在给定初始状态的条件下，
-潜水器的运动轨迹通过离散时间积分方式进行计算。
-其连续时间速度模型可统一表示为
+\textbf{Trajectory Integration Model:}
+Under the given initial conditions,
+the trajectory of the submersible is calculated through discrete-time integration.
+Its continuous-time velocity model can be uniformly expressed as
 \begin{equation}
 \dot{\mathbf{X}}(t)
 =
@@ -438,27 +434,26 @@ $w_{\mathrm{hover}} + w_{\mathrm{sink}} = 1$。
 +
 \mathbf{V}_{\mathrm{turb}}(t),
 \end{equation}
-其中
-$\mathbf{X}(t) = [x(t),y(t)]^{\mathrm{T}}$ 表示潜水器在水平面的空间位置，
-$\mathbf{V}_{\mathrm{pre}}$ 为数值海洋模型给出的基础预测洋流速度场，
-$\alpha$ 为速度缩放系数，
-$\mathbf{V}_{\mathrm{sys}}$ 与 $\mathbf{V}_{\mathrm{turb}}(t)$
-分别表示系统性洋流预测偏差与随机湍流扰动项。
+where
+$\mathbf{X}(t) = [x(t),y(t)]^{\mathrm{T}}$ represents the spatial position of the underwater vehicle in the horizontal plane.
+$\mathbf{V}_{\mathrm{pre}}$ is the basic predicted ocean current velocity field provided by the numerical ocean model.
+$\alpha$ is the speed scaling coefficient.
+$\mathbf{V}_{\mathrm{sys}}$ and $\mathbf{V}_{\mathrm{turb}}(t)$ respectively represent the systematic ocean current prediction deviation and the random turbulent disturbance term.
 
 \vspace{0.5em}
-\subsection{蒙特卡洛不确定性模型}
-在实际海洋环境中，
-潜水器位置预测的不确定性不仅来源于故障事件本身的随机性，
-还显著受到洋流场预测误差的影响。
-由于洋流数据通常基于数值预报与离散观测，
-并通过垂直最近邻插值等方法进行空间填充，
-不可避免地引入模型误差与观测噪声。
-因此，
-在多次故障情景重演过程中，
-实际作用于潜水器的洋流场应被视为随机变量而非确定输入。
+\subsection{Monte Carlo Uncertainty Model}
+In the actual marine environment,
+the uncertainty in predicting the position of the submersible not only arises from the randomness of the failure event itself,
+but is also significantly affected by errors in ocean current field predictions.
+Since ocean current data is usually based on numerical forecasts and discrete observations,
+and spatially filled through methods such as vertical nearest neighbor interpolation,
+inevitable model errors and observation noise are introduced.
+Therefore,
+in multiple failure scenario replays,
+the actual ocean current field acting on the submersible should be regarded as a random variable rather than a deterministic input.
 
-基于蒙特卡洛模拟思想，
-我们将洋流速度建模为由三部分叠加而成：
+Based on the idea of Monte Carlo simulation,
+we model the ocean current velocity as the superposition of three components:
 \begin{equation}
 \mathbf{V}_r(x,y,z,t)
 =
@@ -468,11 +463,11 @@ $\mathbf{V}_{\mathrm{sys}}$ 与 $\mathbf{V}_{\mathrm{turb}}(t)$
 +
 \mathbf{V}_{\mathrm{turb}}(t),
 \end{equation}
-其中
-$\mathbf{V}_{\mathrm{sys}}^{(k)}$ 为第 $k$ 次蒙特卡洛仿真中引入的系统性误差项，
-用于刻画洋流预测在整体尺度上的偏差。
-该项在单次仿真中保持为常数，
-但在不同仿真之间服从零均值正态分布：
+where
+$\mathbf{V}_{\mathrm{sys}}^{(k)}$ is the systematic error term introduced in the $k$-th Monte Carlo simulation,
+used to characterize the bias of ocean current prediction on the overall scale.
+This term remains constant within a single simulation,
+but follows a zero-mean normal distribution across different simulations:
 \begin{equation}
 \mathbf{V}_{\mathrm{sys}}
 \sim
@@ -481,9 +476,9 @@ $\mathbf{V}_{\mathrm{sys}}^{(k)}$ 为第 $k$ 次蒙特卡洛仿真中引入的�
 \sigma_{\mathrm{sys}} \approx 0.1\,\mathrm{m/s}.
 \end{equation}
 
-随机湍流项 $\mathbf{V}_{\mathrm{turb}}(t)$
-用于描述小尺度海洋湍流引起的时间相关随机扰动，
-假设其服从零均值正态分布：
+Random turbulent term $\mathbf{V}_{\mathrm{turb}}(t)$
+is used to describe time-correlated random disturbances caused by small-scale ocean turbulence,
+and is assumed to follow a zero-mean normal distribution:
 \begin{equation}
 \mathbf{V}_{\mathrm{turb}}(t)
 \sim
@@ -492,8 +487,8 @@ $\mathbf{V}_{\mathrm{sys}}^{(k)}$ 为第 $k$ 次蒙特卡洛仿真中引入的�
 \sigma_{\mathrm{turb}} \approx 0.02\,\mathrm{m/s}.
 \end{equation}
 
-在上述假设下，
-潜水器在第 $k$ 次蒙特卡洛模拟中的离散时间状态更新方程统一表示为
+Under the above assumptions,
+the discrete-time state update equation of the submersible in the $k$-th Monte Carlo simulation is uniformly expressed as
 \begin{equation}
 \mathbf{X}_{t+\Delta t}
 =
@@ -508,13 +503,13 @@ $\mathbf{V}_{\mathrm{sys}}^{(k)}$ 为第 $k$ 次蒙特卡洛仿真中引入的�
 \right)\Delta t.
 \end{equation}
 
-通过对上述状态方程进行 $N$ 次重复仿真，
-可以获得潜水器潜在落点的样本集合。
-在统计意义上，
-我们采用二维多元正态分布对落点分布进行近似刻画，
-其协方差矩阵定义为
+By performing $N$ repeated simulations of the above state equation,
+a sample set of potential submersible landing points can be obtained.
+In a statistical sense,
+we use a two-dimensional multivariate normal distribution to approximate the distribution of landing points,
+with its covariance matrix defined as
 \begin{equation}
-\mathbf{\Sigma}
+\Sigma
 =
 \begin{bmatrix}
 \mathrm{Var}(x) & \mathrm{Cov}(x,y) \\
@@ -522,10 +517,10 @@ $\mathbf{V}_{\mathrm{sys}}^{(k)}$ 为第 $k$ 次蒙特卡洛仿真中引入的�
 \end{bmatrix}.
 \end{equation}
 
-为量化潜水器位置不确定性，
-定义不确定性区域 $S_{\mathrm{UQ}}$
-为二维正态分布下的 $95\%$ 置信椭圆，
-其面积可表示为
+To quantify the uncertainty in the submersible's position,
+we define the uncertainty region $S_{\mathrm{UQ}}$
+as the $95\%$ confidence ellipse under the two-dimensional normal distribution,
+whose area can be expressed as
 \begin{equation}
 S_{\mathrm{UQ}}
 =
@@ -533,171 +528,143 @@ S_{\mathrm{UQ}}
 \sqrt{ \chi_{0.95,2}^{2} \lambda_1 }
 \sqrt{ \chi_{0.95,2}^{2} \lambda_2 },
 \end{equation}
-其中
-$\lambda_1,\lambda_2$ 为协方差矩阵 ${\Sigma}$ 的特征值，
+where
+$\lambda_1,\lambda_2$ are the eigenvalues of the covariance matrix ${\Sigma}$,
+and
 $\chi_{0.95,2}^{2} \approx 5.991$
-为自由度为 $2$ 的卡方分布在 $95\%$ 置信水平下的临界值。
-\subsection{结果分析}
-由上述建立的模型，
-我们根据爱奥尼亚海域的地形数据，从三维与纵剖面两个角度绘制了该区域的真实地形结构图，
-如\autoref{fig:all}所示。同时，我们计算出了潜艇悬浮点的深度$2000.6m$,如\autoref{fig:xuanfu}所示。
-\begin{figure}[H]
-\centering
-
-% ===== 左侧：海底地形（包含两幅子图） =====
-\begin{minipage}[t]{0.7\textwidth}
+is the critical value of the chi-square distribution with 2 degrees of freedom at the 95\% confidence level.
+\subsection{Result Analysis}
+Based on the above established model,
+we plotted the true terrain structure of the Ionian Sea region from both three-dimensional and vertical profile perspectives,
+as shown in \autoref{fig:ionian-sea}. At the same time, we calculated the depth of the submarine hover point to be $2000.6m$.
+\begin{figure}[htbp]
   \centering
-
-  \begin{subfigure}[b]{0.52\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{figures/image3.png}
-    \caption{海底地形立体示意}
-    \label{fig:haididixing}
-  \end{subfigure}\hfill
-  \begin{subfigure}[b]{0.45\linewidth}
-    \centering
+  % ===== 左侧：海底地形 =====
+  \begin{subfigure}[b]{0.48\linewidth}
+    \includegraphics[width=\linewidth,trim=0 0 50 0,clip]{figures/image3.png}
+    \caption{3D map of the seabed topography}
+    \label{fig:haididixing-terrain}
+  \end{subfigure}%
+  \hfill
+  % ===== 右侧：垂直剖面 =====
+  \begin{subfigure}[b]{0.48\linewidth}
     \includegraphics[width=\linewidth]{figures/image4.png}
-    \caption{海底地形剖面图}
-    \label{fig:poumiantu}
+    \caption{Vertical profile}
+    \label{fig:haididixing-profile}
   \end{subfigure}
-
-  \caption{爱奥尼亚海域海底地形结构}
-  \label{fig:all}
-\end{minipage}
-\hfill
-% ===== 右侧：潜艇悬浮点 =====
-\begin{minipage}[t]{0.25\textwidth}
-  \centering
-  \includegraphics[height=0.2\textheight,
-    keepaspectratio
-  ]{figures/image_p1.png}
-  \caption{潜艇悬浮点深度}
-  \label{fig:xuanfu}
-\end{minipage}
-\label{fig:terrain_and_hover}
+  \caption{The terrain of Ionian Sea}
+  \label{fig:ionian-sea}
 \end{figure}
+To ensure the reliability and reproducibility of the $N=2000$ Monte Carlo simulations,
+we always have the submersible start from the fixed initial position $\mathbf{X_0}=[x_0, y_0, z_0]^T$ in all experiments.
+Before the failure occurs, it descends vertically at a constant rate, and the horizontal drift can be ignored.
+The movement is controlled by the active buoyancy and propulsion systems. After the failure, the propulsion system stops,
+and the submersible enters a drifting state. Its subsequent trajectory is completely driven by environmental forces.
 
 \autoref{fig:accident-probability_before},\ref{fig:accident-probability_after}
-展示了在未引入系统随机误差与引入系统随机误差两种情形下，
-潜水器故障后最终位置的概率密度分布，其中左列对应中性悬浮漂移状态（Suspended Drift Zone），
-右列对应沉底状态（Seabed Impact Zone）。
+show the probability density distribution of the submersible's final position after failure under two scenarios: without and with the introduction of systematic random errors. The left column corresponds to the Suspended Drift Zone, while the right column corresponds to the Seabed Impact Zone.
 \begin{figure}[htbp]
-\centering
-\footnotesize
-\begin{minipage}{\linewidth}
-  \centering
-  \includegraphics[width=0.8\linewidth]{figures/image_before.png}
-  \vspace{-0.5cm}
-  \caption{引入误差前潜水器位置概率分布图}
-  \label{fig:accident-probability_before}
-\end{minipage}
-\vskip\baselineskip   % 垂直间距可调
-\vspace{-0.5cm}
-\begin{minipage}{\linewidth}
-  \centering
-  \includegraphics[width=0.8\linewidth]{figures/image_after.png}
-   \vspace{-0.5cm}
-  \caption{引入误差后潜水器位置概率分布图}
-  \label{fig:accident-probability_after}
-\end{minipage}
+    \centering
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[height=5.2cm]{figures/image_before.png}
+        \vspace{-0.4cm}
+        \caption{Probability Distribution Before Introducing Errors}
+        \label{fig:accident-probability_before}
+    \end{subfigure}
+    \vspace{-0.3cm}  % 调整两图间距
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[height=6.2cm]{figures/image_after.png}
+        \vspace{-0.4cm}
+        \caption{Probability Distribution After Introducing Errors}
+        \label{fig:accident-probability_after}
+    \end{subfigure}
+    \vspace{-0.3cm}
+    \caption{Comparison of Submersible Position Distributions}
+    \label{fig:accident-probability_comparison}
 \end{figure}
-在未引入系统误差的情形下，
-悬浮漂移区域的概率分布呈现出相对集中的条带状结构，
-高概率区域主要分布在起始点附近，并沿主洋流方向形成有限尺度的扩散带。
-当引入服从正态分布的系统误差后，悬浮漂移区的概率分布发生了显著变化，使得
-高概率区域由局部集中转变为更为分散的多峰结构；
-概率等值线出现明显的不规则形态，呈现出更强的随机性；
-整个概率分布的分布范围也变大，低概率区域的覆盖范围明显增加。
-这一现象表明，中性悬浮状态下，潜水器的水平运动对洋流预测误差高度敏感。
-随机扰动在时间积分过程中不断累积，导致轨迹不确定性迅速放大，
-从而使最终位置预测呈现出“扩散主导”的特征。
 
-相比之下，沉底状态在引入系统误差前后表现出较强的稳定性，
-首先，高概率核心区的位置基本保持不变集中在中心附近；
-概率等值线仍呈近似同心分布，仅在外缘区域出现轻微扩散；
-这表明，在潜水器进入不可逆下沉阶段后，其运动主要由竖直方向的重力—浮力差异主导，
-水平方向的洋流扰动仅在下沉初期产生有限影响。
-随着潜水器与海底接触，海底地形约束进一步削弱了湍流不确定性的影响，
-使得最终沉底位置具有较强的稳定性。
+In the absence of systematic errors,
+the probability distribution in the suspended drift zone exhibits a relatively concentrated banded structure,
+with high-probability areas mainly distributed near the starting point and forming a limited-scale diffusion belt along the main ocean current direction.
+When systematic errors following a normal distribution are introduced, the probability distribution in the suspended drift zone changes significantly, resulting in
+high-probability areas changing from locally concentrated to more dispersed multi-peak structures;
+probability contour lines show obvious irregular shapes, exhibiting stronger randomness;
+the overall distribution range of the probability distribution also increases, with a significant increase in the coverage of low-probability areas.
+This phenomenon indicates that in the neutral suspension state, the horizontal movement of the submersible is highly sensitive to errors in ocean current prediction.
+Random disturbances accumulate continuously during the time integration process, leading to a rapid amplification of trajectory uncertainty,
+resulting in the final position prediction exhibiting a "diffusion-dominated" characteristic.
 
-该模型的不确定性主要来自于对洋流预测的的偏差，我们将模型的洋流速度中引入正态分布的随机偏差，
-这一部分的进一步讨论在灵敏度分析\autoref{sub:yangliulingminxing}中给出。
+In contrast, the seabed state shows strong stability before and after the introduction of systematic errors,
+with the high-probability core area remaining basically unchanged and concentrated near the center;
+probability contour lines still show an approximately concentric distribution, with only slight diffusion at the outer edges;
+this indicates that after the submersible enters the irreversible sinking stage, its movement is mainly dominated by the vertical difference between gravity and buoyancy,
+and horizontal ocean current disturbances only have limited impact in the early sinking stage.
+As the submersible contacts the seabed, seabed terrain constraints further weaken the impact of turbulence uncertainty,
+resulting in a strong stability of the final seabed position.
 
-为有效降低事故发生前由环境不确定性引入的位置预测误差，
-我们假设潜水器在正常工作阶段仍具备有限但稳定的通信能力，
-并能够以固定时间间隔（15\,min）
-向母船周期性回传关键环境与状态信息。
-这些信息可用于对预测模型进行在线修正，
-从而显著压缩潜水器失联后的不确定搜索区域。
-\begin{itemize}
-  \item \textbf{深海洋流流速与流向信息：}  
-  由于深海环境相较于表层海洋具有更强的稳定性，
-  短时间尺度内洋流变化幅度较小，
-  潜水器可利用\textbf{声学多普勒流速剖面仪（ADCP）}
-  实时测量其所处深度范围内的洋流流速与流向，
-  并将该信息回传至母船。
-  该数据可用于修正数值海洋模型中的洋流预测偏差，
-  从而降低轨迹外推过程中由环境误差导致的不确定性。
-  \item \textbf{潜水器状态信息（位置与速度）：}  
-  潜水器的实时位置信息可由\textbf{超短基线定位系统（USBL）}
-  相对于母船进行测定，
-  而速度与姿态信息则由\textbf{惯性测量单元（IMU）}提供。
-  这些状态量的周期性更新能够对潜水器运动模型形成有效约束，
-  抑制误差在时间积分过程中的累积，
-  并提高事故发生后位置预测的可靠性。
-\end{itemize}
-因此，潜水器必须通过配备ADCP、USBL、IMU传感器，
-将其状态信息与海洋状态信息进行关联，
-反馈给母船，从而减少其位置预测不确定性。
+\autoref{fig:image_p1} presents the results of the Monte Carlo uncertainty analysis. Although all simulations started from the same initial position and maintained a uniform vertical descent, the final positions of the submersible exhibited significant spatial dispersion. This spread is primarily caused by errors in ocean current predictions, turbulent disturbances, and the randomness of the failure depth. The area of the $95\%$ confidence ellipse is $1.54,\mathrm{km^2}$, which quantitatively characterizes the uncertainty in position prediction and provides a well-defined target area for subsequent search and rescue operations.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/image_p1.jpg}
+  \caption{Monte Carlo Uncertainty Quantification Result}
+  \label{fig:image_p1}
+\end{figure}
 
-\section{问题二求解}
-\subsection{多目标优化模型}
-在深海探索与搜救任务中，搜索设备的合理配置对任务成败具有决定性影响。
-设备选择不仅需要关注其探测性能，还必须综合考虑成本、可用性、维护难度、准备时间以及实际使用效率等工程因素。
-随着海洋探测技术的不断发展，低成本、高分辨率的海洋观测设备已被广泛部署于多种平台之上，
-例如单波束声纳、多波束声纳、海底剖面仪以及侧扫声纳等 \cite{pmid34883851}。
-本文选取几类典型搜索设备，
-对其关键性能参数进行了对比分析，
-结果如 \autoref{tab:equipment-comparison} 所示。
+The main source of model uncertainty lies in the deviation of ocean current forecasts. To account for this, normally distributed random perturbations were introduced into the simulations to reflect environmental variability (see the sensitivity analysis in \autoref{sub:yangliulingminxing}). To reduce position prediction errors before the submersible loses contact, it is assumed that the vehicle retains limited but stable communication capability during normal operation, allowing it to periodically transmit key environmental and state information to the mother ship. This includes deep-sea current velocity and direction measured in real time by the \textbf{ADCP}, as well as the submersible’s position (\textbf{USBL}) and velocity and attitude (\textbf{IMU}). These periodic updates can be used to correct errors in numerical ocean models and constrain the submersible’s motion model, suppressing error accumulation and significantly improving position prediction after contact is lost. Therefore, equipping the submersible with ADCP, USBL, and IMU sensors is essential to relay both its own state and environmental information to the mother ship, thereby reducing position uncertainty and providing a reliable reference for search and rescue operations.
+\section{Solution to Problem 2}
+\subsection{Multi-objective Optimization Model}
+In deep-sea exploration and search and rescue missions, the reasonable configuration of search equipment has a decisive impact on the success or failure of the mission.
+Equipment selection not only needs to focus on its detection performance but must also comprehensively consider engineering factors such as cost, availability, maintenance difficulty, preparation time, and actual usage efficiency.
+With the continuous development of marine exploration technology, low-cost, high-resolution marine observation equipment has been widely deployed on various platforms,
+such as single-beam sonar, multi-beam sonar, seabed profilers, and side-scan sonar \cite{pmid34883851}.
+This paper selects several typical pieces of search equipment,
+and compares their key performance parameters,
+as shown in \autoref{tab:equipment-comparison}.
 \begin{table}[htbp]
 \centering
-\caption{不同搜索设备的对比}
-\vspace{-0.4cm}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{Comparison of Different Search Equipment}
 \label{tab:equipment-comparison}
-\begin{tabular}{cccccc}
+\begin{tabularx}{\linewidth}{@{}X >{\raggedleft\arraybackslash}p{2.1cm} >{\raggedleft\arraybackslash}p{2.7cm} >{\raggedleft\arraybackslash}p{2.2cm} >{\raggedleft\arraybackslash}p{2.4cm} >{\raggedleft\arraybackslash}p{2.0cm}@{}}
 \toprule
-设备类型& 成本 (美元) &扫描效率 (km$^2$/h) & 探测概率 (POD) &准备时间 (小时) & 额定深度 (米) \\
+\makecell[l]{Equipment\\Type} & \makecell[r]{Cost\\(USD)} & \makecell[r]{Scan Efficiency\\(km$^2$/h)} & \makecell[r]{POD} & \makecell[r]{Prep. Time\\(h)} & \makecell[r]{Rated Depth\\(m)} \\
 \midrule
-高端AUV & 70000 & 2.5 & 0.95 & 12 & 6000 \\
-标准AUV & 30000 & 1.2 & 0.85 & 8 & 4000 \\
-拖曳声纳 & 20000 & 8.0 & 0.65 & 6 & 10000 \\
-ROV & 100000 & 0.4 & 0.99 & 24 & 7000 \\
+High-end AUV & 70{,}000 & 2.5 & 0.95 & 12 & 6{,}000 \\
+Standard AUV & 30{,}000 & 1.2 & 0.85 & 8 & 4{,}000 \\
+Towed Sonar System & 20{,}000 & 8.0 & 0.65 & 6 & 10{,}000 \\
+Deep-sea ROV & 100{,}000 & 0.4 & 0.99 & 24 & 7{,}000 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
-不同类型设备在覆盖效率、探测精度与部署成本之间形成了显著的权衡关系，因此有必要通过系统化建模方法对设备组合方案进行定量评估。
-为此，本文将搜索设备配置问题建模为一个多目标优化问题。
-定义决策变量向量
+
+Different types of equipment form significant trade-offs between coverage efficiency, detection accuracy, and deployment cost, making it necessary to quantitatively evaluate equipment combination schemes through systematic modeling methods.
+To this end, this paper models the search equipment configuration problem as a multi-objective optimization problem.
+Define the decision variable vector
 $
-\bm{X}=[x_1, x_2, x_3, x_4]
+\mathbf{X}=[x_1, x_2, x_3, x_4]
 $
-其中, $x_1$,$x_2$,$x_3$, $x_4$分别表示High-end AUV，Standard AUV，Towed Sonar System，Deep-sea ROV的数量。
-设备动员的直接经济成本被定义为第一个优化目标：
+where $x_1$, $x_2$, $x_3$, and $x_4$ represent the quantities of High-end AUV, Standard AUV, Towed Sonar System, and Deep-sea ROV, respectively.
+The direct economic cost of equipment mobilization is defined as the first optimization objective:
 \begin{equation}
 f_1(\mathbf{X})=\sum_{i=1}^{4} C_i\,x_i,
 \end{equation}
-其中 $C_i$ 表示第 $i$ 类设备的单次动员成本。
-考虑到潜水器故障后可能处于悬浮层或沉底状态两种情形，
-本文将总体发现概率定义为两个区域发现概率的加权和：
+where $C_i$ represents the single mobilization cost of the $i$-th type of equipment.
+
+Considering that the submersible may be in either a hovering layer or a sinking state after a failure,
+this paper defines the overall probability of detection as a weighted sum of the detection probabilities in the two regions:
 \begin{equation}
 f_2(\mathbf{X}) =
 W_{\mathrm{hover}}\,P_{\mathrm{hover}}(\mathbf{X})
 +
 W_{\mathrm{sink}}\,P_{\mathrm{sink}}(\mathbf{X}),
 \end{equation}
-其中 $W_{\mathrm{hover}}$ 与 $W_{\mathrm{sink}}$ 
-分别表示潜水器处于悬浮层与沉底状态的先验概率权重。
-悬浮层区域的搜救概率建模为
+where, $W_{\mathrm{hover}}$ and $W_{\mathrm{sink}}$
+respectively represent the prior probability weights of the underwater vehicle being in the hovering layer and the sinking state.
+The search probability model in the hovering layer is modeled as
 \begin{equation}
 P_{\mathrm{hover}}(\mathbf{X})
 =
@@ -705,10 +672,11 @@ P_{\mathrm{hover}}(\mathbf{X})
 -\frac{x_2\,\eta_2\,T}{A_{\mathrm{hover}}}\cdot \mathrm{POD}_2
 \right),
 \end{equation}
-其中 $\eta_2$ 为标准 AUV 的单位时间覆盖效率，
-$T$ 为可用搜救时间，
-$A_{\mathrm{hover}}$ 为悬浮层区域面积。
-沉底区域主要依赖高端 AUV 与拖曳声纳系统，其搜救概率定义为
+where $\eta_2$ represents the unit-time coverage efficiency of the standard AUV,
+$T$ represents the available search time,
+$A_{\mathrm{hover}}$ represents the area of the hovering zone.
+
+The submerged area mainly relies on high-end AUVs and towed sonar systems, and its search probability is defined as
 \begin{equation}
 P_{\mathrm{sink}}(\mathbf{X})
 =
@@ -717,10 +685,10 @@ P_{\mathrm{sink}}(\mathbf{X})
 \cdot \overline{\mathrm{POD}}_{1,3}
 \right),
 \end{equation}
-其中 $\eta_1$ 与 $\eta_3$ 分别为高端 AUV 与拖曳声纳的覆盖效率，
-$\overline{\mathrm{POD}}_{1,3}$ 为两类设备的加权平均探测概率。
-综合上述两个目标，本文求解设备配置的帕累托最优解集 $\mathbf{X}^*$，
-使其满足
+where $\eta_1$ and $\eta_3$ represent the coverage efficiencies of the high-end AUV and towed sonar, respectively,
+$\overline{\mathrm{POD}}_{1,3}$ is the weighted average detection probability of the two types of equipment.
+Combining the above two objectives, this paper solves for the Pareto optimal set of equipment configurations $\mathbf{X}^*$,
+such that
 \begin{equation}
 \nexists\,\mathbf{X}'\ \text{s.t.}\
 \begin{cases}
@@ -728,68 +696,54 @@ f_1(\mathbf{X}') \le f_1(\mathbf{X}^*),\\
 f_2(\mathbf{X}') \ge f_2(\mathbf{X}^*),
 \end{cases}
 \end{equation}
-且至少有一个不等号严格成立。
-模型同时受到以下工程约束：
-\begin{itemize}
-  \item \textbf{深度约束：}
-  \begin{equation}
-  D_{\mathrm{rated},i} \ge D_{\mathrm{target}},
-  \end{equation}
-  以保证设备能够在目标海域正常工作；
-  \item \textbf{时间约束：}
-  总搜救时间不超过 $72\,\mathrm{h}$。
-\end{itemize}
-\subsection{结果分析}
+and at least one inequality is strict.
 
-需要指出的是，
-由于爱奥尼亚海海域存在超过 $5000m$ 的深海沟地形，
-标准 AUV 的额定工作深度仅为 $4000m$，
-难以满足实际搜救需求。
-因此，在后续设备组合评估中，
-本文不再考虑标准 AUV 方案。
-在此基础上，
-我们利用 MATLAB 对不同设备组合的搜索效果进行了数值仿真，
-构建了总预算与任务成功概率之间的权衡关系，
-结果如 \autoref{fig:image_p2} 所示。
-\begin{figure}[H]
+The model is also subject to
+depth constraints $D_{\mathrm{rated},i} \ge D_{\mathrm{target}}$,
+to ensure that the equipment can operate normally in the target sea area;
+a time constraint that the total search and rescue time does not exceed $72\,\mathrm{h}$;
+and equipment quantity constraints $x_i \in \mathbb{Z}, 0 \le x_i \le 4$.
+\subsection{Results Analysis}
+We use MATLAB to simulate the above-established model,
+constructing the trade-off relationship between total budget and mission success probability,
+as shown in \autoref{fig:image_p2}.
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/image_p2.png}
-\caption{预算与成功率的关系}
+\caption{Relationship between Budget and Success Probability}
 \label{fig:image_p2}
 \end{figure}
-仿真结果表明，随着预算的增加，
-可部署的高性能设备数量与类型不断提升，从而显著提高搜索任务的整体成功概率。
-具体而言，当我们使用一台声纳加上一台 High-end AUV的组合时，可以保证搜索的成功率
-达到99.87\%，同时能够控制预算在 \$90.0\,K。
-该组合在探测效率、部署速度与成本之间实现了较为理想的平衡，
-适合作为母船的常备搜索配置。
-若进一步追求接近零风险的搜索目标，
-则需要在上述基础上额外增加声纳设备数量，
-例如配置一台高端 AUV 与两套拖曳声纳系统。
-此时，虽然搜索覆盖冗余度与可靠性显著提升，
-但相应的预算需求亦上升至约 \$110.0\,K。
-因此，该方案更适用于由专业救援船只参与的高风险、长周期搜救任务。
-\section{问题三的求解}
-问题三从搜救任务的角度展开，
-研究重点聚焦于母船的最优部署与路径规划问题。
-具体而言，母船应选择在何处释放救援设备，
-以及应如何规划其搜索航迹，
-能够在有限时间内最大化发现并成功救援故障潜水器的概率。
-该问题本质上是一个同时受时间约束与概率约束的搜救优化问题，
-需要在搜索效率与搜索覆盖之间进行权衡。
-\subsection{基于后验概率的搜索策略}
-基于问题一中的蒙特卡洛模拟得到的潜水器落点分布$P(z)$,
-我们构建了包含海底与悬浮状态的二维概率热力图，用于刻画潜水器在水平平面内的空间不确定性分布。
-考虑到我们使用的搜索设备（声纳）具有一定的扫射幅宽，
-我们建立了宽幅传感器模型。
-不同于传统模型的点搜索，该模型在单位时间的搜索是一个范围搜索，
-其单位时间内的覆盖面积可以近似的表示为母船的航速$V$与扫描宽度$W$的乘积。
-\subsection{搜救路径规划模型}
-搜救任务的本质是在和时间赛跑，
-我们团队的思想就是最大化单位时间内的发现概率，
-而且为了模拟真实搜救船只的运动特性，
-我们建立了带宽性约束的贪婪搜索模型。
-在局部时间窗内，路径规划问题可表述为以下优化模型：
+
+Simulation results indicate that as the budget increases,
+the number and types of deployable high-performance equipment continuously improve, significantly enhancing the overall success probability of the search task.
+Specifically, when using a combination of one sonar and one High-end AUV, the search success rate can be guaranteed
+to reach 99.87\%, while controlling the budget at around \$90.0\,K.
+This combination achieves a relatively ideal balance between detection efficiency, deployment speed, and cost,
+making it suitable as a standard search configuration for the mother ship.
+If a near-zero risk search target is further pursued,
+additional sonar equipment needs to be added on the above basis,
+for example, configuring one high-end AUV and two towed sonar systems.
+At this point, although the redundancy and reliability of the search coverage have significantly improved,
+the corresponding budget requirement has also risen to approximately \$110.0\,K.
+Therefore, this solution is more suitable for high-risk and long-duration search and rescue missions involving professional rescue vessels.
+\section{Solution to Problem 3 }
+Problem 3 focuses on the optimal deployment and path planning of the mother ship from the perspective of search and rescue tasks.
+Specifically, where the mother ship should release rescue equipment,
+and how it should plan its search trajectory,
+to maximize the probability of discovering and successfully rescuing the malfunctioning submarine within a limited time.
+This problem is essentially a search and rescue optimization problem constrained by both time and probability,
+requiring a trade-off between search efficiency and search coverage.
+\subsection{Search Strategy Based on Posterior Probability}
+Based on the Monte Carlo simulation of the submarine's landing distribution $P(z)$ from Problem 1,
+we constructed a two-dimensional probability heatmap including seabed and hovering states to characterize the spatial uncertainty distribution of the submarine in the horizontal plane.
+Considering that the search equipment we use (sonar) has a certain sweep width,
+we established a wide-beam sensor model.
+Unlike the traditional point search model, this model performs area search within a unit time,
+and the coverage area within a unit time can be approximately represented as the product of the mother ship's speed $V$ and the scan width $W$.
+\subsection{Search Path Planning Model}
+The essence of search and rescue tasks is a race against time. To maximize the probability of detection per unit time and to simulate the movement characteristics of real search and rescue vessels,
+we established a bandwidth-constrained greedy search model.
+Within a local time window, the path planning problem can be formulated as the following optimization model:
 \begin{equation}
   \max_{\theta} J(\theta)
   =
@@ -797,123 +751,131 @@ f_2(\mathbf{X}') \ge f_2(\mathbf{X}^*),
   +
   \lambda \cdot I(\theta = \theta_{\mathrm{prev}}),
 \end{equation}
-其中，
-$\theta$ 表示母船当前航向角，
-$S(\theta)$ 为沿该航向在单位时间内由声呐扫测形成的搜索区域，
-$\rho_t(x,y)$ 为时刻 $t$ 搜索区域内的后验概率密度函数，
-$I$ 为指示函数，
-用于保持航向的连续性与路径平滑性，
-$\lambda$ 为平衡搜索效率与航向稳定性的权重参数。
+where,
+$\theta$ represents the current heading angle of the mother ship,
+$S(\theta)$ is the search area formed by the sonar sweep along this heading within a unit time,
+$\rho_t(x,y)$ is the posterior probability density function within the search area at time $t$,
+$I$ is the indicator function,
+used to maintain continuity and smoothness of the heading,
+$\lambda$ is the weight parameter balancing search efficiency and heading stability.
 
-在搜索过程中，
-我们进一步引入贝叶斯更新机制，
-对已完成搜索的区域进行概率削减，
-从而动态更新后验概率分布。
-该机制能够驱动母船自适应地向尚未覆盖的高概率区域移动，
-并随着搜索进程的推进逐步收缩有效搜索空间。
-\subsection{结果分析}
-最终我们利用matlab绘制出母船在经纬度坐标系下（经度21.3°-21.7°，纬度36.55°-36.87°）的条带搜索路径\autoref{fig:p3_1}，
-背景深蓝色区域表示目标可能存在的位置范围，白色线条为母船搜索的实际航迹。
-并得到了搜索时间与成功发现概率之间的对应关系\autoref{fig:p3_2}，
-为搜救行动的决策制定提供了定量依据。
+During the search process,
+we further introduce a Bayesian update mechanism,
+to reduce the probability in the areas that have been searched,
+thereby dynamically updating the posterior probability distribution.
+This mechanism enables the mother ship to adaptively move towards high-probability areas that have not yet been covered,
+and gradually shrink the effective search space as the search progresses.
+\subsection{Result Analysis}
+Finally, we used MATLAB to plot the strip search path of the mother ship in the latitude and longitude coordinate system (longitude 21.3$^\circ$--21.7$^\circ$, latitude 36.55$^\circ$--36.87$^\circ$) \autoref{fig:p3_1},
+where the dark blue area in the background represents the possible location range of the target, and the white lines are the actual search tracks of the mother ship.
+We also obtained the relationship between search time and the probability of successful detection \autoref{fig:p3_2},
+providing quantitative basis for decision-making in search and rescue operations.
 \vspace{-0.2cm}
 \begin{figure}[ht]
   \centering
-  \begin{subfigure}[b]{0.4\textwidth} % [b] 表示底部对齐
+  \begin{subfigure}[b]{0.45\textwidth} % [b] 表示底部对齐
     \includegraphics[width=\linewidth]{figures/image_p3_1.png}
-    \caption{搜索路径}
+    \caption{Search Path}
     \label{fig:p3_1}
   \end{subfigure}
   \hfill % 填充空白，使两个子图并排
-  \begin{subfigure}[b]{0.4\textwidth}
+  \begin{subfigure}[b]{0.45\textwidth}
     \includegraphics[width=\linewidth]{figures/image_p3_2.png}
-    \caption{搜索时间所对应的成功概率}
+    \caption{Success probability with search time}
     \label{fig:p3_2}
   \end{subfigure}
-  \caption{搜索策略}
+  \caption{Search Strategy}
   \label{fig:p3}
 \end{figure}
 
-\autoref{fig:p3_1}表明搜索轨迹采用经典的平行条带策略，实现了对目标区域的系统性全覆盖。在搜索过程中，
-某些区域轨迹更为密集，这反映了搜索策略的自适应性。
-多条轨迹交叉覆盖的地方正对应后验概率密度的高值区，系统可能进行了多次重复扫描以提高探测置信度，同时
-贝叶斯更新机制使得高概率区域在首次扫描后仍保持较高剩余概率，触发二次精细搜索。
+\autoref{fig:p3_1} shows that the search trajectory adopts the classic parallel strip strategy, achieving systematic full coverage of the target area. During the search process,
+some areas have denser trajectories, reflecting the adaptiveness of the search strategy.
+Multiple trajectory intersections correspond to high posterior probability density areas, indicating that the system may have conducted multiple repeated scans to improve detection confidence. Meanwhile,
+the Bayesian update mechanism ensures that high-probability areas maintain relatively high residual probabilities after the first scan, triggering secondary fine searches.
 
-\autoref{fig:p3_2}展现出我们所建立的贪婪搜索的策略的显著效率。
-由此我们绘制出该搜索策略的性能指标\autoref{tab:zhibiao}。
+\autoref{fig:p3_2} demonstrates the significant efficiency of the greedy search strategy we established.
+Based on this, we plotted the performance metrics of this search strategy \autoref{tab:zhibiao}.
 \begin{table}[ht]
     \centering
-    \caption{性能指标表}
+  \small
+  \setlength{\tabcolsep}{6pt}
+  \renewcommand{\arraystretch}{1.15}
+  \vspace{-0.2cm}
+  \caption{Performance Metrics}
+  \vspace{-0.4cm}
     \label{tab:zhibiao}
-    \begin{tabular}{lcc}
+  \begin{tabularx}{\linewidth}{@{}l >{\centering\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}X@{}}
         \toprule
-        指标& 数值& 描述 \\
+    \textbf{Metric} & \textbf{Value} & \textbf{Description} \\
         \midrule
-        总搜索时间 & 59.3小时 & 约2.5天，符合实际搜救的时间窗口 \\
-        最终成功率 & 98.67\% & 高于95\%的工程可接受阈值 \\
-        50\%成功率时间 & $\sim$4小时 & 快速定位阶段 \\
-        75\%成功率时间 & $\sim$10小时 & 高置信度阶段 \\
-        90\%成功率时间 & $\sim$30小时 & 接近完成阶段 \\
-        边际时间成本 & 20h $\rightarrow$ 3.67\% & 后期每1\%需5.4小时 \\
+    Total search time & 59.3 h & Approximately 2.5 days, consistent with the operational search window \\
+    Final success rate & 98.67\% & Above the engineering acceptable threshold of 95\% \\
+    50\% success time & $\sim$4 h & Rapid localization phase \\
+    75\% success time & $\sim$10 h & High confidence phase \\
+    90\% success time & $\sim$30 h & Near completion phase \\
+    Marginal time cost & 20 h $\rightarrow$ 3.67\% & Each additional 1\% requires 5.4 hours in the late stage \\
         \bottomrule
-    \end{tabular}
+  \end{tabularx}
 \end{table}
-在搜索的初期阶段（$0-5$小时），母船优先覆盖后验概率密度最高的区域。
-这使得搜索成功率迅速上升至60\%左右，
-接着进入搜索的中期阶段（$5-30$小时），搜索转向次高概率区域，成功率的增长逐渐放缓，
-在30小时左右，达到90\%,
-搜索的后期阶段(30小时以上)，开始搜索低概率边缘区域，边际收益递减效应明显，
-曲线趋于饱和，成功率增加十分缓慢，在经过59.3个小时的搜索后，搜索成功率达到98.67\%。
 
-\section{问题四的求解}
-\subsection{多目标分层搜索策略}
-当同一片海域存在多个潜水器故障，
-，我们用于单目标所用的传统贪婪搜索模型容易陷入局部最优，
-且在目标间转移时缺乏全局的规划能力。
-因此我们将多目标搜救问题拆分成\textbf{全局航路规划}与\textbf{局部全面搜索}两个层级，
-建立基于有限状态机（FSM）的分层搜索模型,从而兼顾整体的搜索效率与局部搜索的完整性。
-\subsubsection*{基于广义TSP的目标排序}
-首先，$t=0$时刻的后验概率密度函数为$\rho_0(x,y)$，
-通过寻找局部极大值点确定$K$个潜在目标中心集合$C$：
+In the early stage of the search ($0-5$ hours), the mother ship prioritizes covering areas with the highest posterior probability density.
+This causes the search success rate to rapidly rise to about 60\%,
+then entering the mid-stage of the search ($5-30$ hours), the search shifts to areas with the next highest probability, and the growth of the success rate gradually slows down.
+Around 30 hours, it reaches 90\%.
+In the late stage of the search (over 30 hours), the search begins to cover low-probability peripheral areas, with a clear diminishing marginal returns effect.
+The curve tends to saturate, and the success rate increases very slowly. After 59.3 hours of search, the success rate reaches 98.67\%.
+
+\section{Solution to Problem 4}
+\subsection{Multi-Target Hierarchical Search Strategy}
+When multiple submersible failures occur in the same sea area,
+the traditional greedy search model used for single targets is prone to local optima,
+and lacks global planning capability when transitioning between targets.
+Therefore, we decompose the multi-target search and rescue problem into two levels: \textbf{global route planning} and \textbf{local comprehensive search},
+establishing a hierarchical search model based on a finite state machine (FSM) to balance overall search efficiency and local search completeness.
+\subsubsection*{Target Ordering Based on Generalized TSP}
+First, at time $t=0$, the posterior probability density function is $\rho_0(x,y)$,
+and the set of $K$ potential target centers $C$ is determined by finding local maxima:
 \begin{equation}
-  C={(x_k,y_k)\mid\mathrm{\nabla}\rho_0(x_k,y_k)=0,det(H(\rho_0))>0,k=1,\ldots,K}
+  C=\left\{(x_k,y_k)\mid\mathrm{\nabla}\rho_0(x_k,y_k)=0,\det\big(H(\rho_0)\big)>0,\ k=1,\ldots,K\right\}
 \end{equation}
-其中$k$表示第$k$个故障的潜水器，$K$表示所有的潜水器故障数。
+where $k$ represents the $k$-th failed submersible, and $K$ represents the total number of submersible failures in the area.
 
-为最小化母船在不同目标之间的转移时间，
-本文将目标访问顺序建模为广义旅行商问题（TSP）。
-定义目标 $i$ 与目标 $j$ 之间的欧氏距离为 $d_{ij}$，
-决策变量 $x_{ij}\in\{0,1\}$ 表示母船是否直接从目标 $i$ 航行至目标 $j$，
-则全局路径规划的优化目标为
+To minimize the transfer time of the mother ship between different targets,
+this paper models the target visitation order as a Generalized Traveling Salesman Problem (TSP).
+Define the Euclidean distance between target $i$ and target $j$ as $d_{ij}$,
+and the decision variable $x_{ij}\in\{0,1\}$ indicates whether the mother ship sails directly from target $i$ to target $j$,
+then the optimization objective of global path planning is
 \begin{equation}
   \min \sum_{i=1}^{K}\sum_{j=1}^{K} d_{ij}\,x_{ij}.
 \end{equation}
-该问题通过最邻近启发式算法进行求解，
-从母船初始位置出发，
-优先访问距离最近的高置信度目标，
-并在完成单目标搜救后迭代更新剩余目标集合，
-从而生成一条近似最优的多目标搜救航行序列。
+This problem is solved using the nearest neighbor heuristic algorithm,
+starting from the initial position of the mother ship,
+prioritizing visits to the nearest high-confidence targets,
+and iteratively updating the remaining target set after completing single-target search and rescue,
+thus generating an approximately optimal multi-target search and rescue navigation sequence.
 
-通过最邻近算法求解该模型，
-得到最优的航行序列，即优先搜寻离起点更近的目标，
-搜救完一个目标后，又继续搜素最近的未救援目标，以此类推，推理规划出最优救援路线。
-\subsubsection*{螺旋覆盖路径的确定}
-在针对单个目标进行搜索时，
-为了克服贪婪搜索中的盲目摆动并保证对置信区间的$100\%$覆盖，
-我们放弃了基于梯度的航向决策$\max_{\theta} J(\theta)$，
-转而采用确定性的方形螺旋策略。
-定义$t$时刻相对于目标中心的螺旋层数为$n$，此时航向角 $\theta_t$ 被限制为离散集合
+This model is solved using the nearest neighbor algorithm,
+resulting in an optimal navigation sequence that prioritizes searching targets closer to the starting point,
+and after completing the search and rescue of one target, continues to search the nearest unrescued target, and so on, thus inferring and planning the optimal rescue route.
+\subsubsection*{Determination of Spiral Coverage Path}
+When searching for a single target,
+to overcome the blind oscillation in greedy search and ensure 100\% coverage of the confidence interval,
+we abandon the gradient-based heading decision $\max_{\theta} J(\theta)$,
+and instead adopt a deterministic square spiral strategy.
+Define the spiral layer number relative to the target center at time $t$ as $n$, and the heading angle $\theta_t$ is restricted to the discrete set
 \begin{equation}
   \theta_t \in \left\{0,\frac{\pi}{2},\pi,\frac{3\pi}{2}\right\}
 \end{equation}
-第$n$圈螺旋的边长约束为\begin{equation}
+
+The side length constraint of the $n$-th spiral layer is
+\begin{equation}
   L_n = 2nW
 \end{equation}
-其中 $W$ 为声呐的有效扫测宽度。
-该策略能够保证搜索区域随时间逐层扩展，
-并实现对高置信区域的系统性覆盖。
-\subsubsection*{状态机与贝叶斯更新模型}
-为了实现航行与搜索的动态切换，我们定义系统状态（转移，搜索）：
+where $W$ is the effective scanning width of the sonar.
+This strategy ensures that the search area expands layer by layer over time,
+and achieves systematic coverage of high-confidence areas.
+\subsubsection*{Finite State Machine and Bayesian Update Model}
+To achieve dynamic switching between transit and search, we define the system states (Transit, Search):
 \begin{equation}
 M(t+1)=
 \begin{cases}
@@ -925,161 +887,257 @@ M(t),
 & \text{otherwise},
 \end{cases}
 \end{equation}
-其中 $\bm{P}_{\mathrm{ship}}$ 为母船当前位置，
-$\bm{P}_{\mathrm{target}}$ 为当前搜索目标中心，
-$R_{\mathrm{trigger}}$ 为进入局部搜索的触发半径，
-$\epsilon$ 为目标区域内的残余概率阈值。
+where
+$\bm{P}_{\mathrm{ship}}$ represents the current position of the mother ship,
+$\bm{P}_{\mathrm{target}}$ represents the center of the current search target,
+$R_{\mathrm{trigger}}$ is the triggering radius for entering the local search,
+and $\epsilon$ is the residual probability threshold within the target area.
 
-搜救目标的本质依然还是在时间约束下最大化发现概率。
-我们沿用之前单一模型的概率密度，引入宽幅传感器的探测概率$Pd=0.95$.
-当搜救船沿规划路线航行时，
-若在$t$时刻未发现目标，则扫射区域$S(\theta)$内的概率密度按贝叶斯法则更新：
+The essence of the search and rescue target remains maximizing the probability of discovery under time constraints.
+We continue to use the probability density from the previous single model and introduce the detection probability of the wide-beam sensor $P_d=0.95$.
+When the search and rescue ship sails along the planned route,
+if the target is not found at time $t$, the probability density within the sweep area $S(\theta)$ is updated according to Bayes' rule:
 \begin{equation}
   \rho_{t+1}(x,y)=
   \begin{cases}
-    \rho_t(x,y)\cdot(1-P_d), & (x,y)\in S(\theta_t),\\
-    \rho_t(x,y), & (x,y)\notin S(\theta_t).
+    \rho_t(x,y)\cdot(1-P_d), & (x,y)\in S(\theta_t)\\
+    \rho_t(x,y), & (x,y)\notin S(\theta_t)
   \end{cases}
 \end{equation}
-最终，
-多目标搜救问题可表述为：
-在满足时间约束的前提下，
-通过合理的目标排序、路径规划与概率更新机制，
-使累积期望发现概率在最短时间 $T$ 内达到给定阈值，
-其性能指标定义为
+
+Finally,
+the multi-target search and rescue problem can be formulated as:
+under the premise of satisfying time constraints,
+through reasonable target sorting, path planning, and probability update mechanisms,
+the cumulative expected discovery probability reaches a given threshold within the shortest time $T$,
+and its performance metric is defined as
 \begin{equation}
-  \max {J}=\sum_{t=0}^{T}\iint_{S(\theta_t)}\rho_t(x,y)\cdot P_ddxdy
+  \max {J}=\sum_{t=0}^{T}\iint_{S(\theta_t)}\rho_t(x,y)\cdot P_d\,\mathrm{d}x\,\mathrm{d}y
 \end{equation}
-\subsection{结果分析与模型验证}
-我们选取了以西经$66.5^\circ$ 北纬$19.5^\circ$ 为中心的加勒比海域,
-如\autoref{fig:jlb}所示。与爱奥尼亚海相比，加勒比海具有更为复杂的海洋动力学特征，
-包括墨西哥湾流、加勒比暖流等多层环流结构，以及显著的盐度变化。
+\subsection{Results Analysis and Model Validation}
+We extend this model to the Caribbean Sea, centered at 66.5°W longitude and 19.5°N latitude
+as shown in \autoref{fig:jlb}. Compared to the Ionian Sea, the Caribbean Sea exhibits more complex ocean dynamic features,
+including multi-layer circulation structures such as the Gulf Stream and Caribbean Current, as well as significant salinity and temperature variations.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/image.png}\
-  \caption{加勒比海域}
+  \includegraphics[height=5.2cm]{figures/image.png}
+  \caption{Caribbean Sea}
   \label{fig:jlb}
 \end{figure}
 
-我们应用前面建立的悬浮漂移-沉降模型，得到了潜水器在加勒比海失事后的空间概率分布及悬浮平衡深度如\autoref{fig:image_p4}所示。
-
-与爱奥尼亚海悬浮的深度$2000m$相比，潜水器在加勒比海悬浮的深度下降到$1400m$，
-同时因为海底洋流的复杂性，使得潜水器在加勒比海悬浮时的概率热图比爱奥尼亚海的情况更加复杂，
-出现了一个概率双峰，这两个区域潜水器可能存在的概率约为90\%。
-这是因为潜水器在达到悬浮平衡深度后，比在爱奥尼亚海的悬浮深度浅，
-受到更明显的多层环流的差异化作用，
-部分沿主流路径漂移至主峰区域，部分受支流影响偏转至次峰区域。
-而当潜水器发生沉底时，
-潜水器在重力主导下竖直下沉，
-洋流仅在下沉过程中造成有限的水平漂移，
-导致其概率分布的位置较为集中。
-
+We apply the previously established suspended drift-sinking model to obtain the spatial probability distribution and suspended equilibrium depth of the submersible after the accident in the Caribbean Sea, as shown in \autoref{fig:image_p4}.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/image_p4.png}
-  \caption{左：沉底的位置概率分布 \quad 中：悬浮的位置概率分布 \quad 右：悬浮平衡深度}
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g1.png}
+    \caption{Probability distribution of the bottom position}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g2.png}
+    \caption{Probability distribution of suspended position}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g3.png}
+    \caption{Suspended Depth}
+  \end{subfigure}\vspace{-0.1cm}
+  \caption{}
   \label{fig:image_p4}
 \end{figure}
-\autoref{fig:image_p42}展示了基于确定性的方形螺旋策略的单目标搜救路径规划结果及累积成功概率演化过程。
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/image_p42.png}
-  \caption{左：搜寻单个潜水器的路径 \quad 右：累计成功率随时间的变化曲线 }
-  \label{fig:image_p42}
-\end{figure}
+\vspace{-0.3cm}
 
+Compared to the suspended depth of $2000\,\mathrm{m}$ in the Ionian Sea, the submersible's suspended depth in the Caribbean Sea decreases to $1400\,\mathrm{m}$.
+At the same time, due to the complexity of the seabed currents, the probability heatmap of the submersible's suspension in the Caribbean Sea is more complex than that in the Ionian Sea,
+showing a bimodal probability peak, with about 90\% probability that the submersible may exist in that area.
+This is because after the submersible reaches the suspended equilibrium depth, which is shallower than the suspended depth in the Ionian Sea,
+it is affected by more pronounced differentiated multi-layer circulation,
+partially drifting along the main current path to the main peak area, and partially deflecting to the secondary peak area under the influence of tributaries.
+When the submersible sinks to the bottom,
+it sinks vertically under the dominance of gravity,
+and the ocean currents only cause limited horizontal drift during the sinking process,
+resulting in a more concentrated probability distribution.
+
+\autoref{fig:image_p42} shows the single-target search and rescue path planning results and the evolution of cumulative success probability based on the deterministic square spiral strategy.
+Observing the single-target search path results,
+the search trajectory of the mother ship adopts a parallel strip strategy, and this strategy allows for systematic coverage of the entire target area.
+The design of the search path takes into account the posterior probability density function,
+ensuring priority coverage of high-probability areas.
+Through the Bayesian update mechanism, as the search progresses,
+the probability density of the searched area is correspondingly reduced, dynamically adjusting the search path and concentrating resources on high-probability areas that have not been sufficiently searched.
+The cumulative success rate curve over time shows a "fast then slow" growth trend.
+At the beginning of the search, the mother ship prioritizes visiting the target areas with the highest posterior probability, rapidly increasing the success probability;
+As the search progresses, high-probability areas are gradually covered, the probability density of the remaining areas decreases, and the growth rate of the success probability slows down.
+Within about 45 hours of search time, the cumulative success discovery probability finally reaches 93.62\%.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/image_p4_duo.png}
-  \caption{左：多目标搜救路径规划结果\quad 右：成功率随时间的变化曲线 }
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g4.png}
+    \caption{Search path for a single submersible}
+    \label{fig:path_single}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g5.png}
+    \caption{Cumulative success rate over time}
+    \label{fig:success_rate}
+  \end{subfigure}
+  \vspace{-0.3cm}
+  \caption{}
+  \label{fig:image_p42}
+\end{figure}\vspace{-0.4cm}
+
+
+\autoref{fig:image_p43} shows the multi-target search and rescue path planning results and the evolution of cumulative success probability based on the hierarchical search strategy.
+Observing the search path results,
+the overall trajectory of the mother ship presents a clear partitioned search structure.
+The search trajectory is spatially divided into several relatively independent high-density coverage areas,
+and different areas are connected by shorter navigation segments.
+This phenomenon indicates that
+the target center set constructed based on the posterior probability density maxima and the generalized TSP model can effectively determine the visiting order of multiple targets,
+allowing the mother ship to prioritize potential target areas that are closest and have higher confidence, thereby reducing the invalid navigation time consumed in transferring between targets.
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g6.png}
+    \caption{Result of multi-target search path planning }
+    \label{fig:path_multi}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\textwidth}
+    \centering
+    \includegraphics[height=5.2cm]{figures/image_g7.png}
+    \caption{Curve showing the change of success rate over time }
+    \label{fig:success_rate_multi}
+  \end{subfigure}
+    \caption{}
   \label{fig:image_p43}
 \end{figure}
-\autoref{fig:image_p43}展示了基于分层搜索策略的多目标搜救路径规划结果及累积成功概率演化过程。
 
-从搜索路径结果可以看出，
-母船的整体航迹呈现出明显的分区式搜索结构。
-搜索轨迹在空间上被划分为若干相对独立的高密度覆盖区域，
-而不同区域之间通过较短的航行段相连。
-这一现象表明，
-基于后验概率密度极大值构建的目标中心集合以及广义 TSP 模型能够有效确定多目标的访问顺序，
-使母船优先前往距离最近且置信度较高的潜在目标区域，从而减少目标间转移所消耗的无效航行时间。
+\vspace{-0.4cm}
+Within a single target area, the search path exhibits a regular, directionally consistent square spiral pattern,
+rather than frequent directional adjustments or random oscillations.
+This indicates that the adopted deterministic spiral coverage strategy can avoid the local oscillation issues typical of traditional greedy searches,
+while ensuring complete coverage of the target confidence region. The linear relationship between the number of spiral layers and the sweep width
+allows for full utilization of the wide-beam acoustic sensor's effective coverage capability, improving search efficiency per unit time.
 
-在单个目标区域内部，搜索路径呈现出规则、方向一致的方形螺旋形态，
-而非频繁的方向调整或随机摆动。
-这说明采用的确定性螺旋覆盖策略能够在避免传统贪婪搜索局部振荡问题的同时，
-保证对目标置信区间的完整覆盖。螺旋路径的层数与扫测宽度之间的线性关系，
-使得宽幅声学传感器的有效覆盖能力得到充分利用，提高了单位时间内的搜索效率。
+From the probability heatmap, it can be observed that
+the probability density of the searched and covered areas is significantly reduced,
+while the unsurveyed areas still maintain high probability values.
+This result validates the effectiveness of the Bayesian update mechanism during the search process:
+when the mother ship does not find the target at a certain time, the posterior probability within the swept area is reduced according to the detection probability,
+thereby gradually compressing high-uncertainty areas and guiding the search path towards regions that have not been sufficiently covered.
 
-从概率热力分布可以观察到
-已被搜索覆盖的区域概率密度明显降低，
-而未搜索区域仍保持较高概率值。
-这一结果验证了贝叶斯更新机制在搜索过程中的有效性：
-当母船在某一时刻未发现目标时，扫射区域内的后验概率按照探测概率进行削减，
-从而逐步压缩高不确定性区域，并引导搜索路径向未被充分覆盖的区域转移。
+For multi-target search,
+the overall success rate finally reaches 87.04\% at about 11.3 hours.
+The curve as a whole shows a typical "stepwise" growth characteristic,
+reflecting the phased behavior of the multi-target search-rescue process of search-transfer-research.
 
-累计成功率随时间的变化曲线呈现出“先快后缓”的增长趋势。
-在搜索初期，母船优先访问后验概率最高的目标区域，成功概率迅速提升；
-随着搜索的推进，高概率区域逐渐被覆盖，剩余区域的概率密度降低，成功概率增长速率随之放缓。
-在约 45 小时的搜索时间内，累计成功发现概率最终达到 93.62\%。
-该结果充分体现了在探测概率受限及时间资源有限的现实约束下，
-模型仍能够实现较高的搜救成功率，具有良好的工程合理性。
+\paragraph{\textbf{Phase 1: 0 - 2 hours}}
+During the initial stage of the mission,
+the success rate rapidly increases from 0 to approximately 33\%,
+with the steepest slope.
+This phase corresponds to the mother ship traveling from its initial position to the first high-probability target area and conducting a local spiral search.
+Since this target area has the highest posterior probability density
+and satisfies the nearest neighbor criterion,
+it is given priority,
+resulting in a significant increase in success rate within a short period of time.
+
+\paragraph{\textbf{Phase 2: 2 - 8 hours}}
+During this phase,
+the success rate slowly increases from 33\% to approximately 37\%,
+with the curve showing an almost flat trend.
+This phase mainly corresponds to the transfer process between targets,
+where the mother ship is in the \textit{Transit} state,
+navigating from the first target to the second target according to the global path planning results.
+Since no effective sweeping is performed during this process,
+the search contribution is almost zero,
+and the increase in success rate mainly comes from the slight marginal effects in probability updates.
+From the spatial trajectory map, it can be seen that
+there is a long sailing distance between the first and second targets,
+and the time consumption in this stage mainly comes from the speed limitation of the mother ship and the preparation time required for equipment redeployment.
+
+\paragraph{\textbf{Phase 3: 8 - 10 hours}}
+After entering the second high-probability target area,
+the success rate rapidly increases from approximately 37\% to 66\%,
+with the curve showing a significant steep rise again.
+This area corresponds to the central region with the highest probability density and the largest coverage area in the heatmap,
+and after the previous search is completed,
+the Bayesian update mechanism significantly concentrates the relative probability weights of the remaining unsurveyed areas.
+According to the Bayesian update rule,
+the probability density within the searched area is reduced to
+$\rho_t \cdot (1-P_d)$,
+where $P_d = 0.95$,
+thereby further amplifying the relative importance of the unsurveyed areas,
+significantly increasing the probability of detection per unit time.
+
+\paragraph{\textbf{Phase 4: 10 - 12 hours}}
+In the later stage of the mission,
+the success rate growth slows down,
+and diminishing marginal returns begin to appear.
+This phase mainly corresponds to the search of the third high-probability target or the edge areas of the probability distribution.
+Since the remaining posterior probability is already low,
+observing the search trajectory reveals that the mother ship needs to cover a larger area to achieve limited improvements in success rate.
 
 \section{Sensitivity Analysis}
 \label{sub:yangliulingminxing}
-为定量评估洋流预测误差对潜水器位置不确定性的影响，
-我们将洋流速度预测偏差从 $0\%$ 连续增加至 $20\%$，
-并定义相对置信区域扩展率作为灵敏性度量指标：
+To quantitatively assess the impact of ocean current prediction errors on the uncertainty of the submersible's position,
+we continuously increased the ocean current velocity prediction deviation from $0\%$ to $20\%$,
+and defined the relative confidence region expansion rate as a sensitivity metric:
 \begin{equation}
 E=\frac{|A_0-A_i|}{A_0},
 \end{equation}
-其中 $A_0$ 表示在无洋流预测偏差条件下（误差为 $0\%$）得到的 $95\%$ 置信区域面积，
-$A_i$ 表示在洋流预测误差为 $i$ 时对应的 $95\%$ 置信区域面积。
-该指标反映了洋流不确定性引入后潜水器位置不确定性的相对放大程度。
-基于蒙特卡洛仿真结果，我们得到潜水器相对置信区域增长率
-随洋流预测误差变化的关系曲线，如 \autoref{fig:yangliulingminxing} 所示。
-\begin{figure}[H]
+where$A_0$ represents the 95\% confidence  area obtained under the condition of no ocean current prediction deviation (with an error of $0\%$),
+and $A_i$ represents the 95\% confidence  area corresponding to an ocean current prediction error of $i$.
+
+This indicator reflects the relative amplification degree of the uncertainty in the underwater vehicle's position after the introduction of ocean current uncertainty.
+Based on the results of Monte Carlo simulation, we obtained the relationship curve of the relative growth rate of the confidence area of the underwater vehicle
+with respect to the ocean current prediction error, as shown in \autoref{fig:yangliulingminxing}.
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.7\textwidth]{figures/image _sense1.png}
-  \caption{洋流灵敏性分析}
+  \caption{Sensitivity Analysis of Ocean Currents}
   \label{fig:yangliulingminxing}
 \end{figure}
-根据结果图像可以看到，随着洋流的偏离的增大，潜水器相对位置区域面积的增长率也在呈对数趋势增长。
-结果表明我们的模型对洋流预测的灵敏度较高，
-但是这符合实际情况，具有物理意义的。
-在潜水器发生故障、失去推进与姿态控制能力的情况下，
-其运动主要受深海洋流的被动漂移所主导。
-因此，洋流速度与方向预测的微小偏差会在时间积分过程中不断放大，
-直接导致潜水器位置预测误差的快速累积。
-那么洋流预测偏差越大，对潜水器的位置预测的误差自然也就越大。
+
+According to the results shown in the figure, as the deviation of ocean currents increases, the confidence region expansion rate also exhibits a logarithmic growth trend.
+This indicates that our model is highly sensitive to ocean current predictions,
+which is consistent with the actual situation and has physical significance.
+In the event of a submersible failure, losing propulsion and attitude control capabilities,
+its movement is mainly dominated by passive drifting under deep-sea ocean currents.
+Therefore, small deviations in the prediction of ocean current velocity and direction will be continuously amplified during the time integration process,
+directly leading to the rapid accumulation of prediction errors in the submersible's position.
+Thus, the greater the deviation in ocean current prediction, the larger the error in the submersible's position prediction.
 \section{Model Evaluation and Further Discussion}
 \subsection{Strengths}
 \begin{itemize}
-  \item 我们采用了爱奥尼亚海（2025年8月1-7日）和加勒比海的真实海洋环境数据，
-而非依赖简化的理论假设。
-首先我们考虑了随深度变化的流速剖面，捕捉了深海环流的垂直结构的多层洋流场，
-接着我们基于海水密度随温度、盐度、深度的变化规律，得到潜水器的动力学模型
-，最后基于实际测深数据构建影响沉底位置预测的海洋地形模型。
-这样确保了预测位置概率分布能够反映更加真实海况，提升模型的实用性和可信度。
-  \item 我们的模型通过2000个粒子的蒙特卡洛模拟，系统地量化了位置预测的不确定性。
-首先，我们通过高斯混合模型合理刻画了悬浮与沉底两种故障模式的概率分布
-接着构建起随机扰动误差，同时考虑了湍流噪声$v_{noise}(t)
-$ 和系统误差$v_{sys}$。
-相比确定性方法，该概率框架能够表达预测的不确定性，
-为风险评估和资源分配提供了科学依据。
-  \item 我们将建立的模型从爱奥尼亚海域迁移到加勒比海地区，其结果表现良好。
-这表明我们所建立的模型不仅适用于特定区域，还具有良好的迁移能力与拓展性。
+  \item We used real ocean environment data from the Ionian Sea (August 1-7, 2025) and the Caribbean Sea,
+rather than relying on simplified theoretical assumptions.
+First, we considered the velocity profile changes with depth, capturing the multi-layer ocean current field of the deep-sea circulation's vertical structure.
+Next, based on the variation of seawater density with temperature, salinity, and depth, we obtained the submersible's dynamic model.
+Finally, based on actual bathymetric data, we constructed an ocean terrain model affecting the prediction of the bottoming position.
+This ensures that the predicted position probability distribution can reflect more realistic sea conditions, enhancing the model's practicality and credibility.
+  \item Our model systematically quantifies the uncertainty in position prediction through Monte Carlo simulation with 2000 particles.
+First, we reasonably characterized the probability distributions of the two failure modes, floating and bottoming, using a Gaussian mixture model.
+Next, we constructed random disturbance errors, considering both turbulent noise $v_{noise}(t)$ and systematic error $v_{sys}$.
+Compared to deterministic methods, this probabilistic framework can express prediction uncertainty,
+providing a scientific basis for risk assessment and resource allocation.
+  \item We transferred the established model from the Ionian Sea to the Caribbean Sea, and the results performed well.
+This indicates that the model we developed is not only applicable to specific regions but also has good transferability and scalability.
 \end{itemize}
 \subsection{Weaknesses}
 \begin{itemize}
-  \item 当前模型假设声呐探测概率$P_d = 0.95$为常数，但实际情况更复杂。
-首先，声波在深海中的传播收到深度的影响。
-这导致当潜水器位于1400m与2000m的不同深度下，被探测到的概率会有所差异。
-当前模型对两种深度使用相同探测概率，不够精确。
-然后，海底反射干扰，复杂地形（如海沟）会降低探测质量。
-最后沉底目标可能与海底岩石混淆，而悬浮目标在水层中更易识别。
-  \item 问题四的多目标模型将各潜水器视为独立事件，
-但实际可能存在潜水器设计问题导致故障发生并不独立，
-同时，环境事件（如海底滑坡、强洋流）也可能同时影响多个潜水器。
+  \item The current model assumes a constant sonar detection probability $P_d = 0.95$, but the actual situation is more complex.
+First, the propagation of sound waves in the deep sea is affected by depth.
+This leads to different detection probabilities when the submersible is at depths of 1400m and 2000m.
+The current model uses the same detection probability for both depths, which is not precise.
+Then, seabed reflection interference and complex terrain (such as trenches) can reduce detection quality.
+Finally, bottoming targets may be confused with seabed rocks, while floating targets are easier to identify in the water column.
+  \item The multi-target model in Question 4 treats each submersible as an independent event,
+but in reality, there may be design issues causing failures to be dependent,
+and environmental events (such as underwater landslides and strong currents) may simultaneously affect multiple submersibles.
 \end{itemize}
 \newpage
 \addcontentsline{toc}{section}{Reference}
@@ -1094,79 +1152,77 @@ $ 和系统误差$v_{sys}$。
 \end{center}
 
 \vspace{0.3cm}
-\noindent
+\noindent\rule{\textwidth}{1.5pt}
 \begin{tabular}{@{}ll@{}}
 \textbf{To:} & Greek Government, Ministry of Tourism and Culture \\
 \textbf{From:} & MCM Team \#5049\\
 \textbf{Date:} & January 25th, 2026 \\
-\textbf{Subjects:} & Search, Localization, and Rescue Strategy for Submersibles under Ocean Current Uncertainty
+\textbf{Subjects:} & Search, Localization, and Rescue Strategy for Submersibles 
 \end{tabular}
-
 
 \noindent\rule{\textwidth}{1.5pt}
-\vspace{0.5cm}
+Dear Greek Government,
+We are honored to propose measures to ensure the safety of the submersible vessels in the underwater tourism project planned by MCMS Company.
+After understanding the entire project, we analyzed the dynamics model of the submersible and developed a comprehensive and scientifically validated search and rescue system for it.
+This system is based on Monte Carlo uncertainty models, Bayesian search theory, and multi-objective hierarchical search optimization,
+and explicitly takes into account operational costs, preparation conditions, and rescue efficiency.
+This system can effectively search, locate, and rescue disabled manned submersibles in uncertain deep-sea environments.
+Thus, it ensures the safety of tourists and the feasibility of the operation.
 
-Dear Greek Governmen,非常荣幸我们能够就MCMS公司计划实施的海底旅游项目提出保障其潜水器安全的措施。
-在了解到整个项目后，我们通过对潜水器动力学模型进行分析，为其推出了一套全面且经科学验证的搜索与救援系统。
-该系统基于蒙特卡罗不确定性模型、贝叶斯搜索理论以及多目标分层搜索优化，
-并明确考虑了运营成本、准备情况和救援效率。
-该系统能够在深海环境不确定的情况下，
-对失能载人潜水器进行有效的搜索、定位和救援。
-从而确保游客安全和运营的可行性。
-
-为了减少该项目风险，
-我们对救援成功有关键影响的主要不确定性来源进行分析，并发现
-洋流预测误差直接决定着故障后的漂移情况,同时存在
-随机的系统级干扰(包括湍流和模型的误差)，这将加剧潜水器位置分布的不确定性。
-此外，在潜水器故障后，母船获取的信息有限，导致可能的搜索区域迅速扩大。
-敏感性分析表明，当前预测误差每增加 20\%，95\%置信度的搜索区域就会扩大约 25\%，
-呈对数增长趋势。因此，早期信息的获取和快速部署搜索行动对于保障人员安全至关重要，
-我们建议潜水器定期（每 15 分钟传输一次）必须配备
-   声学多普勒流速剖面仪（ADCP），
-   超短基线（USBL）声学调制解调器，
-  惯性测量单元（IMU），向母船传输以下数据：
-\begin{itemize}
-  \item ADCP 测量的深海流速和流向
-  \item 基于超声波定位技术的实时位置估算
-  \item 来自惯性测量单元系统的速度和姿态数据
-\end{itemize}
-这些数据能够极大地减少潜水器位置的不确定性，并使在潜水器发生故障后母船的搜索和定位过程更加高效。
+In order to reduce the risks of this project,
+we analyzed the main sources of uncertainty that have a critical impact on the success of the rescue operation, and found that
+the error in ocean current prediction directly determines the drift situation after the failure, and at the same time,
+there are random system-level disturbances (including turbulence and model errors), which will exacerbate the uncertainty in the distribution of the submersible's position.
+Furthermore, after the submersible fails, the information obtained by the mother ship is limited, leading to a rapid expansion of the possible search area.
+The sensitivity analysis indicates that for every 20\% increase in the current prediction error, the search area with 95\% confidence will expand by approximately 25\%,
+following a logarithmic growth trend. Therefore, the acquisition of early information and the rapid deployment of search operations are crucial for ensuring the safety of personnel,
+we recommend that the submersible must be equipped with
+an acoustic Doppler current profiler (ADCP),
+an ultra-short baseline (USBL) acoustic modem,
+an inertial measurement unit (IMU), and transmit the following data to the mother ship: \begin{itemize}
+\item The deep-sea current velocity and direction measured by ADCP
+\item Real-time position estimation based on ultrasonic positioning technology
+\item Velocity and attitude data from the inertial measurement unit system \end{itemize}
+These data can significantly reduce the uncertainty of the underwater vehicle's position and make the search and positioning process of the mother ship more efficient after the underwater vehicle malfunctions.
 
 
-基于成本效益分析，我们建议搭载该船的母舰配备\autoref{tab:equipment-justification}所示的基本搜索设备。
+Based on the multi-objective optimization model, we comprehensively consider factors such as the mobilization cost, performance characteristics, and reliability of the equipment,
+and recommend that the mother ship carrying this submersible be equipped with the basic search equipment as shown in \autoref{tab:equipment-justification}. 
 \begin{table}[htbp]
 \centering
-\caption{设备选择}
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{Recommended Search Equipment}
 \label{tab:equipment-justification}
-\begin{tabular}{llll}
+\begin{tabularx}{\linewidth}{@{}l X X >{\raggedleft\arraybackslash}p{2.2cm}@{}}
 \toprule
-\textbf{设备} & \textbf{功能} & \textbf{特点}& \textbf{价格} \\
+\textbf{Equipment} & \textbf{Purpose} & \textbf{Key Advantages} & \textbf{Cost (USD)} \\
 \midrule
-拖曳声纳 & 广域探测 & 高覆盖率，低成本，快速部署 & \$20000 \\
-高端自主水下航行器 & 高分辨率定位 & 高探测概率，自主深海能力& \$70000  \\
+Drone sonar & Wide-area detection & High coverage; low cost; rapid deployment & \$20{,}000 \\
+High-end AUV & High-resolution localization & High detection probability; autonomous deep-sea capability & \$70{,}000 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
-这种配置实现了 99.87\% 的搜索成功率，同时将总预算控制在 90,000 美元。
-对于零风险的任务，建议再配备一套拖曳式声纳,此时预算为110,000美元。
+This configuration achieves a search success rate of 99.87\% while keeping the total budget at \$90,000.
+For tasks that require zero-risk compliance, we recommend increasing the budget to \$110,000, allowing for the addition of an extra set of towed sonar. This ensures absolute safety of the mission.
 
-当多艘潜水器可能同时出现故障时，我们提出了一种两层的分层搜索策略：
-首先从后验分布中识别出多个高概率的目标中心。
-使用最近邻启发式算法来解决广义旅行商问题（TSP），以最小化目标之间的运输时间。
-这能够避免目标切换过程中的低效情况，并缩短整个任务的执行时间。
-然后，到达目标区域后，切换至确定性的正方形螺旋式覆盖模式。
-螺旋间距与传感器扫描宽度相匹配，以确保对置信区域进行 100\% 的覆盖。
-这种方法避免了纯粹基于贪婪梯度搜索所固有的振荡和局部最优解的问题。
-结果表明，当同一片海域3台配备上述设备的故障潜水器能够
-被配备上述设备的母船在$45$小时的时候搜寻到的有效率达到93.62\%。
+When multiple submersibles may simultaneously malfunction, we proposed a two-layer hierarchical search strategy:
+First, multiple high-probability target centers are identified from the posterior distribution.
+The nearest neighbor heuristic algorithm is used to solve the generalized traveling salesman problem (TSP) to minimize the transportation time between the targets.
+This can avoid inefficient situations during the target switching process and shorten the execution time of the entire task.
+Then, upon reaching the target area, a deterministic square spiral coverage mode is switched to.
+The spiral spacing matches the sensor scanning width to ensure 100\% coverage of the confidence region.
+This method avoids the oscillations and local optimal solution problems inherent in purely greedy gradient search.
+The results show that when there are 3 faulty submersibles equipped with the above equipment in the same sea area, the mother ship with the corresponding equipment configuration achieves an overall effective discovery rate of up to 93.62\% in continuous search for 45 hours.
 
+In conclusion, we strongly recommend that you consider these suggestions and adopt the Bayesian, hierarchical, and cost-benefit-based search framework proposed by us as the standard operating procedure for carrying out rescue missions for deep-sea submersibles.
+This strategy, when faced with an extremely uncertain marine environment,
+can maximize the rescue success rate and ensure the safety of tourists, while also guaranteeing the feasibility of the operation and the control of the budget, thereby promoting the development of deep-sea tourism projects.
 
-总之，我们强烈建议你们能够考虑这些建议,将我们所提出的贝叶斯、分层以及成本考量的搜索框架作为
-执行深海潜水器救援任务的标准操作流程。
-这一策略在环境不确定性极大的情况下，
-既能最大限度地提高救援成功率保障游客的安全，又能保证操作的可行性和预算的控制，从而
-推动深海旅游的发展。
-
-
-\vspace{0.3cm}
+\vspace{1.2em}
+\begin{flushright}
+Yours sincerely,\\
+MCM Team \#5049
+\end{flushright}
 \end{document}

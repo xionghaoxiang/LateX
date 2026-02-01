@@ -1,0 +1,70 @@
+\begin{thebibliography}{10}
+
+\bibitem{aa}
+Ahmed Abdelmotalib and Zhibo Wu.
+\newblock Power consumption in smartphones (hardware behaviourism).
+\newblock {\em International Journal of Computer Science Issues (IJCSI)}, 9(3):161--164, 05 2012.
+
+\bibitem{ALI2016173}
+Farhan~Azmat Ali, Pieter Simoens, Tim Verbelen, Piet Demeester, and Bart Dhoedt.
+\newblock Mobile device power models for energy efficient dynamic offloading at runtime.
+\newblock {\em Journal of Systems and Software}, 113:173--187, 2016.
+
+\bibitem{batteries6030035}
+Mohammad Alipour, Carlos Ziebert, Fiorentino~Valerio Conte, and Riza Kizilel.
+\newblock A review on temperature-dependent electrochemical properties, aging, and performance of lithium-ion cells.
+\newblock {\em Batteries}, 6(3), 2020.
+
+\bibitem{carroll2010analysis}
+Aaron Carroll and Gernot Heiser.
+\newblock An analysis of power consumption in a smartphone.
+\newblock In {\em Proceedings of the 2010 USENIX Annual Technical Conference (USENIX ATC '10)}, pages 21--21, Boston, MA, USA, 2010. USENIX Association.
+
+\bibitem{Carroll2010AnAO}
+Aaron Carroll and Gernot Heiser.
+\newblock An analysis of power consumption in a smartphone.
+\newblock In {\em USENIX Annual Technical Conference}, 2010.
+
+\bibitem{en10091313}
+Yixing Chen, Deqing Huang, Qiao Zhu, Weiqun Liu, Congzhi Liu, and Neng Xiong.
+\newblock A new state of charge estimation algorithm for lithium-ion batteries based on the fractional unscented kalman filter.
+\newblock {\em Energies}, 10(9), 2017.
+
+\bibitem{Ecker2014CalendarCycleLife}
+Madeleine Ecker, Nerea Nieto, Stefan K{\"a}bitz, Johannes Schmalstieg, Heiko Blanke, Andreas Warnecke, and Dirk~Uwe Sauer.
+\newblock Calendar and cycle life study of li(nimnco)o2-based 18650 lithium-ion batteries.
+\newblock {\em Journal of Power Sources}, 248:839--851, 2014.
+
+\bibitem{aosp_power_profile}
+{Google Inc.}
+\newblock power\_profile.xml --- {Android} open source project.
+\newblock \url{https://android.googlesource.com/platform/frameworks/base/+/main/core/res/res/xml/power_profile.xml}.
+\newblock Accessed: 2026-01-30.
+
+\bibitem{en4040582}
+Hongwen He, Rui Xiong, and Jinxin Fan.
+\newblock Evaluation of lithium-ion battery equivalent circuit models for state of charge estimation by an experimental approach.
+\newblock {\em Energies}, 4(4):582--598, 2011.
+
+\bibitem{Android—mobile-devices}
+Seung-Ryeol Ohk, Seok~Min Hong, and Young-Jin Kim.
+\newblock Phase-based predicting the battery remaining time for android mobile devices.
+\newblock In {\em 2021 International Conference on Information and Communication Technology Convergence (ICTC)}, pages 942--944, 2021.
+
+\bibitem{en11051033}
+Hui Pang and Fengqi Zhang.
+\newblock Experimental data-driven parameter identification and state of charge estimation for a li-ion battery equivalent circuit model.
+\newblock {\em Energies}, 11(5), 2018.
+
+\bibitem{statista_smartphone_2025}
+{Statista Research Department}.
+\newblock Number of smartphone mobile network subscriptions worldwide from 2016 to 2025, with forecasts from 2025 to 2028.
+\newblock \url{https://www.statista.com/statistics/330695/number-of-smartphone-users-worldwide/}, 2025.
+\newblock Accessed: 2026-01-30.
+
+\bibitem{9246725}
+Zichen Xu, Jie Zhou, Wenli Zheng, Yuhao Wang, and Minyi Guo.
+\newblock Exploiting big.little batteries for software defined management on mobile devices.
+\newblock {\em IEEE Transactions on Mobile Computing}, 21(6):1998--2012, 2022.
+
+\end{thebibliography}

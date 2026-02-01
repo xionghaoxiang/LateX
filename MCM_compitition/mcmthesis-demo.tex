@@ -1,0 +1,1045 @@
+%%
+%% This is file `mcmthesis-demo.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% mcmthesis.dtx  (with options: `demo')
+%%
+%% -----------------------------------
+%%
+%% This is a generated file.
+%%
+%% Copyright (C)
+%%       2010 -- 2015 by Zhaoli Wang
+%%       2014 -- 2019 by Liam Huang
+%%       2019 -- present by latexstudio.net
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Liam Huang.
+%%
+%%
+%% This is file `mcmthesis-demo.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% mcmthesis.dtx  (with options: `demo')
+%%
+%% -----------------------------------
+%%
+%% This is a generated file.
+%%
+%% Copyright (C)
+%%       2010 -- 2015 by Zhaoli Wang
+%%       2014 -- 2019 by Liam Huang
+%%       2019 -- present by latexstudio.net
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Liam Huang.
+%%
+\documentclass{mcmthesis}
+\mcmsetup{CTeX = true,    % 使用 CTeX 套装时，设置为 true
+          tcn = {5049}, problem = \textcolor{red}{A},
+          sheet = true, titleinsheet = true, keywordsinsheet = true,
+          titlepage = false, abstract = false}
+\usepackage{newtxtext}     % \usepackage{palatino}
+\usepackage[numbers]{natbib}
+\usepackage{tocloft}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{hyperref}
+\usepackage{etoolbox}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,   % 正文交叉引用（\ref, \autoref）为蓝色
+  citecolor=red,
+  urlcolor=black
+}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{ctex}
+\newcommand{\Rmnum}[1]{\uppercase\expandafter{\romannumeral #1}}  %定义命令输入大写罗马数字
+\newcommand{\rmnum}[1]{\romannumeral #1}  %定义命令输入小写罗马数字
+
+% Force English abstract heading even when ctex is loaded.
+%\ctexset{abstractname = {Summary}}
+\renewcommand{\abstractname}{Summary}
+
+\sethlcolor{yellow!40}
+\newcommand{\hltext}[1]{\colorbox{yellow!40}{#1}}
+\setlength{\cftbeforesecskip}{6pt}
+\renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
+
+\title{}
+% \author{\small \href{http://www.latexstudio.net/}
+%   {\includegraphics[width=7cm]{mcmthesis-logo}}}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+
+
+\begin{keywords}
+
+\end{keywords}
+\end{abstract}
+
+\maketitle
+
+%% Generate the Table of Contents, if it's needed.
+% \renewcommand{\contentsname}{\centering Contents}.
+\pretocmd{\tableofcontents}{%
+  \hypersetup{linkcolor=black}%
+}{}{}
+\apptocmd{\tableofcontents}{%
+  \hypersetup{linkcolor=blue}%
+}{}{}
+
+\tableofcontents        % 若不想要目录, 注释掉该句
+\thispagestyle{fancy}
+
+
+\newpage
+
+
+
+
+
+
+
+
+
+\section{Introduction}
+\subsection{background}
+随着科学技术的发展，手机在我们的生活中发挥着不可或缺的作用。
+到2025年，全球智能手机用户数量已超过73亿。
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/image.png}
+    \caption{全球手机用户数量\cite{statista_smartphone_2025}}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/R-C.png}
+    \caption{手机电池电量示意图}
+  \end{subfigure}
+  \caption{}
+  \label{fig:battery_parallel}
+\end{figure}
+其中，手机的续航能力直接影响用户体验，而电池作为手机的核心部件，与屏幕、CPU工作情况、
+网络负载、应用程序相互配合，共同作用，决定着手机的续航时间进而影响用户的使用体验。
+因此，在不同的使用情况，不同的环境条件下，准确估计手机电池的剩余电量与续航时间，
+对于提升用户体验具有重要意义。
+\subsection{Restatement of the Problem}
+基于上述的理解，我们的任务是建立一个常微分方程（ODE）系统，
+以描述在实际使用场景下随时间变化的充电状态（SOC）的演变情况。具体而言，
+本研究将尝试完成以下几个任务：
+\begin{itemize}
+  \item \textbf{任务一：}建立一个连续时间模型来表示电池的电量状态，并且模型能从电池放电的简单状态拓展到复杂多场景条件。
+  \item \textbf{任务二：}利于上述模型来预测出不同初始充电水平和使用场景下的手机续航时间。
+                        将结果进行分析以量化模型的不确定性，并评估该模型的有效性。 
+  \item \textbf{任务三：}通过调整假设与模型参数，对上述建立的模型进行灵敏性分析以评估模型稳定性。
+  \item \textbf{任务四：}为终端用户以及操作系统设计者制定相应的建议从而增强电池的续航时间。
+\end{itemize}
+\subsection{Literature Review}
+准确的识别电池的State of Charge (SOC)是先进的电池管理系统（BMS）的核心任务之一。
+在电动汽车方面，Hui Pang and Fengqi Zhang提出了的一种基于系统实验数据驱动的参数识别方案
+以及一种基于自适应扩展卡尔曼滤波（AEKF）的锂离子电池等效电路模型的 SOC 估算算法\cite{en11051033}；
+Yixing Chen , Deqing Huang等人基于分数阶微积分理论开发了一个改进的二阶 RC 模型来模拟锂离子电池的特性\cite{en10091313}。
+结果表明，他们实现了在不同工况下对 SOC 的高精度与高效率估计，验证了该类模型在动态负载条件下的有效性和可行性。
+
+在移动消费类电子设备领域，
+受限于电池容量，锂电池功率能耗模型与能量管理策略同样受到关注\cite{aa}。
+已有研究从系统层面对智能手机的主要能耗来源进行了分析，构建了以 CPU、GPU 和显示屏等高能耗组件为核心的功率模型，并基于不同工作负载阶段对设备总体功耗进行预测，从而估算电池消耗量与剩余可用时间\cite{en4040582}。
+此外，通过应用动态卸载技术到移动设备能耗模型（包括 CPU、显示单元、无线网络接口和内存）在移动设备上可实现 18\%至55\%的能效提升，
+具体提升幅度取决于不同的条件\cite{ALI2016173}。
+这些研究揭示了用户行为与系统负载对电池消耗的显著影响，并为多场景下的模型中各子项的合理取值提供了理论与实验依据。
+\subsection{Our Work}
+受到上述研究的启发，本研究将构建基于连续时间的电池电量模型与基于UKF的时间预测模型。
+具体流程如\autoref{fig:process}所示：
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/our.png}
+  \caption{流程图}
+  \label{fig:process}
+\end{figure}
+
+\section{Assumptions and Justification}
+\textbf{Assumption 1:}手机电源管理链路对电池侧呈现近似恒功率取能。
+
+智能手机典型为稳压供电架构，负载功耗更接近功率而非恒流；将复杂电源管理折算为常效率可显著简化耦合并保持物理一致性。
+
+\textbf{Assumption 2:}开路电压$E(SOC)$仅由$SOC$决定，并可用离线拟合的多项式$E(z)$近似表示；在给定电池类型与温区内该映射保持稳定。
+
+OCV--SOC关系是求解电压观测方程的关键，我们采用拟合函数等价于“查表法”，
+可避免引入更高维的电化学状态变量，保证UKF可实现。
+
+\textbf{Assumption 3:}总功率$P(t)$可分解为待机、屏幕、CPU、GPS、网络、后台等可加和分量，
+且每一分量可由可观测/可设定的场景变量（亮度、CPU利用率、信号强度、数据传输量等）驱动。
+
+题目中明确了电池模型需要从简单放电扩展到多场景。将总功率分解为可观测的场景变量，
+便于场景拼接与灵敏度分析。
+
+\textbf{Assumption 4:}电池温度$T(t)$可视为单一集中参数（空间上均匀），
+与环境的散热满足牛顿冷却定律，并且换热系数$h$与散热面积$A$在短时间内不变。
+
+手机电池体积较小、导热快，用0D热模型即可捕捉主要温升趋势；该假设使热-电耦合仍保持低维ODE，适合仿真与滤波。
+\section{Notations}
+
+\begin{table}[H]
+\centering
+\caption{Key notations used in this paper}
+\vspace{-0.4cm}
+\begin{tabularx}{0.92\textwidth}{lXc}
+\toprule
+Symbol & Description & Unit \\
+\midrule
+$SOC(t)$ & State of Charge  & -- \\
+$U(t)$ & Battery terminal voltage & V \\
+$U_{meas}(k)$ & Measured terminal voltage at step $k$ & V \\
+$E(SOC)$ & Open-circuit voltage (OCV)  & V \\
+$i(t)$ & Battery current & A \\
+$\Delta t$ & Sampling period / discretization step & s \\
+$R_0$ & Ohmic internal resistance & $\Omega$ \\
+$R_1,\,R_2$ & Polarization resistances in the 2-RC model & $\Omega$ \\
+$C_1,\,C_2$ & Polarization capacitances in the 2-RC model & F \\
+$U_1(t),\,U_2(t)$ & RC polarization voltages & V \\
+$Q_n$ & Rated/available battery capacity & Ah \\
+$P(t)$ & Total phone power demand (load power) & W \\
+$T(t)$ & Battery/device temperature & $^\circ$C \\
+$T_{env}$ & Ambient temperature & $^\circ$C \\
+$SOH(t)$ & State of Health (capacity/health indicator) & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\section{Establishment of The Continuous-Time Model and Results Analysis}
+\subsection{Establishment of The Model}
+\subsubsection{模型\Rmnum{1}：电池等效电路模型}
+题目明确规定假设手机电池为锂电池，
+考虑各种锂电池充放电过程中包括欧姆极化，电化学极化，浓差极化，
+在内的极化反应及模型计算复杂度与真实度，
+我们选用二阶RC等效电路模型模拟锂电池内部结构，近似描述电池内部的动态过程，其等效电路如\autoref {fig:battery_model}所示。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/battery_model.png}
+  \caption{二阶RC等效电路模型示意图}
+  \label{fig:battery_model}
+\end{figure}
+
+其中$E$是电池的开路电压，取决于State of Charge (SOC)，是表示电池荷电状态（SOC）的函数，
+$i_t$为电路总电流，$U$为电池端输出电压。
+根据基尔霍夫定律可以此得到电池端输出电压$U$的表达式：
+\begin{equation}
+  U=E-U_0-U_1-U_2
+\end{equation}
+其中，欧姆内阻上的压降满足欧姆定律$U_0=i_t\ast R_0$,由此得：
+\begin{equation}
+ U=E(SOC)-i_t\ast R_0-U_1-U_2   
+\end{equation}
+同时，根据基尔霍夫电流定律，第一个并联回路电流关系满足$i_t=i_{R1}+i_{C1}$，
+从而第一个回路的微分方程可以表示为：
+\begin{equation}
+  \frac{dU_1}{dt}=\frac{i_t}{C_1}-\frac{U_1}{R_1C_1}
+\end{equation}
+对于第二个并联回路，同理可得：
+\begin{equation}
+  \frac{dU_2}{dt}=\frac{i_t}{C_2}-\frac{U_2}{R_2C_2}
+\end{equation}
+为了使得最后模型求解闭环，我们定义SOC变化方程：
+\begin{equation}
+  \frac{dSOC}{dt}=-\frac{i_t}{Q_n}
+\end{equation}
+其中$Q_n$是电池额定容量，负号表示放电导致SOC减小。
+
+综上，可得到电池模型的状态方程：
+\begin{equation}
+  \begin{aligned}
+    \frac{dU_1}{dt}&=\frac{i(t)}{C_1}-\frac{U_1}{R_1C_1} \\
+    \frac{dU_2}{dt}&=\frac{i(t)}{C_2}-\frac{U_2}{R_2C_2} \\
+    \frac{d(SOC)}{dt}&=-\frac{i(t)}{Q_n} \\
+  \end{aligned}
+\end{equation}
+以及对应的输出方程：
+\begin{equation}
+  U(t)=E(SOC)-i(t)\ast R_0-U_1-U_2
+\end{equation}
+\subsubsection{模型\Rmnum{2}：功率负载模型}
+ 在真实的手机放电过程中，电池放电电流并非恒定的额定值，而是由手机各组件的瞬时功率需求共同决定；
+ 同时，功率需求又可以由用户的使用行为进行映射。
+ 基于此，我们将电池输出的总功率分解为基础待机功率$P_{base}$、屏幕使用功率$P_{screen}$、CPU使用功率$P_{CPU}$、
+ GPS使用功率$P_{GPS}$、网络使用功率$P_{networking}$以及后台功率$P_{background}$，
+ 得到总功率表达式：
+ \begin{equation}
+    P(t)=P_{base}+P_{screen}(t)+P_{CPU}(t)+P_{GPS}(t)+P_{networking}(t)+P_{background}(t)
+  \end{equation}
+ 另一方面，手机内部的电源管理芯片通常以近似恒定功率模式从电池取电。由功率定义$P=UI$，可得电池电流$i(t)$为：
+  \begin{equation}
+  i(t)=\frac{P}{U(t)\ast\eta}
+  \end{equation}
+  其中$\eta$为DC-DC转换器的效率，通常取接近1的常值。$U(t)$为电池端输出电压。
+
+为准确刻画手机在不同使用场景下的功率特性，我们针对各个功耗组件建立了基于物理原理和实测数据的数学模型。
+\subparagraph{基础功耗}
+基础功耗$P_{{base}}$代表手机在开机但没有任何用户活动时，维持系统存活的最低功耗，包括操作系统内核、时钟芯片、内存待机等必要开销。该项为常数：
+\begin{equation}
+    P_{{base}} = P_0
+\end{equation}
+其中$P_0$通常在0.2-0.5 W之间，取决于具体手机型号。
+\subparagraph{屏幕功耗模型}
+由韦伯定律可知，人眼对光强的感知呈对数关系，因此为了让用户感觉亮度线性变化，屏幕的实际输出功率必须呈现指数或幂函数增长。我们定义屏幕功耗模型为：
+\begin{equation}
+   P_{screen}(t)=\delta _{on}(t)*P_{drive}+\alpha_s*(B(t)^\gamma)
+\end{equation}
+其中：
+$\delta_{on}(t) \in \{0,1\}$表示屏幕开关状态，
+ $P_{drive}$为屏幕驱动的基础功耗，
+ $B(t) \in (0,1)$为屏幕亮度百分比，
+$\gamma$为伽马校正系数，通常在1.5到2.2之间。
+根据文献\cite{carroll2010analysis}的实测数据，实际应用中取：
+\begin{equation}
+    P_{screen}(t) = 1.08 + 0.72 \cdot B(t)^{2.0} 
+\end{equation}
+\subparagraph{处理器功耗模型}
+在物理上，集成电路的动态功耗满足$P = C \cdot V^2 \cdot f$，
+对于现代CPU，当负载$u$增加时，不仅提高频率$f$，还会提高电压$V$。
+由于电压$V$通常与频率$f$成正比，故功耗正比于频率的三次方。
+又因为CPU利用率$u$与频率$f$成正相关，所以功耗与利用率的关系为非线性。
+我们采用二次多项式模拟此现象：
+\begin{equation}
+    P_{CPU}(t) = P_{idle} + \beta _1 \cdot u(t) + \beta _2 \cdot u(t)^2
+\end{equation}
+其中：
+$P_{idle}$为CPU空闲状态功耗,
+$u(t) \in [0,1]$为CPU利用率,
+$\beta _1, \beta _2$为模型系数。（可利用边界条件法确认，通过最大功耗和最小功耗，通过物理直觉确定两者比例，然后后续进行灵敏度分析）
+通过边界条件确定参数：
+CPU最低工作功率为0.36 W（$u=0.1$时），
+最高工作功率为2.88 W（$u=1$时）。
+考虑到手机大部分时间处于低负载状态，线性功耗占主要比重，取：
+\begin{equation}
+    P_{CPU}(t) = 0.1 + 2.58 \cdot u(t) + 0.2 \cdot u(t)^2 
+\end{equation}
+\subparagraph{GPS功耗模型}
+GPS通常在启动阶段（活跃阶段）消耗最高功耗，成功定位后功耗显著降低。定义GPS功耗模型为：
+\begin{equation}
+P_{GPS}t=\delta _{gps}(t)*P_{GPS-active}
+\end{equation}
+其中，$\delta _{gps}(t)\in \{0,1\}$为GPS的开关状态，$P_{GPS-active}$为GPS活跃时的功耗。
+\subparagraph{网络连接功耗模型}
+根据通信原理，为了维持恒定的信噪比以保持连接，当距离变远或障碍物增加时（信号强度$S$变小），手机必须提高发射功率。模型定义为：
+\begin{equation}
+    P_{networking}(t) = \delta_{network}(t) \cdot (P_{base_net}+\frac{P_{ref}}{S_{sianal}(t)}\ast D_{throughput}(t))
+\end{equation}
+其中
+，$\delta_{network}(t) \in \{0,1\}$表示网络模块开关状态
+，$S_{sianal}(t)\in (0,1]$为信号强度因子，1表示信号最好
+，$D_{throughput}(t)$为数据传输速率（Mbps）
+，$P_{ref}$为参考发射功率，一般取0.3-0.4 W。
+\subparagraph{后台任务功耗模型}
+后台任务的最大特点是间歇性，不是持续运行，而是周期性唤醒。引入脉冲序列模型：
+\begin{equation}
+    P_{background}(t) = \sum_{k} P_{task} \cdot \prod (\frac{t - t_k}{\tau })
+\end{equation}
+其中,$\prod $为矩形窗函数，表示任务持续一小段时间,
+ $t_k$表示第$k$次唤醒的时间点,
+ $P_{task}$为唤醒时的功率，由手机工作状态决定。
+矩形窗函数定义为：
+\begin{equation}
+    \prod (\frac{t - t_k}{\tau }) = \begin{cases}
+        1 & t_k \leq t < t_k + \tau \\
+        0 & \text{其他}
+    \end{cases}
+\end{equation}
+其中$\tau$为单次后台任务的持续时间。
+\subsubsection{模型\Rmnum{3}：热力学模型}
+温度是影响电池性能的重要因素之一。电池温度不仅会改变电池内部电化学反应速率，
+还会进一步影响电池内阻、可用容量以及放电效率。
+因此，为了提高电池状态预测模型的准确性，
+有必要建立电池热动力学模型来描述电池温度的动态变化过程。
+在实际工作中，手机系统的热量来源主要包括两个部分：
+一是电池内部由于电流通过内阻产生的焦耳热；
+二是由系统级负载产生的附加热量，
+例如处理器、射频模块功率损耗以及显示器损耗等。
+因此，为了同时描述电池内部物理发热以及系统级功耗引起的产热效应，
+我们将整个手机产生的总热量表示为两部分之和，即
+ \begin{equation}
+    Q_{gen}(t)=i^2(t)\ast R_{0}+\alpha\ast P(t)\ast T
+ \end{equation}
+其中，第一项表示电池内部欧姆内阻引起的焦耳热；第二项表示由电池输出的总能量转化为热量的附加热能。
+参数 $\alpha$ 表示总能量向热能转化的比例系数。考虑到实际电子设备中并非全部电能都会转化为热能，
+本文参考消费电子设备的典型热效率范围，在后续仿真中取 $\alpha=0.1$,$T$代表场景运行总时长。
+
+与此同时，电池在工作过程中还会向环境不断地散热。
+根据牛顿冷却定律，散失的热量与电池和环境温差成正比：
+\begin{equation}
+Q_{diss}\left(t\right)=h\ast A\ast(T(t)-T_{env})
+\end{equation}
+其中$h$为对流换热系数，$A$为有效散热面积，$T_{env}$为环境温度。
+
+根据能量守恒定律，电池温度$T(t)$的动态方程可以表示为：
+\begin{equation}
+mC_p\frac{dT(t)}{dt}=Q_{gen}(t)+Q_{diss}(t)
+\end{equation}
+其中，$m$为电池质量，$C_p$为电池比热容。
+\subsubsection{多物理场的参数耦合}
+温度会进一步改变等效电路模型的参数，从而形成多物理场耦合。
+电池内阻随温度变化遵循阿伦尼乌斯方程，温度越低离子活性越差，内阻越大
+\begin{equation}
+  R(T)=R_{ref}\ast exp \left( \frac{E_a}{k}(\frac{1}{T(t)}-\frac{1}{T_{ref}}) \right)
+\end{equation}
+此外，电池的总容量$Q_n$也并非恒定不变，在低温场景下，其可用化学容量会产生衰减，可以表示为:
+\begin{equation}
+Q_n(T)=Q_{max}\cdot\eta_T(T)
+\end{equation}
+其中，$\eta_T(T)$为温度对可用化学容量的衰减因子，是温度的函数。
+\subsection{模型参数识别}
+在锂电池实际工作中，$E$和SOC是存在函数关系。因此，
+首先，我们通过真实数据采用5阶拟合的方式，定义归一化荷电状态 $z=SOC(t)\in [0,1] $，得到其近似函数表达式：
+\begin{equation}
+  E(z)\ =\ 4.5784\ast z^5+-13.0395\ast z^4\ +13.4836\ast z^3+-5.5077\ast z^2+1.1662\ast z+3.4835
+\end{equation}
+此多项式将作为后续时域仿真的静态查表函数，用于根据实时SOC估算开路电压$E$。
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{figures/DST_.png}
+\caption{E-SOC曲线}
+\label{fig:figure1}
+\end{figure}
+然后，由于实际系统控制与参数辨识均在离散时间域进行，
+需将连续时间的状态方程转换为离散形式。
+设采样周期为 $\Delta t $，基于前向欧拉和指数离散化方法，得到二阶RC模型的离散状态递推方程：
+\begin{equation}
+\begin{aligned}
+  \label{eq:discrete}
+U_1(k+1) &= \exp\left(-\frac{\Delta t}{R_1 C_1}\right) U_1(k) + R_1\left[1 - \exp\left(-\frac{\Delta t}{R_1 C_1}\right)\right]i(k) \\
+U_2(k+1) &= \exp\left(-\frac{\Delta t}{R_2 C_2}\right) U_2(k) + R_2\left[1 - \exp\left(-\frac{\Delta t}{R_2 C_2}\right)\right]i(k) \\
+SOC(k+1) &= SOC(k) - \frac{\eta \cdot i(t) \cdot \Delta t}{Q_n}
+\end{aligned}
+\end{equation}
+
+最后，为避免传统实验法对精密设备和大量先验数据的依赖，
+本研究采用遗传算法（Genetic Algorithm, GA）对二阶RC等效电路模型进行全局参数辨识。
+定义参数向量
+   $\theta = \left[R0,R_1, R_2, C_1, C_2, SOC_0\right]^T$
+其中$SOC_0$为初始荷电状态。
+基于最小二乘原理，构建以端电压误差最小化为目标的损失函数：
+\begin{equation}
+J\left( \theta \right) =\sqrt{\frac{1}{N}\sum_{k-1}^N{\left[ U_{meas}\left( k \right) -U\left( k \right) \right]}^2}
+\end{equation}
+其中，$U_{meas}(k)$为$k$时刻的实测电压数据。$U_(k)$ 为模型在当前参数下的仿真电压，$N$为数据序列长度。
+
+基于GA的迭代优化流程如 Algorithm\autoref{pro:1}所示：
+\begin{algorithm}[htbp]
+\caption{GA-based Parameter Identification}
+\label{pro:1}
+\begin{algorithmic}[1]
+\REQUIRE Current profile $I(t)$, measured voltage $U_{meas}$, OCV polynomial $E(z)$, capacity $Q_n$
+\ENSURE Optimal parameter vector $\theta^* = [R_0, R_1, C_1, R_2, C_2, SOC_0]^T$
+\STATE Initialize population with bounds constraints
+\FOR{$gen = 1$ to $G_{max} = 200$}
+    \FOR{each individual $\theta_i$ in population}
+        \STATE $U \leftarrow \texttt{run\_model}(\theta_i, I, t,E(z), Q_n)$
+        \STATE $J_i \leftarrow \sqrt{\text{mean}((U_{meas} - U)^2)}$
+    \ENDFOR
+    \IF{$\min(J) < 10^{-4}$ or stall count $> 20$}
+        \STATE \textbf{break}
+    \ENDIF
+    \STATE Selection, Crossover ($P_c=0.8$), Mutation ($P_m=0.1$)
+\ENDFOR
+ \RETURN $\theta^* = \arg\min J(\theta)$
+\end{algorithmic}
+\end{algorithm}
+\begin{itemize}
+  \item Step 1: 状态初始化,设定初始条件：$U_1(0)=0, U_2(0)=0$,初始荷电状态$SOC(0)=SOC_0$。根据编码方案生成初始种群，每个个体代表一组候选参数 θ 。
+  \item Step2：时域仿真迭代。根据当前$SOC(k)$，代入拟合得到的多项式函数计算电池开路电压$E(SOC(k))$。根据当前$E(SOC(k))$，代入模型得到电池的仿真电压$U(k)$。
+然后，状态递推,利用离散状态迭代方程\autoref{eq:discrete}，根据当前电流和状态量，计算下一时刻$SOC\left(k+1\right)$，$U_1\left(k+1\right)$，$U_2\left(k+1\right)$.
+  \item Step3：遗传算法寻优，
+利用遗传算法对参数向量进行迭代更新。首先根据适应度函数，选择优秀个体并进行交叉变异。然后重复之前步骤，直到误差小于阈值或达到最大迭代次数。
+\end{itemize}
+\subsection{模型验证}
+为验证所建立的二阶$RC$模型的准确性，
+首先我们采用动态应力测试(DST)工况对模型进行验证，
+测试时长约$2.8×10^4$秒,约$7.78$h。覆盖电池从满充状态（4.2 V）到接近放空（3.4 V）的完整工作区间。
+然后，我们用了一个$100mA$恒流持续放电的数据集进行验证，
+结果如\autoref{fig:model_validation}所示。
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.465\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/DST.png}
+    \caption{DST动态应力测试验证}
+    \label{fig:DST}
+\end{subfigure}
+\hfill  % 自动填充间距，或使用 \quad 固定间距
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/yanzheng.png}
+    \caption{100mA恒流放电测试验证}
+    \label{fig:DST_2}
+\end{subfigure}
+\caption{二阶RC模型在动态工况与标准恒流工况下的验证结果对比}
+\label{fig:model_validation}
+\end{figure}
+
+\autoref{fig:DST}上方模型预测的端电压（红色虚线）与实测电压（蓝色实线）
+在整个放电过程中表现出高度一致性。
+在初始准静态阶段（$0-0.9×10^4$ 秒），模型准确捕捉了电池在4.2V附近的平台期特征，精确反映了初期极化电压的缓慢衰减；
+而在$1.8×10^4-2.8×10^4$ 秒之后的动态高负载阶段，
+面对模拟真实智能手机使用的脉冲电流波动，
+模型展现出优异的瞬态跟踪能力，能够精确复现电压尖峰及其恢复动态.
+
+\autoref{fig:DST}下方的误差分析进一步量化了模型的预测精度。
+在平缓放电区间，预测误差基本维持在$25mV$左右，在剧烈脉冲循环阶段，
+误差与电流纹波同步振荡，大部分误差控制在 $±20mV$范围内，
+统计结果表明，模型的误差的方均根约为$13.46mV$，平均绝对误差约为$9.99mV$。
+相对于$3.7$V的额定电压,误差率仅0.3\%.
+
+\autoref{fig:DST_2}(a)展示了测量电压与模型估计电压的对比，
+\autoref{fig:DST_2}(b)给出了整个放电过程中的电压估计误差。
+从结果可以看出，模型估计值与实测值在整个放电过程中高度一致，
+两条曲线几乎完全重合。
+从误差的统计特性来看，除了放电末端的异常波动外，大部分时间内误差保持在$±15mV$以内，
+均方根误差（RMSE）估计约为$10-12mV$。
+
+上述验证结果表明，我们所提出的等效电路模型结合遗传算法参数辨识，
+在真实工况下具备足够的精度用于剩余使用时间（Time-to-Empty）预测，
+同时确保了其在多样化使用场景下的SOC估计可靠性。
+
+\section{时间预测模型的建立与结果分析}
+\subsection{预测模型的建立}
+在第一问建立的多场景的应用功率及温度影响耦合的综合模型的基础上，为了实现对电量的预测，
+我们采用无迹卡尔曼滤波算法（Unscented Kalman Filter, UKF）对电池SOC进行在线估计与预测。
+\subsubsection{状态空间模型构建}
+为了描述电池的动态特征，我们定义状态空间模型
+，将其状态向量$x_k$用$[U1,k,U2,k,SOC_k]^T$来表示。
+电池的端电压$U$为观测变量$y_k$。
+\subsubsection*{UKF预测算法设计}
+UKF算法主要包括Sigma点生成、状态预测以及量测更新三个步骤。
+\begin{itemize}
+  \item Step1：利用当前估计值$\widehat{{x}}_{k-1}$和协方差矩阵$P_{k-1}$构造一组采样点：
+  \begin{equation}
+\begin{cases}
+{X}_{0,k-1} = \widehat{{x}}_{k-1}, \\
+{X}_{i,k-1} = \widehat{{x}}_{k-1} + \left(\sqrt{(L+\lambda)\mathbf{P}_{k-1}}\right)_i, & i = 1, \ldots, L, \\
+{X}_{i,k-1} = \widehat{{x}}_{k-1} - \left(\sqrt{(L+\lambda)\mathbf{P}_{k-1}}\right)_{i-L}, & i = L+1, \ldots, 2L.
+\end{cases}
+  \end{equation}其中，$L=3$表示状态维度，$\lambda$为缩放比例参数，
+  用于控制采样点分布范围，${X}$为sigma点集矩阵。
+  \item Step2：将生成的sigma点代入状态方程，预测下一时刻的状态：
+  \begin{equation}
+      \begin{aligned}
+U_{1,k}^- &= \exp\left(-\frac{\Delta t}{R_1 C_1}\right) U_{1,k-1} + R1\left[1 - \exp\left(-\frac{\Delta t}{R_1 C_1}\right)\right] i_{k-1} \\
+U_{2,k}^- &= \exp\left(-\frac{\Delta t}{R_2 C_2}\right) U_{2,k-1} + R2\left[1 - \exp\left(-\frac{\Delta t}{R_2 C_2}\right)\right] i_{k-1} \\
+SOC_k^- &= SOC_{k-1} - \frac{\eta \cdot i_{k-1} \cdot \Delta t}{Q_n}
+\end{aligned}
+  \end{equation}
+加权求和得到先验估计：
+\begin{equation}
+x_k^- = \sum_{i=0}^{2L} W_m^{(i)} X_{i,k|k-1} 
+\end{equation}
+对应的协方差矩阵为:
+\begin{equation}
+  P_k^- = \sum_{i=0}^{2L} W_c^{(i)} [X_{i,k|k-1} - \hat{x}_{k-1}][X_{i,k|k-1} - \hat{x}_{k-1}]^T + Q_k
+\end{equation}
+其中，$W_m$，$W_c$为权重系数，$Q_k$为过程噪声协方差，代表模型的不确定性。
+  \item Step3：量测更新。
+ 利用预测的sigma点通过观测方程，预测端电压，并与实际测量的电压$U_{meas}$进行比较来修正。
+ \begin{equation}
+  h_{i,k}=E(X_{SOC})-I_kR_0-X_{U1}-X_{U2}
+ \end{equation} 
+ 其中$E(SOC)$为SOC与开路电压的非线性映射函数,前文已经拟合过函数表达式。
+预测观测值为：
+ \begin{equation}
+ {\hat{y}}_k=\sum_{i=0}^{2L}{W_m^{(i)}h_{i,k}}
+ \end{equation}
+\item Step4：卡尔曼增益计算。
+计算观测自协方差矩阵$ S_k$与互协方差$P_{xy,k}$的值
+\begin{equation}
+  \begin{aligned}
+  S_k&=\sum_{i=0}^{2L}{W_c^{(i)}[h_{i,k}-}{\hat{y}}_k][hi,k-yk]T+Rk\\
+P_{xy,k}&=\sum_{i=0}^{2L}{W_c^{(i)}[X_{i,k|k-1}-{\hat{x}}_k^-}][hi,k-yk]T\\
+\end{aligned}
+\end{equation}
+所以卡尔曼增益为
+\begin{equation}
+  K_k=P_{xy,k}S_k^{-1}
+\end{equation}
+其中$R_k$为测量噪声协方差，代表电压传感器的误差。
+\item Step5：更新预测状态。
+\begin{equation}
+  \begin{aligned}
+    \hat{x}_k&={\hat{x}}_k^-+K_k(U_{meas,k}-{\hat{y}}_k)\\
+P_k&=P_k^--K_kS_kK_k^T
+  \end{aligned}
+\end{equation}
+\end{itemize}
+\subsubsection{电池寿命模型}
+与内阻的短期变化不同，电池的寿命衰减是不可逆的累积过程。
+根据电化学动力学原理，电池内部的副反应速率同样遵循阿伦尼乌斯方程。
+温度越高，反应速率常数越大，导致（电池健康状态）SOH 下降越快。
+我们建立基于阿伦尼乌斯的寿命微分模型。
+
+首先，电池的老化速率随温度的变化关系为：
+\begin{equation}
+  k_{\text{aging}}(T) = k_{\text{ref,aging}} \cdot \exp\left[\frac{E_{a,\text{aging}}}{k}\left(\frac{1}{T_{\text{ref}}} - \frac{1}{T(t)}\right)\right]
+\label{eq:aging}
+\end{equation}
+其中$E_{a,aging}=52J/mol$\cite{Ecker2014CalendarCycleLife}，表示老化活化能。
+
+接着，考虑到电流对副反应的加速作用，SOH的微分方程为：
+\begin{equation}
+  \frac{dSOH}{dt}=-k_{aging}(T)\ast|i(t)|
+\end{equation}
+
+最后，电池老化，其寿命衰减又会反过来影响电池的基准内阻，因此考虑老化后的内阻修正模型为：
+\begin{equation}
+  R_{total}(t)=R(T)\ast(1+\alpha(1-SOH(t)))
+\end{equation}
+其中$\alpha$为内阻增长系数，本题取1.5。
+电池老化主要表现为活性锂离子的丧失和活性材料的损失，根据SOH的定义，老化后的最大可用化学容量与SOH同样呈线性关系，任意时刻t和温度T下的电池实际有效容量为：
+\begin{equation}
+  Q_n(t,T)=Q_{max}\cdot SOH(t)\cdot\eta_T(T)
+\end{equation}
+因此，其最终电池荷电状态在电池寿命的影响下，其微分方程也需引入SOH的修正。随着SOH下降，分母变小，相同的放电电流会导致SOC下降得更快了。
+\begin{equation}
+  \frac{d(SOC)}{dt}=-\frac{i(t)}{Q_{max}\cdot S O H(t)\cdot\eta}
+\end{equation}
+
+\subsection{结果分析}
+\subsubsection{预测结果分析}
+首先，我们选取了四种典型的用户使用场景（待机 Standby、视频播放 Video、导航 Navigation、游戏 Gaming）覆盖了从低功耗到高功耗的完整使用情况，
+评估手机电池在初始荷电状态为1时的
+包括电压降特性、温度变化和荷电状态衰减在内的综合表现。
+结果如\autoref{fig:fig_1}所示，并绘制各场景下电量消耗对比曲线图,如\autoref{fig:fig_1_2}所示。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/n1.png}
+  \caption{电池性能评估结果}
+  \label{fig:fig_1}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/p2_6.png}
+  \caption{不同使用场景下的SOC衰减率对比}
+  \label{fig:fig_1_2}
+\end{figure}
+从电压降曲线以及荷电状态衰减曲线可以清晰地观察到不同场景下的放电特性差异。
+高功耗场景（Game、Navi和Video）表现出急剧的电压下降，从满电 状态到电量耗尽仅持续了约50分钟到150分钟不等，
+其中，Game和Navi的曲线更为陡峭，表明这两种场景对电池的负载更大，放电速度更快。
+相比之下，Standby待机场景呈现出近似线性的缓慢下降，从4.15V满电状态降至3.45V的电量耗尽状态，
+过程持续了约700分钟，表明待机状态下电池负载稳定且较轻。
+
+温度变化曲线进一步揭示了各场景的产热特性及其物理机制。
+Game场景需要CPU和GPU高负载运行，导致的产生大量的热量，显示出最显著的温升效应，温度从初始的25°C快速上升至约41.5°C，
+峰值温度最高且上升速率最快（前10分钟内上升约15°C）。
+Navi场景的温度上升至约38.5°C，温升幅度约13.5°C，反映了GPS模块持续工作、屏幕常亮以及CPU地图渲染的综合产热效应。
+Video场景的温升相对温和，温度上升至约34°C，温升幅度约8.5°C，
+主要热源来自屏幕显示和视频解码器。
+Standby场景的温度基本保持在环境温度26.5°C左右，几乎无温升，完全符合低功耗待机的理论预期。
+
+观察SOC下降率曲线，四种典型场景的SOC耗减速呈现显著分层与时变特征。
+（Standby）模式下，耗散速率维持在约8\%/小时的恒定水平，全程几乎不受时间影响。
+视频（Video）、导航（Navigation）与游戏（Gaming）三种中高负载场景
+均表现出随时间递增的耗散速率。
+视频播放起始速率约40\%/小时，100分钟后缓慢攀升至46\%/小时，增幅约15\%。
+导航与游戏场景所需负载更大，随着使用时长增加，热累积效应显著，整个手机系统产生的热量，
+对电池温度产生累积性的影响，使得放电速率加快，呈现更为激进的加速耗尽趋势。
+导航从57\%/小时增至67\%/小时，
+游戏从68\%/小时激增至近78\%/小时，斜率显著大于视频场景。
+
+接着，我们将电池健康状态（SOH）的长期衰减轨迹与使用场景强度的定量关联，得到了如\autoref {fig:fig_6}所示的结果。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/p2_8.png}
+  \caption{不同使用场景下的SOH衰减对比}
+  \label{fig:fig_6}
+  \end{figure}
+四种场景的SOH衰减呈现显著分层的线性下降趋势,但是斜率差别较大。
+游戏场景衰减最为激进，
+仅约1100次循环即达寿命终点（SOH≈0\%）。
+这是因为游戏场景下，CPU高负载运行导致持续大电流放电，
+同时产生的热量使电池温度维持高位，
+根据\autoref {eq:aging}，高温显著加速了副反应速率，导致电池老化加剧。
+GPS射频模块的高功耗与屏幕常亮产生的热累积虽略低于游戏，但仍远高于轻度使用，这导致在Navi场景下，电池
+约经历1250次循环就会耗尽容量。
+在Video场景下，电流幅值与温度均低于游戏/导航场景
+，最终经历约1750次循环降至失效阈值，老化曲线的斜率相对平缓，但仍比待机快约2.15倍。
+Standby场景下，低电流与室温工作条件使老化速率常数极小，
+副反应几乎可忽略，衰减最为缓慢，在经历2000次循环后仍保持约47\%的SOH，
+展示了理想保管状态下的电池寿命极限。
+
+
+
+\subsubsection{有效性分析}
+接着我们采用110分钟的混合使用场景，评估基于无迹卡尔曼滤波（UKF）算法的时间预测模型的有效性，
+结果如\autoref {fig:fig_2}所示:
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.4\textwidth}  % 直接写宽度，不需要方括号参数
+    \centering
+    \includegraphics[width=\linewidth]{figures/image_p2_21.png}
+    \caption{SOC估计结果}
+    \label{fig:fig_2_1}
+\end{subfigure}
+\hfill  % 添加水平间距
+\begin{subfigure}{0.55\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/image_p2_22.png}
+    \caption{功率消耗分解}
+    \label{fig:fig_2_2}
+\end{subfigure}
+\caption{时间预测模型评估结果}
+\label{fig:fig_2}
+\end{figure}
+
+从SOC估计结果来看，UKF算法表现出了优异的跟踪性能。
+在整个放电过程中（从100\%到约20\%），
+UKF估计值与真实SOC曲线几乎完全重合，
+两者之间的偏差在视觉上难以分辨。
+模型性能指标显示，平均3$\sigma$不确定度仅为2.36\%，
+这表明算法不仅具有高精度，而且具有良好的可靠性和确定性。
+特别值得注意的是，在功率负载发生频繁突变的时刻，
+UKF算法依然能够准确跟踪SOC的动态变化，
+没有出现明显的滞后或振荡现象。
+这得益于UKF的非线性滤波特性和自适应卡尔曼增益机制，
+能够根据系统状态和测量噪声实时调整估计策略，
+有效抑制了累积误差的发散。
+
+功率消耗分解图进一步验证了UKF算法在复杂负载条件下的鲁棒性。
+测试过程涵盖了多种典型使用场景。
+高负载阶段（总功率约4.5-5.5W）模拟了游戏场景，
+此时CPU和屏幕分别贡献约2.5W和1.5-2W的功耗；
+中等负载阶段（总功率约3W）模拟了视频场景；
+低负载阶段（功率低于0.5W），模拟了待机阶段，仅包含后台任务的周期性脉冲与待机功率。
+在这些负载变化的不同工况下，
+UKF算法始终保持了稳定的估计性能，
+证明了其对不同功率模式的良好适应能力。
+
+总的来说，\autoref{fig:fig_2}全面展示了本文提出的功率负载模型、
+二阶RC等效电路模型和UKF估计算法在实际复杂场景下的优异性能。
+能够在全SOC范围内、
+多种负载工况下实现高精度的SOC估计。
+
+然后，我们进行动态场景下从不同初始SOC开始的放电至空预测（Time-to-Empty Prediction），
+得到了电池剩余使用时间预测模型以及UKF算法的误差收敛特性的评估结果，如\autoref{fig:fig_3}所示。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/n2.png}
+  \caption{动态场景下Time-to-Empty Prediction评估结果}
+  \label{fig:fig_3}
+\end{figure}
+左图为动态场景下从不同初始SOC开始的放电至空预测（Time-to-Empty Prediction），
+右图为UKF算法在初始估计值固定为50\%时的误差收敛过程。
+这两个子图从不同角度验证了模型的预测能力和算法的自适应性能。
+
+左图展示了考虑动态发热和网络连接影响下的剩余使用时间预测结果，清晰地揭示了电池在混合使用场景下的非线性放电特性。
+图中绘制了七条SOC衰减曲线，分别对应从100\%、80\%、60\%、50\%、40\%、30\%和20\%七个不同初始电量开始放电的情况,预测的具体结果如\autoref{tab:tte_prediction}所示。
+\begin{table}[htbp]  
+\centering
+  \caption{不同SOC下的Time-to-Empty预测结果}
+  \label{tab:tte_prediction}
+  \vspace{-0.4cm}
+  \begin{tabular}{@{}ccc@{}}
+    \toprule
+    Initial SOC (\%) & Time-to-Empty (min) & Avg. Discharge Rate$^\dagger$ (\%/min) \\
+    \midrule
+    100 & 133 & 0.75 \\
+    80  & 111 & 0.72 \\
+    60  & 69  & 0.87 \\
+    50  & 54  & 0.93 \\
+    40  & 39  & 1.03 \\
+    30  & 27  & 1.11 \\
+    20  & 19  & 1.05 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+结果表明，平均放电速率随着初始SOC的降低而加快。
+这意味着电池的"最后20\%"电量实际上比"电池的平均20\%"消耗得更快。
+这一现象的物理根源在于多重因素的叠加：（1）电池内阻随SOC降低而增大，导致更多能量以热量形式损耗；（2）低SOC时电池端电压降低，为维持恒功率输出，电流必须增大，进一步加剧内阻损耗；（3）前期累积的温升效应通过α(T)修正因子持续影响放电效率。
+
+
+右图展示了UKF算法在初始估计值存在较大偏差时的误差收敛特性，这是评估状态估计算法鲁棒性的关键指标。
+实验设计中，所有测试均将初始SOC估计值固定为50\%，而真实SOC从100\%到20\%的七个不同水平，
+因此初始误差范围从+50\%（真实100\%时）到-30\%（真实20\%时）
+。图中展示了各条件下估计误差随时间的演化过程。
+
+从误差曲线的整体形态来看，UKF算法展现出卓越的收敛性能。
+所有初始误差在极短的时间内（约5-10分钟）快速收敛至±2\%的范围内，
+随后继续缓慢收敛至±1\%以内，并在整个测试期间保持稳定。
+同时，不同真实SOC条件下的稳态误差基本一致，表明算法在全电量范围内具有均匀的估计精度，
+不存在某些SOC区间估计性能明显劣化的问题。
+对比七条误差曲线可以发现，中等初始误差（如真实SOC为50\%，误差为0\%）的情况下，
+曲线几乎始终保持在0\%附近，验证了初始值准确时算法的优异性能。而极端初始误差（真实SOC为100\%或20\%）的情况下，
+虽然初始偏差巨大，但算法依然能在短时间内完成修正，这充分体现了UKF算法的鲁棒性。
+
+\subsubsection{不确定性分析}
+此外，我们对我们建立的基于UKF算法预测模型在不同使用场景和初始SOC条件下的不确定性量化分析，以评估该模型的可靠性。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/n3.png}
+  \caption{预测模型在动态场景下的不确定性评估结果}
+  \label{fig:fig_4}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/n4.png}
+  \caption{不同场景和初始SOC组合下的平均3σ不确定性水平}
+  \label{fig:fig_5}
+\end{figure}
+\autoref{fig:fig_4}展示了四种典型场景（Standby待机、Video视频、Navi导航、Game游戏）下从不同初始SOC开始的预测轨迹及其不确定性区间；
+\autoref{fig:fig_5}则以三维柱状图的形式综合展示了16种场景-初始SOC组合（4场景×4初始SOC）的平均3σ不确定性水平，
+提供了定量的、易于比较的不确定性度量，弥补了第一张图定性观察的不足。
+
+结果表明，观测信息量与不确定性负相关，且占据主导影响。
+从Standby到Video、Navi再到Game，不确定性呈递减趋势，这与传统的"功耗越高越复杂"的直觉相悖。
+这是因为观测信息量的主导作用。
+游戏场景虽然功率波动大（过程噪声大），但电压变化显著（观测信息量大），
+UKF能够通过频繁的有效测量更新持续校正估计；
+相反，待机场景虽然功率稳定（过程噪声小），但电压变化缓慢（观测信息量小），
+测量更新几乎无法修正模型漂移，导致不确定性累积。
+同时，SOC的起始状态会显著的影响该模型的不确定性。
+所有场景下，20\%起始SOC的不确定性均高于100\%起始的SOC，
+且起始SOC的差异明显高于场景变化所带来的影响。
+具体而言，Standby场景的不确定性从2\%以下增至8\%以上，增幅超过3倍，
+而Game场景的不确定性则从2\%以下增至7\%左右。
+
+
+\section{Sensitivity Analysis}
+\subsection{不同环境温度对续航时间的影响}
+为了评估环境温度对电池性能的影响，我们选择了0°C、20°C和35°C三个典型环境温度条件，在四种使用场景下进行SOC衰减测试。
+结果如\autoref{fig:fig_temp}所示。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/image_p3_1.png}
+  \caption{不同温度下的SOC衰减曲线}
+  \label{fig:fig_temp}
+  \end{figure}
+
+结果表明，在任何场景下，温度越低，放电速度更快。
+例如，在低负载的待机（Standby）场景中，
+5°C放电最为快，续航时间最短，约650分钟，而在20，35°C下放电较慢，续航时间约700分钟），变化幅度为7\%。
+然而，这种温度敏感性随着负载增加而急剧衰减。在视频（Video）、导航（Navi）与游戏（Game）等高负载场景中，
+代表三种温度的曲线几乎完全重合。
+其物理根源在于焦耳热主导效应。大电流放电产生的内部产热 
+使电池温度迅速攀升至远高于环境水平的稳定工作温区。此时，无论初始环境温度是5°C还是35°C，
+电池在实际工作过程中的内部温度轨迹趋于一致，导致温度依赖的内阻
+与有效容量差异被迅速抹平。
+因此，用户行为的差异对续航的决定性作用远超环境温度波动影响。
+\subsection{模型系数$\beta_2$对模型的影响}
+定量评估了CPU功耗模型中非线性系数$\beta_2$的敏感性，我们选取了两种参数设置$\beta_2=0.2$和$
+\beta_2=0.5$，并比较了两个模型在动态负载下的表现差异,如\autoref{fig:p3_4}所示。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/image_p3_4.png}
+  \caption{不同$\beta_2$下的SOC衰减曲线与功率变化图}
+  \label{fig:p3_4}
+\end{figure}
+左图展现了在完整的SOC放电周期（约120分钟）内，两条SOC衰减曲线轨迹几乎完全重合，
+右图展现了在完整的SOC放电周期（约120分钟）内，功率变化曲线，其轨迹也高度一致。
+这表明两个模型在动态负载下的表现差异不大
+即$\beta_2$的取值对总电量消耗影响微弱。
+
+\subsection{不同屏幕亮度对模型的影响}
+\subsection{屏幕亮度对电池性能的影响分析}
+
+为了评估屏幕亮度对电池性能的影响，
+本文分别在游戏模式和待机模式下进行了对比实验，
+设置了50\%、75\%和100\%三种亮度等级。
+图\ref{fig:fig_brightness_comparison}展示了两种场景下的实验结果。
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/image_p3_2.png}
+    \caption{不同亮度下的SOC衰减曲线（游戏场景）}
+    \label{fig:fig_brightness_soc}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/image_p3_22.png}
+    \caption{不同亮度下的SOH衰减曲线（待机场景）}
+    \label{fig:fig_brightness_soh}
+\end{subfigure}
+\caption{屏幕亮度对电池性能的影响对比分析}
+\label{fig:fig_brightness_comparison}
+\end{figure}
+
+在游戏场景下，由于CPU负载占据主导地位，
+屏幕亮度对续航时间的影响相对有限，呈现边际效益递减的特征。
+如图\ref{fig:fig_brightness_soc}所示，
+当屏幕亮度从100\%降至50\%时，游戏续航时间仅增加约10分钟，
+这是因为游戏场景的高计算强度使得CPU功耗在总功耗中占比更大，
+屏幕功耗的降低对整体续航的改善效果被部分抵消。
+相比之下，待机模式下屏幕亮度对电池长期健康状态的影响更为显著。
+如图\ref{fig:fig_brightness_soh}所示，
+100\%亮度下电池老化最为激进，
+而50\%亮度下老化最为缓慢，2000次循环后SOH仍维持在20\%以上。
+在待机模式下，屏幕成为主导负载，
+由于亮度与电流成平方关系，
+高亮度设置直接加速了基于阿伦尼乌斯方程的副反应进程，
+导致每轮循环的不可逆损伤累积加剧，
+从而对电池寿命产生深远影响。
+\subsection{网络吞吐量对电池的影响}
+为了评估网络数据传输强度对电池性能的影响，
+本文分别在游戏模式和待机模式下进行了敏感性分析。
+\autoref{fig:network_game}展示了游戏运行时不同网络吞吐量对SOC衰减的短期影响，
+\autoref{fig:network_standby}分析了待机模式下网络吞吐量对电池寿命的长期影响。
+两种场景下均设置了三个网络数据传输等级：
+低数据量（D=0.1）、中等数据量（D=0.5）和高数据量（D=1.0）。
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/sen1.png}
+        \caption{游戏模式下网络吞吐量对SOC的影响}
+        \label{fig:network_game}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/sen2.png}
+        \caption{待机模式下网络吞吐量对SOH的影响}
+        \label{fig:network_standby}
+    \end{subfigure}
+    \caption{网络吞吐量对电池性能的影响对比分析}
+    \label{fig:network_impact_comparison}
+\end{figure}
+放电初期（0-20分钟）三条曲线几乎完全重合，
+而运行到放电后期，网络数据量对SOC的影响累积显现，
+高数据量传输（D=1.0）导致SOC下降最快，
+而低数据量传输（D=0.1）则表现出最慢的SOC衰减。
+这种差异源于网络传输功耗在整体功耗中的占比不大，随时间的累积效应逐渐显现。
+相比之下，待机模式下网络吞吐量对电池寿命的长期影响更为持久，
+到2000个循环时分别降至39\%、44\%和46\%，电池寿命差异约6-7\%。
+结果表明，在高负载场景中，应优先优化CPU和屏幕功耗，
+而日常待机场景中应重点控制网络活动和后台任务。
+\subsection{内阻模型对SOH退化预测的影响}
+为了评估内阻模型的准确性对电池健康状态（SOH）预测的影响，
+本文对比了考虑老化效应的混合模型和仅考虑温度影响而忽略老化的简化模型这两种不同的内阻建模方法，
+结果如\autoref{fig:fig_internal_resistance}所示。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/image_p2.png}
+  \caption{不同内阻模型下的SOH衰减曲线}
+  \label{fig:fig_internal_resistance}
+\end{figure}
+
+从整体趋势来看，混合模型预测的SOH衰减速度明显快于简化模型。
+这种差异源于混合模型中内阻会随循环次数增加而增大，
+导致更高的欧姆损耗和热量产生，进而加速电池容量衰减。
+相比之下，简化模型假设内阻保持恒定，
+无法捕捉老化过程中内阻增加对SOH的累积影响，
+因此倾向于高估电池的实际寿命。
+
+不同使用模式对SOH衰减的影响存在显著差异。
+待机模式因为待机时功率负载极低，电池内部发热和化学反应速率较小，表现出最慢的衰减速率，在2000个循环后SOH仍保持在约47\%，
+游戏模式由于负载功率最大导致内阻发热加剧和电极材料的快速劣化。，导致SOH呈现最快的衰减，
+混合模型预测其在约1100个循环时SOH就降至接近0\%，
+而简化模型预测的寿命约为1220个循环。
+视频播放和导航模式的衰减曲线介于两者之间。
+视频场景的混合模型预测寿命约为1750个循环，
+而导航场景约为1250个循环。
+三种场景下混合模型与简化模型的预测差异约为100-200个循环，并在电池寿命后期（SOH < 50\%）尤为明显。
+这表明内阻随电池的老化显著增加使得对电池容量衰减的加速作用变得更加突出。
+
+
+
+
+
+\section{Recommandations}
+\subsection{针对用户的使用建议}
+\begin{itemize}
+  \item 当进行游戏或导航等高负载场景时，电池耗减速率可达待机状态的 8-10倍。
+因此，在高负载条件下，连续使用不超过 1.5小时，或周期性静置冷却，
+每进行 1小时 高负载游戏后，建议静置 15分钟 以上，
+使电池温度回落至环境温度，从而延长使用时间与电池寿命。
+  \item 在室内环境下，可以适当降低屏幕亮度以延长续航时间和减缓电池老化。
+  \item 待机常亮限制：若需长期保持屏幕开启（如床头时钟、展示模式），强制设定亮度为 50\% 可使电池循环寿命延长。
+当不需要屏幕常亮，尽量关闭屏幕。
+  \item 避免边充边玩，充电过程中产生的焦耳热叠加高负载产热，导致电池温度升高，导致电池老化加快。
+\end{itemize}
+\subsection{针对OS的建议}
+\begin{itemize}
+  \item 加入我们的基于UKF的电池状态估计与时间预测模型，来告知用户电池状态与续航时间。
+  \item 当检测到电池温度过高时，对CPU进行降频限制功率，以降低温度，延缓电池老化。
+  \item 根据环境光，自动调节屏幕亮度，以延长续航时间。
+\end{itemize}
+
+
+\section{Model Evaluation and Further Discussion}
+\subsection{Strengths }
+\begin{itemize}
+  \item 我们采用二阶$RC$等效电路模型，相比纯经验拟合更具物理可解释性，能够实现对SOC的高精度与高效率估计。
+  \item 我们引入热动力学模型并与内阻、可用容量等参数进行耦合，这能够解释温度对电池性能的动态影响，增强了模型对复杂工况的解释力与一致性。
+  \item 我们采用GA算法进行全局寻优，可一定程度避免局部最优，
+  使$R_0,R_1,R_2,C_1,C_2$及初始SOC等关键参数的辨识更稳定，
+  为后续预测提供可靠的模型基底。
+  \item 我们采用的UKF算法能够处理$E(SOC)$的非线性观测关系，实现SOC的在线估计、误差快速收敛，并可给出置信区间，从而同时评估预测精度与预测可信度。
+\end{itemize}
+\subsection{Weaknesses}
+\begin{itemize}
+\item 我们所建立的功率负载模型属于简化的模型，而真实手机功耗不只受CPU、屏幕、GPS、network、后台应用的影响，可能呈现更强的非线性与突发性。
+\item OCV拟合、等效电路参数辨识以及UKF中的$Q_k$、$R_k$等设定均依赖实测数据；更换机型、电池老化程度或系统功耗策略变化时，参数可能需要重新标定。
+\item 仅以端电压作为观测量时，在电压变化缓慢的工况（如待机）观测信息量不足，不确定性更易累积；
+  同时UKF性能对$Q_k$、$R_k$选择较敏感，若设定不当可能出现跟踪抖动或收敛变慢。
+\end{itemize}
+\section{Conclusion}
+本文针对智能手机锂电池的复杂动态行为，建立了一套多物理场耦合的连续时间数学模型，
+解决了非线性工况下的电量预测与剩余时间估计问题。
+首先，基于锂电池的二阶RC等效电路模型，
+通过基尔霍夫定律建立了状态空间微分方程组，
+精确刻画了欧姆极化、电化学极化与浓差极化的动态过程。
+针对模型参数未知问题，
+设计了遗传算法（GA）全局优化框架，以端电压均方根误差（RMSE）最小化为目标，
+辨识得到了包含欧姆内阻、极化参数及初始SOC在内的最优参数集。
+接着将模型扩展至热-电耦合域，
+引入Arrhenius方程描述温度对内阻与可用容量的指数影响，
+并建立了基于阿伦尼乌斯动力学的电池老化（SOH）微分方程。
+然后，为估计SOC与续航时间，我们部署了无迹卡尔曼滤波（UKF）算法，
+通过Sigma点变换处理OCV-SOC强非线性关系，最终得到SOC与续航时间的预测值。
+
+
+
+
+\newpage
+\addcontentsline{toc}{section}{Reference}
+\nocite{*} 
+\bibliographystyle{plain}   % 选用样式（plain / IEEEtran / elsarticle-harv ...）
+\bibliography{reference}  
+\appendix
+\newpage
+\addcontentsline{toc}{section}{Memorandum to Greek Government}
+
+\end{document}
