@@ -339,11 +339,11 @@ $\gamma$为伽马校正系数，通常在1.5到2.2之间。
 其中：
 $P_{idle}$为CPU空闲状态功耗,
 $u(t) \in [0,1]$为CPU利用率,
-$\beta _1, \beta _2$为模型系数。（可利用边界条件法确认，通过最大功耗和最小功耗，通过物理直觉确定两者比例，然后后续进行灵敏度分析）
-通过边界条件确定参数：
+$\beta _1, \beta _2$为模型系数。
+通过边界条件确定该参数，
 CPU最低工作功率为0.36 W（$u=0.1$时），
 最高工作功率为2.88 W（$u=1$时）。
-考虑到手机大部分时间处于低负载状态，线性功耗占主要比重，取：
+考虑到手机大部分时间处于低负载状态，线性功耗占主要比重，取$\beta_1=2.58,\beta_2=0.2$：
 \begin{equation}
     P_{CPU}(t) = 0.1 + 2.58 \cdot u(t) + 0.2 \cdot u(t)^2 
 \end{equation}
@@ -676,13 +676,14 @@ Standby场景的温度基本保持在环境温度26.5°C左右，几乎无温升
 游戏从68\%/小时激增至近78\%/小时，斜率显著大于视频场景。
 
 接着，我们将电池健康状态（SOH）的长期衰减轨迹与使用场景强度的定量关联，得到了如\autoref {fig:fig_6}所示的结果。
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/p2_8.png}
   \caption{不同使用场景下的SOH衰减对比}
   \label{fig:fig_6}
   \end{figure}
-四种场景的SOH衰减呈现显著分层的线性下降趋势,但是斜率差别较大。
+
+  四种场景的SOH衰减呈现显著分层的线性下降趋势,但是斜率差别较大。
 游戏场景衰减最为激进，
 仅约1100次循环即达寿命终点（SOH≈0\%）。
 这是因为游戏场景下，CPU高负载运行导致持续大电流放电，
@@ -696,11 +697,24 @@ Standby场景下，低电流与室温工作条件使老化速率常数极小，
 副反应几乎可忽略，衰减最为缓慢，在经历2000次循环后仍保持约47\%的SOH，
 展示了理想保管状态下的电池寿命极限。
 
-
+最后，我们对建立的容量衰减模型,
+通过matlab仿真，得到了电池容量和循环次数的关系。
+结果如\autoref {fig:fig_3}所示。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/p2_9.png}
+  \caption{容量和循环次数关系曲线}
+  \label{fig:fig_3}
+\end{figure}
+结果显示，电池的有效容量从初始的$2.00 Ah$开始随循环次数增加呈现近似线性的衰减趋势，
+该电池在1000个循环内总共损失约1.04 Ah容量，平均每循环衰减0.052\%初始容量。
+根据行业标准的80\% EOL定义，
+模型预测该电池在约280个循环时达到寿命终止点（容量1.60 Ah，图中红色圆点标注），
+这为电池更换策略和质保期设计提供了量化依据。
 
 \subsubsection{有效性分析}
 接着我们采用110分钟的混合使用场景，评估基于无迹卡尔曼滤波（UKF）算法的时间预测模型的有效性，
-结果如\autoref {fig:fig_2}所示:
+结果如\autoref {fig:fig_2}所示。
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}{0.4\textwidth}  % 直接写宽度，不需要方括号参数
@@ -817,22 +831,33 @@ UKF算法始终保持了稳定的估计性能，
   \label{fig:fig_5}
 \end{figure}
 \autoref{fig:fig_4}展示了四种典型场景（Standby待机、Video视频、Navi导航、Game游戏）下从不同初始SOC开始的预测轨迹及其不确定性区间；
-\autoref{fig:fig_5}则以三维柱状图的形式综合展示了16种场景-初始SOC组合（4场景×4初始SOC）的平均3σ不确定性水平，
-提供了定量的、易于比较的不确定性度量，弥补了第一张图定性观察的不足。
 
-结果表明，观测信息量与不确定性负相关，且占据主导影响。
-从Standby到Video、Navi再到Game，不确定性呈递减趋势，这与传统的"功耗越高越复杂"的直觉相悖。
-这是因为观测信息量的主导作用。
-游戏场景虽然功率波动大（过程噪声大），但电压变化显著（观测信息量大），
-UKF能够通过频繁的有效测量更新持续校正估计；
-相反，待机场景虽然功率稳定（过程噪声小），但电压变化缓慢（观测信息量小），
-测量更新几乎无法修正模型漂移，导致不确定性累积。
-同时，SOC的起始状态会显著的影响该模型的不确定性。
-所有场景下，20\%起始SOC的不确定性均高于100\%起始的SOC，
-且起始SOC的差异明显高于场景变化所带来的影响。
-具体而言，Standby场景的不确定性从2\%以下增至8\%以上，增幅超过3倍，
-而Game场景的不确定性则从2\%以下增至7\%左右。
+\autoref{fig:fig_5}以三维柱状图的形式综合展示了16种场景-初始SOC组合（4场景×4初始SOC）的平均3σ不确定性水平，
+提供了定量的不确定性。
+图中颜色从蓝色到黄色的渐变直观反映了不确定性的增加趋势，
+图中每个柱体的高度值$M_{uncertainty}$通过以下公式计算：
+\begin{equation}
+M_{uncertainty} = \frac{1}{T} \sum_{k=1}^{T} \left(3 \cdot \sqrt{P_{SOC}(k)}\right) \times 100\%
+\end{equation}
+其中：
+$T$为仿真总步数（对应代码中的duration，即600秒）；
+$P_{SOC}(k)$为第$k$时刻UKF协方差矩阵中对应SOC的对角元素，代表SOC估计的方差；
+$\sqrt{P_{SOC}(k)}$为第$k$时刻SOC估计的标准差（$\sigma_k$）；
+该指标通过对整个放电过程的3σ不确定性进行时间平均，
+综合反映了UKF算法在不同条件下的估计可靠性。
 
+结果表明，初始SOC是影响估计不确定性的主导因素，
+从初始SOC维度来看，
+所有场景下从100\%到20\%初始SOC的不确定性均呈显著上升趋势。
+以Standby场景为例，不确定性从100\%起始SOC时的2.66\%激增到20\%起始SOC时的8.50\%，
+增幅高达220\%；
+Game场景从100\%起始的2.77\%增加到20\%起始的6.96\%，
+增幅约151\%。
+从使用场景维度来看（排除掉初始SOC为20\%的情况），
+不同场景的不确定性差异相对较小。
+综合来看，该三维图揭示了SOC估计不确定性的分层特征：
+初始SOC主导了不确定性的绝对水平（20\%起始比100\%起始高约3-5个百分点），
+而使用场景则在此基础上产生细微变化，同一起始SOC下场景间差异约0.5-1.5个百分点。
 
 \section{Sensitivity Analysis}
 \subsection{不同环境温度对续航时间的影响}
@@ -840,7 +865,7 @@ UKF能够通过频繁的有效测量更新持续校正估计；
 结果如\autoref{fig:fig_temp}所示。
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/image_p3_1.png}
+  \includegraphics[width=0.8\textwidth]{figures/image_p3_1.png}
   \caption{不同温度下的SOC衰减曲线}
   \label{fig:fig_temp}
   \end{figure}
@@ -856,37 +881,59 @@ UKF能够通过频繁的有效测量更新持续校正估计；
 与有效容量差异被迅速抹平。
 因此，用户行为的差异对续航的决定性作用远超环境温度波动影响。
 \subsection{模型系数$\beta_2$对模型的影响}
-定量评估了CPU功耗模型中非线性系数$\beta_2$的敏感性，我们选取了两种参数设置$\beta_2=0.2$和$
-\beta_2=0.5$，并比较了两个模型在动态负载下的表现差异,如\autoref{fig:p3_4}所示。
+
+为了定量评估CPU功耗模型中非线性系数$\beta_2$的敏感性，
+并验证模型在极限工况下的准确性，
+本文首先通过边界条件测试确定了$\beta_2$的合理取值范围。
+基于修正后的CPU功率模型：
+\begin{equation}
+P_{CPU}(t) = 0.1 + 2.28 \cdot u(t) + \beta_2 \cdot [u(t)]^2
+\end{equation}
+在最高功率边界条件（$u=1$）下，模型预测功率为：
+\begin{equation}
+P = 0.1 + 2.28(1) + \beta_2(1)^2 = 0.1 + 2.28 + \beta_2
+\end{equation}
+当$\beta_2=0.5$时，$P_{CPU}=2.88$W，与实测最高功率完全一致，验证了高负载工况下的模型准确性。
+在最低功率边界条件（$u=0.1$）下，模型预测
+$P_{CPU} =  0.333\text{W}$
+该结果与原实测值0.36W非常接近，误差仅为0.027W，符合灵敏度分析要求。
+边界条件验证表明$\beta_2=0.5$在全负载范围内具有良好的拟合精度。
+
+为进一步评估$\beta_2$对整体电池性能预测的影响，
+本文选取了$\beta_2=0.2$和$\beta_2=0.5$两种参数设置，
+在动态负载下进行了完整放电周期的对比实验，
+结果如图\ref{fig:p3_4}所示。
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/image_p3_4.png}
+  \includegraphics[width=1\textwidth]{figures/image_p3_4.png}
   \caption{不同$\beta_2$下的SOC衰减曲线与功率变化图}
   \label{fig:p3_4}
 \end{figure}
-左图展现了在完整的SOC放电周期（约120分钟）内，两条SOC衰减曲线轨迹几乎完全重合，
-右图展现了在完整的SOC放电周期（约120分钟）内，功率变化曲线，其轨迹也高度一致。
-这表明两个模型在动态负载下的表现差异不大
-即$\beta_2$的取值对总电量消耗影响微弱。
 
-\subsection{不同屏幕亮度对模型的影响}
-\subsection{屏幕亮度对电池性能的影响分析}
-
+从图中可以看出，在完整的SOC放电周期（约120分钟）内，
+两种不同$\beta_2$参数下模型的SOC衰减曲线轨迹与功率变化曲线高度重合。
+尽管$\beta_2$从0.2增加到0.5，即非线性项增强了150\%，
+但对总电量消耗和续航时间的影响微弱，
+这主要是因为在实际使用场景中，二次项$\beta_2[u(t)]^2$在不同的CPU利用率条件下的贡献相对于线性项$2.28u(t)$较小。
+该结果表明，虽然$\beta_2$对边界条件下的功率预测精度至关重要，
+但在动态混合负载场景下，模型对该参数具有一定的鲁棒性，
+这为模型在不同设备和应用场景下的迁移应用提供了便利。
+\subsection{屏幕亮度对电池性能的影响}
 为了评估屏幕亮度对电池性能的影响，
 本文分别在游戏模式和待机模式下进行了对比实验，
 设置了50\%、75\%和100\%三种亮度等级。
 图\ref{fig:fig_brightness_comparison}展示了两种场景下的实验结果。
-
 \begin{figure}[htbp]
 \centering
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.44\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/image_p3_2.png}
     \caption{不同亮度下的SOC衰减曲线（游戏场景）}
     \label{fig:fig_brightness_soc}
 \end{subfigure}
 \hfill
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.51\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/image_p3_22.png}
     \caption{不同亮度下的SOH衰减曲线（待机场景）}
@@ -920,14 +967,14 @@ UKF能够通过频繁的有效测量更新持续校正估计；
 低数据量（D=0.1）、中等数据量（D=0.5）和高数据量（D=1.0）。
 \begin{figure}[htbp]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.44\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/sen1.png}
         \caption{游戏模式下网络吞吐量对SOC的影响}
         \label{fig:network_game}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.51\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/sen2.png}
         \caption{待机模式下网络吞吐量对SOH的影响}
