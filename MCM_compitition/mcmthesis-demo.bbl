@@ -10,21 +10,16 @@ Farhan~Azmat Ali, Pieter Simoens, Tim Verbelen, Piet Demeester, and Bart Dhoedt.
 \newblock Mobile device power models for energy efficient dynamic offloading at runtime.
 \newblock {\em Journal of Systems and Software}, 113:173--187, 2016.
 
-\bibitem{batteries6030035}
-Mohammad Alipour, Carlos Ziebert, Fiorentino~Valerio Conte, and Riza Kizilel.
-\newblock A review on temperature-dependent electrochemical properties, aging, and performance of lithium-ion cells.
-\newblock {\em Batteries}, 6(3), 2020.
-
 \bibitem{android2024powervalues}
 {Android Open Source Project}.
 \newblock Power values.
 \newblock \url{https://source.android.com/docs/core/power/values}, 2024.
 \newblock Accessed: 2024-02-02.
 
-\bibitem{Carroll2010AnAO}
+\bibitem{Carroll2010Power}
 Aaron Carroll and Gernot Heiser.
 \newblock An analysis of power consumption in a smartphone.
-\newblock In {\em USENIX Annual Technical Conference}, 2010.
+\newblock In {\em Proceedings of the USENIX Annual Technical Conference}. USENIX Association, 2010.
 
 \bibitem{calce2024battery}
 {Center for Advanced Life Cycle Engineering (CALCE)}.
@@ -47,11 +42,6 @@ Hongwen He, Rui Xiong, and Jinxin Fan.
 \newblock Evaluation of lithium-ion battery equivalent circuit models for state of charge estimation by an experimental approach.
 \newblock {\em Energies}, 4(4):582--598, 2011.
 
-\bibitem{Android—mobile-devices}
-Seung-Ryeol Ohk, Seok~Min Hong, and Young-Jin Kim.
-\newblock Phase-based predicting the battery remaining time for android mobile devices.
-\newblock In {\em 2021 International Conference on Information and Communication Technology Convergence (ICTC)}, pages 942--944, 2021.
-
 \bibitem{en11051033}
 Hui Pang and Fengqi Zhang.
 \newblock Experimental data-driven parameter identification and state of charge estimation for a li-ion battery equivalent circuit model.
@@ -62,10 +52,5 @@ Hui Pang and Fengqi Zhang.
 \newblock Number of smartphone mobile network subscriptions worldwide from 2016 to 2025, with forecasts from 2025 to 2028.
 \newblock \url{https://www.statista.com/statistics/330695/number-of-smartphone-users-worldwide/}, 2025.
 \newblock Accessed: 2026-01-30.
-
-\bibitem{9246725}
-Zichen Xu, Jie Zhou, Wenli Zheng, Yuhao Wang, and Minyi Guo.
-\newblock Exploiting big.little batteries for software defined management on mobile devices.
-\newblock {\em IEEE Transactions on Mobile Computing}, 21(6):1998--2012, 2022.
 
 \end{thebibliography}

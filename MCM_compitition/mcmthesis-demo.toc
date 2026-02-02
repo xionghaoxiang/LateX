@@ -7,36 +7,35 @@
 \contentsline {section}{\numberline {3}Notations}{5}{section.3}%
 \contentsline {section}{\numberline {4}The Continuous-Time Model }{5}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Establishment of The Model}{5}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}模型\uppercase {i}：电池等效电路模型}{5}{subsubsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.2}模型\uppercase {ii}：功率负载模型}{6}{subsubsection.4.1.2}%
-\contentsline {subparagraph}{基础功耗}{7}{section*.5}%
-\contentsline {subparagraph}{屏幕功耗模型}{7}{section*.6}%
-\contentsline {subparagraph}{处理器功耗模型}{7}{section*.7}%
-\contentsline {subparagraph}{GPS功耗模型}{7}{section*.8}%
-\contentsline {subparagraph}{网络连接功耗模型}{8}{section*.9}%
-\contentsline {subparagraph}{后台任务功耗模型}{8}{section*.10}%
-\contentsline {subsubsection}{\numberline {4.1.3}模型\uppercase {iii}：热力学模型}{8}{subsubsection.4.1.3}%
-\contentsline {subsubsection}{\numberline {4.1.4}多物理场的参数耦合}{9}{subsubsection.4.1.4}%
-\contentsline {subsection}{\numberline {4.2}参数识别}{9}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}模型验证}{10}{subsection.4.3}%
-\contentsline {section}{\numberline {5}Time-to-Empty Prediction Model}{11}{section.5}%
-\contentsline {subsection}{\numberline {5.1}预测模型的建立}{11}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}状态空间模型构建}{11}{subsubsection.5.1.1}%
-\contentsline {subsubsection}{\numberline {5.1.2}电池寿命模型}{12}{subsubsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.2}结果分析}{13}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Sensitivity Analysis}{17}{section.6}%
-\contentsline {subsection}{\numberline {6.1}不同环境温度对续航时间的影响}{17}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}模型系数$\beta _2$对模型的影响}{18}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}屏幕亮度对电池性能的影响}{18}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}网络吞吐量对电池的影响}{19}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}任务波动对模型的影响}{20}{subsection.6.5}%
-\contentsline {subsection}{\numberline {6.6}内阻模型对SOH退化预测的影响}{20}{subsection.6.6}%
-\contentsline {section}{\numberline {7}Recommandations}{21}{section.7}%
-\contentsline {subsection}{\numberline {7.1}针对用户的使用建议}{21}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}针对OS的建议}{21}{subsection.7.2}%
-\contentsline {section}{\numberline {8}Model Evaluation and Further Discussion}{21}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Strengths }{21}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Weaknesses}{22}{subsection.8.2}%
-\contentsline {section}{\numberline {9}Conclusion}{22}{section.9}%
-\contentsline {section}{Reference}{23}{section.9}%
-\contentsline {section}{Report on Use of AI}{24}{section*.30}%
+\contentsline {subsubsection}{\numberline {4.1.1}Model \uppercase {i}: Battery Equivalent Circuit Model}{5}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Model \uppercase {ii}: Power Load Model}{7}{subsubsection.4.1.2}%
+\contentsline {subparagraph}{Base Power Consumption}{7}{section*.5}%
+\contentsline {subparagraph}{Screen Power Consumption Model}{7}{section*.6}%
+\contentsline {subparagraph}{Processor Power Consumption Model}{7}{section*.7}%
+\contentsline {subparagraph}{GPS Power Consumption Model}{8}{section*.8}%
+\contentsline {subparagraph}{Network Power Consumption Model}{8}{section*.9}%
+\contentsline {subparagraph}{Background Task Power Consumption Model}{8}{section*.10}%
+\contentsline {subsubsection}{\numberline {4.1.3}Model \uppercase {iii}: Thermodynamic Model}{9}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.4}Multi-physics Parameter Coupling}{9}{subsubsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.2}Parameter Identification}{10}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Model Validation}{11}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Time-to-Empty Prediction Model}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Model Establishment}{12}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}State Space Model Construction}{12}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Battery Life Model}{13}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Results Analysis}{14}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Sensitivity Analysis}{18}{section.6}%
+\contentsline {subsection}{\numberline {6.1}The impact of different environmental temperatures on the battery life}{18}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}The impact of model coefficient $\beta _2$ on the model}{19}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}The impact of screen brightness on battery performance}{20}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}The impact of network throughput on battery performance}{21}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Impact of Task Fluctuations on the Model}{21}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Impact of Internal Resistance Model on SOH Degradation Prediction}{22}{subsection.6.6}%
+\contentsline {section}{\numberline {7}Recommendations}{23}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Suggestions for User Usage}{23}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Suggestions for the OS}{23}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Model Evaluation and Further Discussion}{24}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Strengths}{24}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Weaknesses}{24}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Conclusion}{24}{section.9}%
+\contentsline {section}{Reference}{25}{section.9}%

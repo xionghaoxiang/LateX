@@ -35,20 +35,51 @@
 \DeclareGraphicsExtensions{.pdf, .jpg, .tif, .png}
 \thispagestyle{empty}
 \vspace*{-16ex}
-\centerline{\begin{tabular}{*3{c}}
+\centerline{
+\begin{tabular}{*3{c}}
     \parbox[t]{0.3\linewidth}{\begin{center}\textbf{Problem Chosen}\\ \Large \textcolor{red}{\Problem}\end{center}}
     & \parbox[t]{0.3\linewidth}{\begin{center}\textbf{2026\\ MCM/ICM\\ Summary Sheet}\end{center}}
     & \parbox[t]{0.3\linewidth}{\begin{center}\textbf{Team Control Number}\\ \Large \textcolor{red}{\Team}\end{center}}    \\
     \hline
 \end{tabular}}
+
+
+
 %%%%%%%%%%% Begin Summary %%%%%%%%%%%
 % Enter your summary here replacing the (red) text
 % Replace the text from here ...
 \begin{center}
-\textcolor{black}{%
-1111
-}
+    {\Huge \textbf{Battery SOC Prediction and Power Consumption Analysis}}\\[2ex]
 \end{center}
+Smartphone battery endurance remains notoriously unpredictable due to coupled thermal-load dynamics.
+This paper develops a continuous-time multi-physics framework for accurate \textbf{State-of-Charge (SOC) estimation and Time-to-Empty (TTE) prediction}.
+
+\textbf{Firstly}, based on the second-order RC equivalent circuit model, we employed \textbf{the Genetic Algorithm (GA)} to conduct global optimization identification of the key parameters of the battery.
+We also used the $100mA$ constant current discharge experimental data to validate the model.
+\textbf{The results show} that the Genetic Algorithm can effectively identify the equivalent parameters of the mobile phone battery,
+ensuring a good consistency between the output voltage of the model and the measured voltage, with an average error rate within 0.5\%.
+On this basis, we introduced \textbf{the power load model and the thermodynamic model},
+coupled modeling the electro-thermal behavior of the battery,
+and constructed a continuous-time lithium-ion battery model applicable to dynamic load conditions. 
+
+\textbf{Subsequently}, based on the aforementioned model, \textbf{the Unscented Kalman Filter (UKF)} method was employed to establish the TTF prediction model, enabling dynamic predictions of the remaining usage time and service life of the battery under different usage scenarios and different initial SOC conditions. 
+The experimental settings covered four typical usage scenarios: \textbf{Standby, Video, Navigation, and Game}, as well as 16 combinations of initial SOC  ranging from 100\% to 20\%.
+The results demonstrated that the model exhibited excellent prediction accuracy under all test conditions,
+\textbf{with the average $3\sigma$ prediction error controlled within the range of 2.66\%-8.50\%}.
+This verified the effectiveness and robustness of the method in complex dynamic scenarios. 
+
+\textbf{Then}, by systematically adjusting key parameters such as \textbf{environmental temperature, screen brightness, and network data traffic, as well as related assumptions},
+we conducted a model sensitivity analysis.
+\textbf{The analysis results} showed that the impact of environmental temperature on battery life mainly manifested in low-load standby scenarios,
+where the battery life decreased by approximately 7\% under low-temperature conditions;
+while in medium-high load scenarios such as video, navigation, and gaming, its impact could be largely ignored.
+\textbf{At the same time}, compared to short-term battery performance, screen brightness and network throughput are more sensitive to \textbf{the long-term lifespan of the battery}. 
+Reducing screen brightness and network data load can significantly delay the battery aging process. 
+
+\textbf{Ultimately}, building on our findings, we recommend targeted \textbf{strategies for end-users and OS developers} to enhance battery longevity.
+ Users should mitigate sustained high-load usage and moderate screen brightness and network activity. For OS designers, we advocate integrating thermal-aware CPU throttling and dynamic power management to prolong overall device lifespan.
+
+
 % to here
 %%%%%%%%%%% End Summary %%%%%%%%%%%
 

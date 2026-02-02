@@ -82,7 +82,7 @@
 }
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{ctex}
+\usepackage{rotating} % 导言区
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
 \newcommand{\Rmnum}[1]{\uppercase\expandafter{\romannumeral #1}}  %定义命令输入大写罗马数字
@@ -97,32 +97,42 @@
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
-\title{When the Icon Turns Red: Unveiling the Hidden Dynamics Behind Battery Anxiety}
+\title{When the Icon Turns Red: Unveiling the Hidden Dynamics Behind Battery }
 % \author{\small \href{http://www.latexstudio.net/}
 %   {\includegraphics[width=7cm]{mcmthesis-logo}}}
 \date{\today}
 \begin{document}
 \begin{abstract}
-手机在当今社会是人们必不可少的重要工具。
-其电池的状态影响着人们的日常生活。
-针对复杂的锂离子电池状态难以准确表征与预测的问题，
-本文建立了一个多物理场耦合的连续时间电池模型，
-用于分析电池荷电状态(SOC)和剩余使用时间。
+Smartphone battery endurance remains notoriously unpredictable due to coupled thermal-load dynamics.
+This paper develops a continuous-time multi-physics framework for accurate \textbf{State-of-Charge (SOC) estimation and Time-to-Empty (TTE) prediction}.
 
-首先，
-我们使用遗传算法(GA)对构建二阶RC等效电路模型参数进行全局优化识别并
-通过100mA的恒流放电数据集进行模型的验证。
-接着我们使用UKF算法建立了TTF预测模型，得到了不同场景、不同初始SOC下的电池剩余使用时间。
-实验结果表明，在我们设定的Standby、Video、Navigation和Game四种典型场景与
-从100\%到20\%初始SOC的16种工况组合中，模型的平均3$\sigma$预测误差在2.66\%-8.50\%范围内，
-具有良好的预测性能。
+\textbf{Firstly}, based on the second-order RC equivalent circuit model, we employed \textbf{the Genetic Algorithm (GA)} to conduct global optimization identification of the key parameters of the battery.
+We also used the $100mA$ constant current discharge experimental data to validate the model.
+\textbf{The results show} that the Genetic Algorithm can effectively identify the equivalent parameters of the mobile phone battery,
+ensuring a good consistency between the output voltage of the model and the measured voltage, with an average error rate within 0.5\%.
+On this basis, we introduced \textbf{the power load model and the thermodynamic model},
+coupled modeling the electro-thermal behavior of the battery,
+and constructed a continuous-time lithium-ion battery model applicable to dynamic load conditions. 
 
-然后，我们对模型进行了包括温度、屏幕亮度、网络数据流量等参数与假设的更改，从而进行模型灵敏度分析。
-结果表明，
+\textbf{Subsequently}, based on the aforementioned model, \textbf{the Unscented Kalman Filter (UKF)} method was employed to establish the TTF prediction model, enabling dynamic predictions of the remaining usage time and service life of the battery under different usage scenarios and different initial SOC conditions. 
+The experimental settings covered four typical usage scenarios: \textbf{Standby, Video, Navigation, and Game}, as well as 16 combinations of initial SOC  ranging from 100\% to 20\%.
+The results demonstrated that the model exhibited excellent prediction accuracy under all test conditions,
+\textbf{with the average $3\sigma$ prediction error controlled within the range of 2.66\%–8.50\%}.
+This verified the effectiveness and robustness of the method in complex dynamic scenarios. 
 
+\textbf{Then}, by systematically adjusting key parameters such as \textbf{environmental temperature, screen brightness, and network data traffic, as well as related assumptions},
+we conducted a model sensitivity analysis.
+\textbf{The analysis results} showed that the impact of environmental temperature on battery life mainly manifested in low-load standby scenarios,
+where the battery life decreased by approximately 7\% under low-temperature conditions;
+while in medium-high load scenarios such as video, navigation, and gaming, its impact could be largely ignored.
+\textbf{At the same time}, compared to short-term battery performance, screen brightness and network throughput are more sensitive to \textbf{the long-term lifespan of the battery}. 
+Reducing screen brightness and network data load can significantly delay the battery aging process. 
 
-\begin{keywords}
-SOC估计\quad 续航预测 \quad 遗传算法 \quad 无迹卡尔曼滤波 \quad 智能手机 \quad 锂电池
+\textbf{Ultimately}, building on our findings, we recommend targeted \textbf{strategies for end-users and OS developers} to enhance battery longevity.
+ Users should mitigate sustained high-load usage and moderate screen brightness and network activity. For OS designers, we advocate integrating thermal-aware CPU throttling and dynamic power management to prolong overall device lifespan.
+
+ \begin{keywords}
+SOC estimation \quad Remaining time prediction \quad Genetic algorithm \quad Univariate Kalman filtering \quad Smart phone \quad Lithium battery
 \end{keywords}
 \end{abstract}
 
@@ -153,80 +163,66 @@ SOC估计\quad 续航预测 \quad 遗传算法 \quad 无迹卡尔曼滤波 \quad
 
 \section{Introduction}
 \subsection{background}
-随着科学技术的发展，手机在我们的生活中发挥着不可或缺的作用。
-到2025年，全球智能手机用户数量已超过73亿。
+With the development of science and technology, mobile phones play an indispensable role in our lives.
+By 2025, the number of global mobile phone users had exceeded 7.3 billion.The battery life of the phone directly affects the user experience. 
+As the core component of the phone, the battery works together with the screen, CPU operation, network load, and applications to determine the phone's battery life.
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/image.png}
-    \caption{全球手机用户数量\cite{statista_smartphone_2025}}
+    \caption{Global number of mobile phone users\cite{statista_smartphone_2025}}
   \end{subfigure}\hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/R-C.png}
-    \caption{手机电池电量示意图}
+    \caption{Schematic diagram of mobile phone battery capacity}
   \end{subfigure}
   \caption{}
   \label{fig:battery_parallel}
 \end{figure}
-其中，手机的续航能力直接影响用户体验，而电池作为手机的核心部件，与屏幕、CPU工作情况、
-网络负载、应用程序相互配合，共同作用，决定着手机的续航时间进而影响用户的使用体验。
-因此，在不同的使用情况，不同的环境条件下，准确估计手机电池的剩余电量与续航时间，
-对于提升用户体验具有重要意义。
+\vspace{-0.4cm}
 \subsection{Restatement of the Problem}
-基于上述的理解，我们的任务是建立一个常微分方程（ODE）系统，
-以描述在实际使用场景下随时间变化的充电状态（SOC）的演变情况。具体而言，
-本研究将尝试完成以下几个任务：
+Based on the above understanding, our task is to establish a time-domain model to describe the evolution of the State of Charge (SOC) over time in practical usage scenarios. Specifically, this study will attempt to accomplish the following tasks:
 \begin{itemize}
-  \item \textbf{任务一：}建立一个连续时间模型来表示电池的电量状态，并且模型能从电池放电的简单状态拓展到复杂多场景条件。
-  \item \textbf{任务二：}利于上述模型来预测出不同初始充电水平和使用场景下的电池性能。
-                        将结果进行分析以量化模型的不确定性与有效性。 
-  \item \textbf{任务三：}通过调整假设与模型参数，对上述建立的模型进行灵敏性分析以评估模型稳定性。
-  \item \textbf{任务四：}为终端用户以及操作系统设计者制定相应的建议从而增强电池的续航时间。
+  \item \textbf{Task 1:} Establish a continuous-time model to represent the battery's charge state, and the model can extend from simple battery discharge states to complex multi-scenario conditions.
+  \item \textbf{Task 2:} Use the above model to predict battery performance under different initial charge levels and usage scenarios.
+                        Analyze the results to quantify the model's uncertainty and effectiveness. 
+  \item \textbf{Task 3:} Conduct sensitivity analysis on the established model by adjusting assumptions and model parameters.
+  \item \textbf{Task 4:} Develop corresponding suggestions for end users and operating system designers to enhance the battery life.
 \end{itemize}
 \subsection{Literature Review}
-准确的识别电池的State of Charge (SOC)是先进的电池管理系统（BMS）的核心任务之一。
-在电动汽车方面，Hui Pang and Fengqi Zhang提出了的一种基于系统实验数据驱动的参数识别方案
-以及一种基于自适应扩展卡尔曼滤波（AEKF）的锂离子电池等效电路模型的 SOC 估算算法\cite{en11051033}；
-Yixing Chen , Deqing Huang等人基于分数阶微积分理论开发了一个改进的二阶 RC 模型来模拟锂离子电池的特性\cite{en10091313}。
-结果表明，他们实现了在不同工况下对 SOC 的高精度与高效率估计，验证了该类模型在动态负载条件下的有效性和可行性。
+Accurate State of Charge (SOC) estimation is a core function of advanced Battery Management Systems (BMS). In the field of electric vehicles, Hui Pang and Fengqi Zhang proposed a parameter identification framework and an SOC estimation method for lithium-ion battery equivalent circuit models based on Adaptive Extended Kalman Filtering (AEKF) \cite{en11051033}. Yixing Chen, Deqing Huang, et al. developed an improved second-order RC model incorporating fractional calculus to better capture lithium-ion battery dynamics \cite{en10091313}. These studies demonstrate that equivalent circuit models combined with advanced filtering algorithms can achieve high SOC estimation accuracy under dynamic operating conditions.
 
-在移动消费类电子设备领域，
-受限于电池容量，锂电池功率能耗模型与能量管理策略同样受到关注\cite{aa}。
-已有研究从系统层面对智能手机的主要能耗来源进行了分析，构建了以 CPU、GPU 和显示屏等高能耗组件为核心的功率模型，并基于不同工作负载阶段对设备总体功耗进行预测，从而估算电池消耗量与剩余可用时间\cite{en4040582}。
-此外，通过应用动态卸载技术到移动设备能耗模型（包括 CPU、显示单元、无线网络接口和内存）在移动设备上可实现 18\%至55\%的能效提升，
-具体提升幅度取决于不同的条件\cite{ALI2016173}。
-这些研究揭示了用户行为与系统负载对电池消耗的显著影响，并为多场景下的模型中各子项的合理取值提供了理论与实验依据。
-\subsection{Our Work}
-受到上述研究的启发，本研究将构建基于连续时间的电池电量模型与基于UKF的时间预测模型。
-具体流程如\autoref{fig:process}所示：
+In mobile consumer electronic devices, limited battery capacity has motivated extensive research on power consumption modeling and energy management strategies \cite{aa}. Prior work has analyzed smartphone energy consumption at the system level, constructed power models focusing on high-energy components such as CPU, GPU, and display, and predicted overall device power consumption under varying workloads to estimate battery usage and remaining operating time \cite{en4040582}. Moreover, dynamic offloading techniques applied to mobile device energy models—covering CPU, display, wireless interfaces, and memory—have been shown to improve energy efficiency by 18\% to 55\%, depending on operating conditions \cite{ALI2016173}. Collectively, these studies highlight the critical influence of user behavior and system load on battery consumption and provide a theoretical and empirical foundation for parameter selection in multi-scenario battery models.\subsection{Our Work}
+Inspired by the aforementioned research, the specific process of our study is shown in \autoref{fig:process}:
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{figures/our.png}
-  \caption{流程图}
+  \caption{Flowchart}
   \label{fig:process}
 \end{figure}
 
 \section{Assumptions and Justification}
-\textbf{Assumption 1:}手机电源管理链路对电池侧呈现近似恒功率取能。
+\textbf{Assumption 1:}
+The mobile phone power management link exhibits approximately constant power absorption at the battery side.
 
-智能手机典型为稳压供电架构，负载功耗更接近功率而非恒流；将复杂电源管理折算为常效率可显著简化耦合并保持物理一致性。
+Due to regulated power supply architectures, the battery-side behavior can be reasonably approximated as constant power, simplifying system coupling while maintaining physical consistency.
 
-\textbf{Assumption 2:}开路电压$E(SOC)$仅由$SOC$决定，并可用离线拟合的多项式$E(z)$近似表示；在给定电池类型与温区内该映射保持稳定。
+\textbf{Assumption 2:}
+The open-circuit voltage $E(SOC)$ depends only on $SOC$ and is approximated by an offline fitted polynomial $E(z)$ within a given temperature range.
 
-OCV--SOC关系是求解电压观测方程的关键，我们采用拟合函数等价于“查表法”，
-可避免引入更高维的电化学状态变量，保证UKF可实现。
+This approximation replaces lookup-table methods, avoids additional electrochemical states, and ensures tractable UKF implementation.
 
-\textbf{Assumption 3:}总功率$P(t)$可分解为待机、屏幕、CPU、GPS、网络、后台等可加和分量，
+\textbf{Assumption 3:}
+The total power $P(t)$ is decomposable into additive scenario-based components (e.g., standby, screen, CPU, GPS, network).
 
-题目中明确了电池模型需要从简单放电扩展到多场景。将总功率分解为可观测的场景变量，
-便于场景拼接与灵敏度分析。
+This enables multi-scenario modeling and sensitivity analysis beyond simple discharge conditions.
 
-\textbf{Assumption 4:}电池温度$T(t)$可视为单一集中参数（空间上均匀），
-与环境的散热满足牛顿冷却定律，并且换热系数$h$与散热面积$A$在短时间内不变。
+\textbf{Assumption 4:}
+The battery temperature $T(t)$ is spatially uniform and follows Newton’s law of cooling over short time intervals.
 
-手机电池体积较小、导热快，用0D热模型即可捕捉主要温升趋势；该假设使热-电耦合仍保持低维ODE，适合仿真与滤波。
+A lumped thermal model captures the dominant temperature dynamics while keeping electro-thermal coupling low-dimensional.
 \section{Notations}
 
 \begin{table}[H]
@@ -239,10 +235,9 @@ Symbol & Description & Unit \\
 \midrule
 $SOC(t)$ & State of Charge  & -- \\
 $U(t)$ & Battery terminal voltage & V \\
-$U_{meas}(k)$ & Measured terminal voltage at step $k$ & V \\
 $E(SOC)$ & Open-circuit voltage (OCV)  & V \\
 $i(t)$ & Battery current & A \\
-$\Delta t$ & Sampling period / discretization step & s \\
+% $\Delta t$ & Sampling period / discretization step & s \\
 $R_0$ & Ohmic internal resistance & $\Omega$ \\
 $R_1,\,R_2$ & Polarization resistances in the 2-RC model & $\Omega$ \\
 $C_1,\,C_2$ & Polarization capacitances in the 2-RC model & F \\
@@ -257,44 +252,43 @@ $SOH(t)$ & State of Health (capacity/health indicator) & -- \\
 \end{table}
 \section{The Continuous-Time Model }
 \subsection{Establishment of The Model}
-\subsubsection{模型\Rmnum{1}：电池等效电路模型}
-题目明确规定假设手机电池为锂电池，
-考虑各种锂电池充放电过程中包括欧姆极化，电化学极化，浓差极化，
-在内的极化反应及模型计算复杂度与真实度，
-我们选用二阶RC等效电路模型模拟锂电池内部结构，近似描述电池内部的动态过程，其等效电路如\autoref {fig:battery_model}所示。
+\subsubsection{Model \Rmnum{1}: Battery Equivalent Circuit Model}
+The problem statement explicitly assumes the smartphone battery is a lithium battery.
+Considering various polarization effects during lithium battery charge and discharge processes, including ohmic polarization, electrochemical polarization, and concentration polarization,
+and balancing model computational complexity with fidelity,
+we select a second-order RC equivalent circuit model to simulate the internal structure of the lithium battery, approximately describing the internal dynamic processes. Its equivalent circuit is shown in \autoref{fig:battery_model}.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/battery_model.png}
-  \caption{二阶RC等效电路模型示意图}
+  \caption{Second-order RC equivalent circuit model schematic}
   \label{fig:battery_model}
 \end{figure}
 
-其中$E$是电池的开路电压，取决于State of Charge (SOC)，是表示电池荷电状态（SOC）的函数，
-$i_t$为电路总电流，$U$为电池端输出电压。
-根据基尔霍夫定律可以此得到电池端输出电压$U$的表达式：
+Where,$E$ represents the open-circuit voltage of the battery, which depends on the State of Charge (SOC) and is a function indicating the battery's state of charge (SOC).
+$i_t$ is the total current in the circuit, and $U$ is the output voltage of the battery.
+According to Kirchhoff's laws, the expression for the output voltage $U$ of the battery can be derived as follows: $i_t$ is the total current in the circuit, and $U$ is the output voltage of the battery.
 \begin{equation}
   U=E-U_0-U_1-U_2
 \end{equation}
-其中，欧姆内阻上的压降满足欧姆定律$U_0=i_t\ast R_0$,由此得：
+Where the voltage drop across the ohmic resistance satisfies Ohm's law $U_0=i_t\ast R_0$, thus:
 \begin{equation}
  U=E(SOC)-i_t\ast R_0-U_1-U_2   
 \end{equation}
-同时，根据基尔霍夫电流定律，第一个并联回路电流关系满足$i_t=i_{R1}+i_{C1}$，
-从而第一个回路的微分方程可以表示为：
+Meanwhile, according to Kirchhoff's Current Law, the current relationship in the first parallel circuit satisfies $i_t = i_{R1} + i_{C1}$,
+therefore, the differential equation of the first circuit can be expressed as:
 \begin{equation}
   \frac{dU_1}{dt}=\frac{i_t}{C_1}-\frac{U_1}{R_1C_1}
 \end{equation}
-对于第二个并联回路，同理可得：
+For the second parallel circuit, by the same reasoning, we can obtain:
 \begin{equation}
   \frac{dU_2}{dt}=\frac{i_t}{C_2}-\frac{U_2}{R_2C_2}
 \end{equation}
-为了使得最后模型求解闭环，我们定义SOC变化方程：
+To close the model for solution, we define the SOC change equation:
 \begin{equation}
   \frac{dSOC}{dt}=-\frac{i_t}{Q_n}
 \end{equation}
-其中$Q_n$是电池额定容量，负号表示放电导致SOC减小。
-
-综上，可得到电池模型的状态方程：
+Where $Q_n$ is the battery's rated capacity, and the negative sign indicates that discharging causes SOC to decrease.
+In summary, the state equations of the battery model can be obtained:
 \begin{equation}
   \begin{cases}
     \dfrac{dU_1}{dt} = \dfrac{i(t)}{C_1} - \dfrac{U_1}{R_1C_1} \\[8pt]
@@ -302,155 +296,154 @@ $i_t$为电路总电流，$U$为电池端输出电压。
     \dfrac{d(SOC)}{dt} = -\dfrac{i(t)}{Q_n}
   \end{cases}
 \end{equation}
-以及对应的输出方程：
+and the corresponding output equation:
 \begin{equation}
   U(t)=E(SOC)-i(t)\ast R_0-U_1-U_2
 \end{equation}
-\subsubsection{模型\Rmnum{2}：功率负载模型}
- 在真实的手机放电过程中，电池放电电流并非恒定的额定值，而是由手机各组件的瞬时功率需求共同决定；
- 同时，功率需求又可以由用户的使用行为进行映射。
- 基于此，我们将电池输出的总功率分解为基础待机功率$P_{base}$、屏幕使用功率$P_{screen}$、CPU使用功率$P_{CPU}$、
- GPS使用功率$P_{GPS}$、网络使用功率$P_{networking}$以及后台功率$P_{background}$，
- 得到总功率表达式：
+\subsubsection{Model \Rmnum{2}: Power Load Model}
+ In the actual discharge process of the phone, the battery discharge current is not a constant rated value, but is determined by the instantaneous power demand of various phone components;
+ At the same time, the power demand can be mapped from the user's usage behavior.
+ Based on this, we decompose the total power output of the battery into base standby power $P_{base}$, screen usage power $P_{screen}$, CPU usage power $P_{CPU}$,
+ GPS usage power $P_{GPS}$, network usage power $P_{networking}$, and background power $P_{background}$,
+ obtaining the total power expression:
  \begin{equation}
     P(t)=P_{base}+P_{screen}(t)+P_{CPU}(t)+P_{GPS}(t)+P_{networking}(t)+P_{background}(t)
   \end{equation}
- 另一方面，手机内部的电源管理芯片通常以近似恒定功率模式从电池取电。由功率定义$P=UI$，可得电池电流$i(t)$为：
+ On the other hand, the power management chip inside the phone usually draws power from the battery in an approximately constant power mode. According to the power definition $P=UI$, the battery current $i(t)$ can be expressed as:
   \begin{equation}
   i(t)=\frac{P}{U(t)\ast\eta}
   \end{equation}
-  其中$\eta$为DC-DC转换器的效率，通常取接近1的常值。$U(t)$为电池端输出电压。
-
-为准确刻画手机在不同使用场景下的功率特性，我们针对各个功耗组件建立了基于物理原理和实测数据的数学模型。
-\subparagraph{基础功耗}
-基础功耗$P_{{base}}$代表手机在开机但没有任何用户活动时，维持系统存活的最低功耗，包括操作系统内核、时钟芯片、内存待机等必要开销。该项为常数：
+  where $\eta$ is the efficiency of the DC-DC converter, usually taken as a constant close to 1. $U(t)$ is the output voltage at the battery terminal.
+To accurately characterize the power characteristics of the phone under different usage scenarios, we have established mathematical models for each power-consuming component based on physical principles and measured data.
+\subparagraph{Base Power Consumption}
+Base power consumption $P_{{base}}$ represents the minimum power required to keep the system alive when the phone is turned on but there is no user activity, including necessary overhead such as the operating system kernel, clock chip, and memory standby. This item is a constant:
 \begin{equation}
     P_{{base}} = P_0
 \end{equation}
-其中$P_0$通常在0.2-0.5 W之间，取决于具体手机型号。
-\subparagraph{屏幕功耗模型}
-由韦伯定律可知，人眼对光强的感知呈对数关系，因此为了让用户感觉亮度线性变化，屏幕的实际输出功率必须呈现指数或幂函数增长。我们定义屏幕功耗模型为：
+where $P_0$ is usually between 0.2-0.5 W, depending on the specific phone model.
+\subparagraph{Screen Power Consumption Model}
+According to Weber's law, the human eye perceives light intensity logarithmically. Therefore, to make the user perceive brightness changes linearly, the actual screen output power must increase exponentially or as a power function. We define the screen power consumption model as:
 \begin{equation}
    P_{screen}(t)=\delta _{on}(t)*P_{drive}+\alpha_s*(B(t)^\gamma)
 \end{equation}
-其中：
-$\delta_{on}(t) \in \{0,1\}$表示屏幕开关状态，
- $P_{drive}$为屏幕驱动的基础功耗，
- $B(t) \in (0,1)$为屏幕亮度百分比，
-$\gamma$为伽马校正系数，通常在1.5到2.2之间。
-根据文献\cite{carroll2010analysis}的实测数据，实际应用中取：
+where:
+$\delta_{on}(t) \in \{0,1\}$ represents the screen on/off status,
+$P_{drive}$ is the basic power consumption for screen driving,
+$B(t) \in (0,1)$ is the screen brightness percentage,
+$\gamma$ is the gamma correction coefficient, usually ranging from 1.5 to 2.2.
+According to the measured data from reference \cite{Carroll2010Power},
+ in practical applications, the following values are adopted:
 \begin{equation}
-    P_{screen}(t) = 1.08 + 0.72 \cdot B(t)^{2.0} 
+    P_{screen}(t) = 1.08 + 0.72 \cdot B(t)^{2} 
 \end{equation}
-\subparagraph{处理器功耗模型}
-在物理上，集成电路的动态功耗满足$P = C \cdot V^2 \cdot f$，
-对于现代CPU，当负载$u$增加时，不仅提高频率$f$，还会提高电压$V$。
-由于电压$V$通常与频率$f$成正比，故功耗正比于频率的三次方。
-又因为CPU利用率$u$与频率$f$成正相关，所以功耗与利用率的关系为非线性。
-我们采用二次多项式模拟此现象：
+\subparagraph{Processor Power Consumption Model}
+Physically, the dynamic power consumption of integrated circuits satisfies $P = C \cdot V^2 \cdot f$,
+For modern CPUs, as the load $u$ increases, not only does the frequency $f$ increase, but the voltage $V$ also increases.
+Since the voltage $V$ is usually proportional to the frequency $f$, the power consumption is proportional to the cube of the frequency.
+And because the CPU utilization $u$ is positively correlated with the frequency $f$, the relationship between power consumption and utilization is nonlinear.
+We use a quadratic polynomial to simulate this phenomenon:
 \begin{equation}
     P_{CPU}(t) = P_{idle} + \beta _1 \cdot u(t) + \beta _2 \cdot u(t)^2
 \end{equation}
-其中：
-$P_{idle}$为CPU空闲状态功耗,
-$u(t) \in [0,1]$为CPU利用率,
-$\beta _1, \beta _2$为模型系数。
-通过边界条件确定该参数，
-CPU最低工作功率为0.36 W（$u=0.1$时），
-最高工作功率为2.88 W（$u=1$时）。
-考虑到手机大部分时间处于低负载状态，线性功耗占主要比重，取$\beta_1=2.58,\beta_2=0.2$：
+where:
+$P_{idle}$ is the CPU idle power,
+$u(t) \in [0,1]$ is the CPU utilization,
+$\beta _1, \beta _2$ are model coefficients.
+These parameters are determined by boundary conditions,
+with the CPU minimum operating power being 0.36 W (at $u=0.1$),
+maximum operating power being 2.88 W (at $u=1$). 
+Considering that the phone is mostly in a low-load state most of the time, the linear power consumption accounts for the major proportion. 
+Therefore, we take $\beta_1=2.58$ and $\beta_2=0.2$:
 \begin{equation}
     P_{CPU}(t) = 0.1 + 2.58 \cdot u(t) + 0.2 \cdot u(t)^2 
 \end{equation}
-\subparagraph{GPS功耗模型}
-GPS通常在启动阶段（活跃阶段）消耗最高功耗，成功定位后功耗显著降低。定义GPS功耗模型为：
+\subparagraph{GPS Power Consumption Model}
+GPS typically consumes the most power during the startup phase (active phase), and the power consumption significantly decreases after successful positioning. The GPS power consumption model is defined as:
 \begin{equation}
-P_{GPS}t=\delta _{gps}(t)*P_{GPS-active}
+P_{GPS}(t)=\delta _{gps}(t)*P_{GPS-active}
 \end{equation}
-其中，$\delta _{gps}(t)\in \{0,1\}$为GPS的开关状态，$P_{GPS-active}$为GPS活跃时的功耗。
-\subparagraph{网络连接功耗模型}
-根据通信原理，为了维持恒定的信噪比以保持连接，当距离变远或障碍物增加时（信号强度$S$变小），手机必须提高发射功率。模型定义为：
+where $\delta _{gps}(t)\in \{0,1\}$ represents the GPS on/off status, and $P_{GPS-active}$ is the power consumption when GPS is active.
+\subparagraph{Network Power Consumption Model}
+According to communication principles, to maintain a constant signal-to-noise ratio for connection, when the distance increases or obstacles increase (signal strength $S$ decreases), the phone must increase the transmission power. The model is defined as:
 \begin{equation}
     P_{networking}(t) = \delta_{network}(t) \cdot (P_{base_net}+\frac{P_{ref}}{S_{signal}(t)}\ast D_{throughput}(t))
 \end{equation}
-其中
-，$\delta_{network}(t) \in \{0,1\}$表示网络模块开关状态
-，$S_{signal}(t)\in (0,1]$为信号强度因子，1表示信号最好
-，$D_{throughput}(t)$为数据传输速率（Mbps）
-，$P_{ref}$为参考发射功率，一般取0.3-0.4 W。
-\subparagraph{后台任务功耗模型}
-后台任务的最大特点是间歇性，不是持续运行，而是周期性唤醒。引入脉冲序列模型：
+where
+$\delta_{network}(t) \in \{0,1\}$ represents the network module on/off status,
+$S_{signal}(t)\in (0,1]$ is the signal strength factor, with 1 indicating the best signal,
+$D_{throughput}(t)$ is the data transmission rate (Mbps),
+$P_{ref}$ is the reference transmission power, generally taken as 0.3-0.4 W.
+\subparagraph{Background Task Power Consumption Model}
+The main characteristic of background tasks is intermittency; they do not run continuously but are periodically awakened. We introduce a pulse sequence model:
 \begin{equation}
     P_{background}(t) = \sum_{k} P_{task} \cdot \prod (\frac{t - t_k}{\tau })
 \end{equation}
-其中,$\prod $为矩形窗函数，表示任务持续一小段时间,
- $t_k$表示第$k$次唤醒的时间点,
- $P_{task}$为唤醒时的功率，由手机工作状态决定。
-矩形窗函数定义为：
+where $\prod $ is the rectangular window function, indicating that the task lasts for a short period,
+ $t_k$ represents the time point of the $k$-th wake-up,
+ $P_{task}$ is the power during wake-up, determined by the phone's working state.
+The rectangular window function is defined as:
 \begin{equation}
     \prod (\frac{t - t_k}{\tau }) = \begin{cases}
         1 & t_k \leq t < t_k + \tau \\
-        0 & \text{其他}
+        0 & \text{otherwise}
     \end{cases}
 \end{equation}
-其中$\tau$为单次后台任务的持续时间。
-\subsubsection{模型\Rmnum{3}：热力学模型}
-温度是影响电池性能的重要因素之一。电池温度不仅会改变电池内部电化学反应速率，
-还会进一步影响电池内阻、可用容量以及放电效率。
-因此，为了提高电池状态预测模型的准确性，
-有必要建立电池热动力学模型来描述电池温度的动态变化过程。
-在实际工作中，手机系统的热量来源主要包括两个部分：
-一是电池内部由于电流通过内阻产生的焦耳热；
-二是由系统级负载产生的附加热量，
-例如处理器、射频模块功率损耗以及显示器损耗等。
-因此，为了同时描述电池内部物理发热以及系统级功耗引起的产热效应，
-我们将整个手机产生的总热量表示为两部分之和，即
- \begin{equation}
-    Q_{gen}(t)=i^2(t)\ast R_{0}+\alpha\ast P(t)\ast T
- \end{equation}
-其中，第一项表示电池内部欧姆内阻引起的焦耳热；第二项表示由电池输出的总能量转化为热量的附加热能。
-参数 $\alpha$ 表示总能量向热能转化的比例系数。考虑到实际电子设备中并非全部电能都会转化为热能，
-本文参考消费电子设备的典型热效率范围，在后续仿真中取 $\alpha=0.1$,$T$代表场景运行总时长。
+where $\tau$ is the duration of a single background task.
+\subsubsection{Model \Rmnum{3}: Thermodynamic Model}
+Temperature is a key factor influencing battery performance, as it affects electrochemical reaction rates, internal resistance, available capacity, and discharge efficiency.
+To improve the accuracy of battery state prediction, a thermodynamic model is introduced to describe the dynamic evolution of battery temperature.
 
-与此同时，电池在工作过程中还会向环境不断地散热。
-根据牛顿冷却定律，散失的热量与电池和环境温差成正比：
+In smartphone systems, heat generation mainly arises from two sources:
+(i) Joule heat produced by the battery current flowing through the internal resistance, and
+(ii) additional heat induced by system-level power consumption, including the processor, RF modules, and display.
+
+Accordingly, the total heat generation of the phone is modeled as
+\begin{equation}
+Q_{gen}(t)=i^2(t)\ast R_{0}+\alpha\ast P(t)\ast T
+\end{equation}
+where the first term represents the Joule heat caused by the battery’s internal ohmic resistance, and the second term denotes the heat converted from the total energy output of the battery.
+The parameter $\alpha$ is the energy-to-heat conversion coefficient. Considering the typical thermal efficiency of consumer electronic devices, $\alpha=0.1$ is adopted in subsequent simulations.
+$T$ denotes the total running time of the scenario.
+
+Meanwhile, the battery continuously dissipates heat to the environment during operation.
+According to Newton's law of cooling, the heat loss is proportional to the temperature difference between the battery and the environment:
 \begin{equation}
 Q_{diss}\left(t\right)=h\ast A\ast(T(t)-T_{env})
 \end{equation}
-其中$h$为对流换热系数，$A$为有效散热面积，$T_{env}$为环境温度。
-
-根据能量守恒定律，电池温度$T(t)$的动态方程可以表示为：
+where $h$ is the convective heat transfer coefficient, $A$ is the effective heat dissipation area, and $T_{env}$ is the ambient temperature.
+According to the law of conservation of energy, the dynamic equation of battery temperature $T(t)$ can be expressed as:
 \begin{equation}
 mC_p\frac{dT(t)}{dt}=Q_{gen}(t)+Q_{diss}(t)
 \end{equation}
-其中，$m$为电池质量，$C_p$为电池比热容。
-\subsubsection{多物理场的参数耦合}
-温度会进一步改变等效电路模型的参数，从而形成多物理场耦合。
-电池内阻随温度变化遵循阿伦尼乌斯方程，温度越低离子活性越差，内阻越大
+where $m$ is the battery mass, and $C_p$ is the battery specific heat capacity.
+\subsubsection{Multi-physics Parameter Coupling}
+Temperature further changes the parameters of the equivalent circuit model, forming multi-physics coupling.
+The battery internal resistance varies with temperature following the Arrhenius equation; the lower the temperature, the poorer the ion activity, and the greater the internal resistance:
 \begin{equation}
   R(T)=R_{ref}\ast exp \left( \frac{E_a}{k}(\frac{1}{T(t)}-\frac{1}{T_{ref}}) \right)
 \end{equation}
-此外，电池的总容量$Q_n$也并非恒定不变，在低温场景下，其可用化学容量会产生衰减，可以表示为:
+In addition, the total capacity $Q_n$ of the battery is not constant. In low-temperature scenarios, its available chemical capacity will degrade, which can be expressed as:
 \begin{equation}
 Q_n(T)=Q_{max}\cdot\eta_T(T)
 \end{equation}
-其中，$\eta_T(T)$为温度对可用化学容量的衰减因子，是温度的函数。
-\subsection{参数识别}
-在锂电池实际工作中，$E$和SOC是存在函数关系。因此，
-首先，我们通过真实数据采用5阶拟合的方式，定义归一化荷电状态 $z=SOC(t)\in [0,1] $，得到其近似函数表达式：
+where $\eta_T(T)$ is the degradation factor of available chemical capacity due to temperature, which is a function of temperature.
+\subsection{Parameter Identification}
+In the actual operation of lithium batteries, there is a functional relationship between $E$ and SOC. Therefore,
+first, we use real data to perform a 5th-order fitting, defining the normalized state of charge $z=SOC(t)\in [0,1]$, and obtain its approximate functional expression:
 \begin{equation}
   E(z)\ =\ 4.5784\ast z^5+-13.0395\ast z^4\ +13.4836\ast z^3+-5.5077\ast z^2+1.1662\ast z+3.4835
 \end{equation}
-此多项式将作为后续时域仿真的静态查表函数，用于根据实时SOC估算开路电压$E$。
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.4\textwidth]{figures/DST_.png}
-\caption{E-SOC曲线}
-\label{fig:figure1}
-\end{figure}
-然后，由于实际系统控制与参数辨识均在离散时间域进行，
-需将连续时间的状态方程转换为离散形式。
-设采样周期为 $\Delta t $，基于前向欧拉和指数离散化方法，得到二阶RC模型的离散状态递推方程：
+This polynomial will serve as a static lookup function for subsequent time-domain simulations, used to estimate the open-circuit voltage $E$ based on real-time SOC.
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.4\textwidth]{figures/DST_.png}
+% \caption{E-SOC curve}
+% \label{fig:figure1}
+% \end{figure}
+
+Then, since the actual system control and parameter identification are performed in the discrete time domain,
+the continuous-time state equations need to be converted into discrete form.
+Let the sampling period be $\Delta t$, and based on the forward Euler and exponential discretization methods, the discrete state update equations for the second-order RC model are obtained:
 \begin{equation}
 \begin{cases}
 U_1(k+1) = \exp\left(-\dfrac{\Delta t}{R_1 C_1}\right) U_1(k) + R_1\left[1 - \exp\left(-\dfrac{\Delta t}{R_1 C_1}\right)\right]i(k) \\[10pt]
@@ -460,30 +453,30 @@ SOC(k+1) = SOC(k) - \dfrac{\eta \cdot i(t) \cdot \Delta t}{Q_n}
 \label{eq:discrete}
 \end{equation}
 
-最后，为避免传统实验法对精密设备和大量先验数据的依赖，
-本研究采用遗传算法（Genetic Algorithm, GA）对二阶RC等效电路模型进行全局参数辨识。
-定义参数向量
+Finally, in order to avoid the reliance of traditional experimental methods on sophisticated equipment and large amounts of prior data,
+this study employs the Genetic Algorithm (GA) to conduct global parameter identification for the second-order RC equivalent circuit model.
+Define the parameter vector
    $\theta = \left[R0,R_1, R_2, C_1, C_2, SOC_0\right]^T$
-其中$SOC_0$为初始荷电状态。
-基于最小二乘原理，构建以端电压误差最小化为目标的损失函数：
+where $SOC_0$ is the initial state of charge.
+Based on the least squares principle, construct a loss function aimed at minimizing the terminal voltage error:
 \begin{equation}
 J\left( \theta \right) =\sqrt{\frac{1}{N}\sum_{k-1}^N{\left[ U_{meas}\left( k \right) -U\left( k \right) \right]}^2}
 \end{equation}
-其中，$U_{meas}(k)$为$k$时刻的实测电压数据。$U_(k)$ 为模型在当前参数下的仿真电压，$N$为数据序列长度。
-
-基于GA的迭代优化流程如\autoref{fig:figure1}所示：
+where $U_{meas}(k)$ is the measured voltage data at time $k$. $U(k)$ is the simulated voltage under the current parameters, and $N$ is the length of the data sequence.
+The iterative optimization process based on GA is shown in \autoref{fig:figure1}:
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.7\textwidth]{figures/2.png}
-  \caption{GA参数辨识流程图}
+  \caption{GA Parameter Identification Flowchart}
   \label{fig:figure1}
 \end{figure}
 \begin{itemize}
-  \item Step 1: 状态初始化,设定初始条件：$U_1(0)=0, U_2(0)=0$,初始荷电状态$SOC(0)=SOC_0$。根据编码方案生成初始种群，每个个体代表一组候选参数 θ 。
-  \item Step2：时域仿真迭代。根据当前$SOC(k)$，代入拟合得到的多项式函数计算电池开路电压$E(SOC(k))$。根据当前$E(SOC(k))$，代入模型得到电池的仿真电压$U(k)$。
-然后，状态递推,利用离散状态迭代方程\autoref{eq:discrete}，根据当前电流和状态量，计算下一时刻$SOC\left(k+1\right)$，$U_1\left(k+1\right)$，$U_2\left(k+1\right)$.
-  \item Step3：遗传算法寻优，
-利用遗传算法对参数向量进行迭代更新。首先根据适应度函数，选择优秀个体并进行交叉变异。然后重复之前步骤，直到误差小于阈值或达到最大迭代次数。
+  \item Step 1: Initialize states, set initial conditions: $U_1(0)=0, U_2(0)=0$, initial state of charge $SOC(0)=SOC_0$.
+   Generate the initial population according to the encoding scheme, each individual representing a candidate parameter set $\theta$.
+  \item Step2: Time-domain simulation iteration. Based on the current $SOC(k)$, substitute into the fitted polynomial function to calculate the battery open-circuit voltage $E(SOC(k))$. Based on the current $E(SOC(k))$, substitute into the model to obtain the simulated battery voltage $U(k)$.
+Then, state propagation, using the discrete state iteration equation \autoref{eq:discrete}, calculate the next moment $SOC\left(k+1\right)$, $U_1\left(k+1\right)$, $U_2\left(k+1\right)$ based on the current current and state variables.
+  \item Step3: Genetic algorithm optimization,
+Use the genetic algorithm to iteratively update the parameter vector. First, select excellent individuals based on the fitness function and perform crossover and mutation. Then repeat the previous steps until the error is less than the threshold or the maximum number of iterations is reached.
  \end{itemize}
 % \begin{figure}[htbp]
 % \centering
@@ -492,10 +485,10 @@ J\left( \theta \right) =\sqrt{\frac{1}{N}\sum_{k-1}^N{\left[ U_{meas}\left( k \r
 %     \caption{DST参数识别}
 %     \label{fig:DST}
 % \end{figure}
-通过使用公开的DST数据集\cite{calce2024battery}进行RC参数识别,最终我们得到了如\autoref{tab:parameter_identification}所示的一组最优参数。
+By using the publicly available DST dataset \cite{calce2024battery} for RC parameter identification, we ultimately obtained a set of optimal parameters as shown in \autoref{tab:parameter_identification}.
 \begin{table}[htbp]
   \centering
-  \caption{基于DST工况的GA参数辨识结果}
+  \caption{GA Parameter Identification Results Based on DST Conditions}
   \vspace{-0.4cm}
   \label{tab:parameter_identification}
   \begin{tabular}{cccccc}
@@ -507,243 +500,228 @@ J\left( \theta \right) =\sqrt{\frac{1}{N}\sum_{k-1}^N{\left[ U_{meas}\left( k \r
   \end{tabular}
   \\[6pt]  % 增加行间距
   \raggedright\footnotesize
-  注：辨识误差RMSE = $13.46 mV$，MAE=$9.9 mV$
+  Note: Under these parameters, the identification error of the model: RMSE is $13.46 mV$, and MAE is $9.9 mV$.
 \end{table}
-\subsection{模型验证}
-为验证所建立的二阶$RC$模型的准确性，
-我们使用一个$100mA$恒流持续放电的数据集\cite{android2024powervalues}进行验证，
-结果如\autoref{fig:DST_2}所示。
+\subsection{Model Validation}
+To validate the accuracy of the established second-order $RC$ model,
+we used a $100mA$ constant current discharge dataset \cite{android2024powervalues} for verification,
+and the results are shown in \autoref{fig:DST_2}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/yanzheng.png}
-    \caption{100mA恒流放电测试验证}
+    \caption{100mA Constant Current Discharge Test Validation}
     \label{fig:DST_2}
 \end{figure}
-\autoref{fig:DST_2}(a)展示了测量电压与模型估计电压的对比，
-\autoref{fig:DST_2}(b)给出了整个放电过程中的电压估计误差。
-从结果可以看出，模型估计值与实测值在整个放电过程中高度一致，
-两条曲线几乎完全重合。
-从误差的统计特性来看，除了放电末端的异常波动外，大部分时间内误差保持在$±15mV$以内，
-均方根误差（RMSE）估计约为$10-12mV$。
+\autoref{fig:DST_2}(a) shows the comparison between the measured voltage and the model estimated voltage,
+\autoref{fig:DST_2}(b) presents the voltage estimation error throughout the discharge process.
+The results indicate that the model estimates are highly consistent with the measured values during the entire discharge process,
+the two curves almost completely overlap.
+From the statistical characteristics of the error, except for the abnormal fluctuations at the end of the discharge, the error remains within $±15mV$ for most of the time,
+with a root mean square error (RMSE) of $13.59mV$.
 
-上述验证结果表明，我们所提出的等效电路模型结合遗传算法参数辨识，
-在真实工况下具备足够的精度用于剩余使用时间（Time-to-Empty）预测，
-同时确保了其在多样化使用场景下的SOC估计可靠性。
+The above validation results indicate that the proposed equivalent circuit model combined with genetic algorithm parameter identification,
+has sufficient accuracy for remaining time-to-empty prediction under real working conditions,
+while also ensuring reliable SOC estimation across diverse usage scenarios.
 
 \section{Time-to-Empty Prediction Model}
-\subsection{预测模型的建立}
-在第一问建立的多场景的应用功率及温度影响耦合的综合模型的基础上，为了实现对电量的预测，
-我们采用无迹卡尔曼滤波算法（Unscented Kalman Filter, UKF）对电池SOC进行在线估计与预测。
-\subsubsection{状态空间模型构建}
-为描述电池动态特征,构建状态空间模型,状态向量定义为 $\mathbf{x}_k=[U_{1,k},U_{2,k},SOC_k]^T$,观测变量为电池端电压 $y_k=U_k$。
-\subsubsection*{UKF预测算法设计}
-UKF算法主要包括Sigma点生成、状态预测以及量测更新三个步骤。
-\begin{itemize}
-  \item Step1：利用当前估计值$\widehat{{x}}_{k-1}$和协方差矩阵$P_{k-1}$构造一组采样点：
-  \begin{equation}
+\subsection{Model Establishment}
+Based on the comprehensive model established in the first question that couples multi-scenario application power and temperature effects, in order to achieve power prediction,
+we use the Unscented Kalman Filter (UKF) algorithm for online estimation and prediction of battery SOC.
+\subsubsection{State Space Model Construction}
+To describe the dynamic characteristics of the battery, a state space model is constructed. The state vector is defined as $\mathbf{x}_k=[U_{1,k},U_{2,k},SOC_k]^T$, and the observed variable is the battery terminal voltage $y_k=U_k$.
+\subsubsection*{UKF Prediction Algorithm Design}
+The state estimation framework based on UKF (Unscented Kalman Filter) processes the strong nonlinear OCV-SOC relationship in the battery model through the \textbf{Unscented Transformation (UT)}. The core idea is to use a finite number of sigma points to accurately capture the mean and covariance of the state distribution, thereby achieving Bayesian recursive estimation. The specific implementation is divided into the following three stages:
+
+\textbf{Stage 1: Sigma Point Generation and State Prediction}
+
+First, based on the posterior estimate $\widehat{{x}}_{k-1}$ and its error covariance matrix $P_{k-1}$ at time $k-1$, $2L+1$ sigma points are deterministically sampled (with $L=3$ being the state dimension):
+\begin{equation}
 \begin{cases}
 {X}_{0,k-1} = \widehat{{x}}_{k-1}, \\
 {X}_{i,k-1} = \widehat{{x}}_{k-1} + \left(\sqrt{(L+\lambda)\mathbf{P}_{k-1}}\right)_i, & i = 1, \ldots, L, \\
 {X}_{i,k-1} = \widehat{{x}}_{k-1} - \left(\sqrt{(L+\lambda)\mathbf{P}_{k-1}}\right)_{i-L}, & i = L+1, \ldots, 2L.
 \end{cases}
-  \end{equation}其中，$L=3$表示状态维度，$\lambda$为缩放比例参数，
-  用于控制采样点分布范围，${X}$为sigma点集矩阵。
-  \item Step2：将生成的sigma点代入状态方程，预测下一时刻的状态：
-  \begin{equation}
-      \begin{cases}
-U_{1,k}^- &= \exp\left(-\frac{\Delta t}{R_1 C_1}\right) U_{1,k-1} + R_1\left[1 - \exp\left(-\frac{\Delta t}{R_1 C_1}\right)\right] i_{k-1} \\
-U_{2,k}^- &= \exp\left(-\frac{\Delta t}{R_2 C_2}\right) U_{2,k-1} + R_2\left[1 - \exp\left(-\frac{\Delta t}{R_2 C_2}\right)\right] i_{k-1} \\
-SOC_k^- &= SOC_{k-1} - \frac{\eta \cdot i_{k-1} \cdot \Delta t}{Q_n}
-\end{cases}
-  \end{equation}
-加权求和得到先验估计：
-\begin{equation}
-x_k^- = \sum_{i=0}^{2L} W_m^{(i)} X_{i,k|k-1} 
 \end{equation}
-对应的协方差矩阵为:
-\begin{equation}
-  P_k^- = \sum_{i=0}^{2L} W_c^{(i)} [X_{i,k|k-1} - \hat{x}_{k-1}][X_{i,k|k-1} - \hat{x}_{k-1}]^T + Q_k
-\end{equation}
-其中，$W_m$，$W_c$为权重系数，$Q_k$为过程噪声协方差，代表模型的不确定性。
-  \item Step3：量测更新。
- 利用预测的sigma点通过观测方程，预测端电压，并与实际测量的电压$U_{meas}$进行比较来修正。
- \begin{equation}
-  h_{i,k}=E(X_{SOC})-I_kR_0-X_{U_1}-X_{U_2}
- \end{equation} 
- 其中$E(SOC)$为SOC与开路电压的非线性映射函数,前文已经拟合过函数表达式。
-预测观测值为：
- \begin{equation}
- {\hat{y}}_k=\sum_{i=0}^{2L}{W_m^{(i)}h_{i,k}}
- \end{equation}
-\item Step4：卡尔曼增益计算。
-计算观测自协方差矩阵$ S_k$与互协方差$P_{xy,k}$的值
+Here, $\lambda$ is the scaling parameter that controls the range of the sampling point distribution. These Sigma points are substituted into the discrete state equation for propagation, resulting in the prior state estimate $x_k^-$ and the prior covariance $P_k^-$:
 \begin{equation}
   \begin{cases}
-  S_k=\sum_{i=0}^{2L}{W_c^{(i)}[h_{i,k}-}{\hat{y}}_k][hi,k-yk]T+Rk\\
-P_{xy,k}=\sum_{i=0}^{2L}{W_c^{(i)}[X_{i,k|k-1}-{\hat{x}}_k^-}][hi,k-yk]T\\
-\end{cases}
-\end{equation}
-所以卡尔曼增益为
-\begin{equation}
-  K_k=P_{xy,k}S_k^{-1}
-\end{equation}
-其中$R_k$为测量噪声协方差，代表电压传感器的误差。
-\item Step5：更新预测状态。
-\begin{equation}
-  \begin{cases}
-    \hat{x}_k={\hat{x}}_k^-+K_k(U_{meas,k}-{\hat{y}}_k)\\
-    P_k=P_k^--K_kS_kK_k^T
+x_k^- = \sum_{i=0}^{2L} W_m^{(i)} X_{i,k|k-1}\\ P_k^- = \sum_{i=0}^{2L} W_c^{(i)} [X_{i,k|k-1} - \hat{x}_{k-1}][X_{i,k|k-1} - \hat{x}_{k-1}]^T + Q_k
   \end{cases}
 \end{equation}
-\end{itemize}
-\subsubsection{电池寿命模型}
-与内阻的短期变化不同，电池的寿命衰减是不可逆的累积过程。
-根据电化学动力学原理，电池内部的副反应速率同样遵循阿伦尼乌斯方程。
-温度越高，反应速率常数越大，导致（电池健康状态）SOH 下降越快。
-我们建立基于阿伦尼乌斯的寿命微分模型。
+Here, $Q_k$ is the process noise covariance, representing model uncertainty.
 
-首先，电池的老化速率随温度的变化关系为：
+\textbf{Stage 2: Measurement Prediction and Statistical Characteristic Extraction}
+
+The predicted sigma points are mapped to the measurement space through the nonlinear observation equation $h(\cdot)$, calculating the predicted terminal voltage $h_{i,k}=E(X_{SOC})-I_kR_0-X_{U_1}-X_{U_2}$, thereby obtaining the predicted measurement mean $\hat{y}_k$.
+\begin{equation}
+{\hat{y}}_k=\sum_{i=0}^{2L}{W_m^{(i)}h_{i,k}} 
+\end{equation}
+To provide statistical basis for subsequent correction, the measurement innovation covariance $S_k$ and the state-measurement cross covariance $P_{xy,k}$ need to be calculated:
+\begin{equation}
+\begin{cases}
+  S_k=\sum_{i=0}^{2L}{W_c^{(i)}[h_{i,k}-}{\hat{y}}_k][h_{i,k}-\hat{y}_k]^T+R_k,\\
+  P_{xy,k}=\sum_{i=0}^{2L}{W_c^{(i)}[X_{i,k|k-1}-{\hat{x}}_k^-}][h_{i,k}-\hat{y}_k]^T.
+\end{cases}
+\end{equation}
+Here, $R_k$ is the measurement noise covariance, reflecting the accuracy of the voltage sensor.
+
+\textbf{Stage 3: Kalman Gain and State Correction}
+
+Based on the minimum mean square error criterion, the optimal Kalman gain $K_k=P_{xy,k}S_k^{-1}$ is calculated. Using the residual between the actual measurement $U_{meas,k}$ and the predicted value $\hat{y}_k$, the prior estimate is corrected to obtain the posterior state $\hat{x}_k$ and the updated covariance $P_k$:
+\begin{equation}
+  \begin{cases}
+    \hat{x}_k={\hat{x}}_k^-+K_k(U_{meas,k}-{\hat{y}}_k),\\
+    P_k=P_k^--K_kS_kK_k^T.
+  \end{cases}
+\end{equation}
+At this point, a complete filtering cycle has been completed. The third component in $\hat{x}_k$ represents the optimal SOC estimation after being corrected by the voltage feedback.
+\subsubsection{Battery Life Model}
+Unlike the short-term variations in internal resistance, battery life degradation is an irreversible cumulative process.
+According to electrochemical kinetics principles, the rate of side reactions inside the battery also follows the Arrhenius equation.
+Higher temperatures lead to larger reaction rate constants, causing the battery health state (SOH) to decline faster.
+We establish a differential life model based on the Arrhenius equation.
+
+First, the relationship between the battery aging rate and temperature is:
 \begin{equation}
   k_{\text{aging}}(T) = k_{\text{ref,aging}} \cdot \exp\left[\frac{E_{a,\text{aging}}}{k}\left(\frac{1}{T_{\text{ref}}} - \frac{1}{T(t)}\right)\right]
 \label{eq:aging}
 \end{equation}
-其中$E_{a,aging}=52J/mol$\cite{Ecker2014CalendarCycleLife}，表示老化活化能。
+Here, $E_{a,aging}=52J/mol$\cite{Ecker2014CalendarCycleLife} is the activation energy for aging.
 
-接着，考虑到电流对副反应的加速作用，SOH的微分方程为：
+Next, considering the accelerating effect of current on side reactions, the differential equation for SOH is:
 \begin{equation}
   \frac{dSOH}{dt}=-k_{aging}(T)\ast|i(t)|
 \end{equation}
 
-最后，电池老化，其寿命衰减又会反过来影响电池的基准内阻，因此考虑老化后的内阻修正模型为：
+Finally, battery aging and its life degradation will in turn affect the battery's baseline internal resistance. Therefore, the internal resistance correction model after aging is considered as:
 \begin{equation}
   R_{total}(t)=R(T)\ast(1+\alpha(1-SOH(t)))
 \end{equation}
-其中$\alpha$为内阻增长系数，本题取1.5。
-电池老化主要表现为活性锂离子的丧失和活性材料的损失，根据SOH的定义，老化后的最大可用化学容量与SOH同样呈线性关系，任意时刻t和温度T下的电池实际有效容量为：
+Here, $\alpha$ is the internal resistance growth coefficient, taken as 1.5 in this study.
+Battery aging mainly manifests as the loss of active lithium ions and active materials. According to the definition of SOH, the maximum available chemical capacity after aging is also linearly related to SOH. The actual effective capacity of the battery at any time t and temperature T is:
 \begin{equation}
   Q_n(t,T)=Q_{max}\cdot SOH(t)\cdot\eta_T(T)
 \end{equation}
-因此，其最终电池荷电状态在电池寿命的影响下，其微分方程也需引入SOH的修正。随着SOH下降，分母变小，相同的放电电流会导致SOC下降得更快了。
+Therefore, the differential equation for the final battery state of charge under the influence of battery life also needs to introduce the correction of SOH. As SOH decreases, the denominator becomes smaller, and the same discharge current will cause SOC to decrease faster.
 \begin{equation}
   \frac{d(SOC)}{dt}=-\frac{i(t)}{Q_{max}\cdot S O H(t)\cdot\eta}
 \end{equation}
 
-\subsection{结果分析}
-\subsubsection*{场景定义}
-为验证模型在不同用户行为下的适用性，本文基于实际功耗参数与网络特性，定义了四种典型使用场景，各场景的关键负载参数设置如下：
-\begin{itemize}
-\item \textbf{低功耗待机（Standby）}：\\
-在此场景下，中央处理器处于极低占用状态（$u=0.1$），
-屏幕完全关闭（亮度 $B=0$），且GPS定位模块关闭。
-设备仅维持基础网络连接（信号强度 $S_{signal}=0.8$，数据流量需求 $D_{throughput}=0.0$），
-并允许后台任务以脉冲形式间歇性运行（每 $600\,\text{s}$ 唤醒一次，
-持续 $20\,\text{s}$，功耗 $0.7\,\text{W}$）。
-该场景代表了用户未主动交互时的系统存活状态。
+\subsection{Results Analysis}
+\subsubsection*{Scenario Definition}
+In order to study the power consumption and performance of the battery under different usage scenarios, we selected four typical usage scenarios ,the corresponding parameter configurations are shown in \autoref{tab:usage_scenarios_transposed}: 
 
-\item \textbf{视频播放（Video）}：\\
-该场景模拟高清视频解码过程，CPU利用率设定为中等水平（$u=0.4$），
-屏幕亮度开启至 $B=60\%$ 以平衡观看体验与能耗。
-网络模块持续工作以缓冲媒体流，由于需要保障网络信号良好（$S_{signal}=0.9$），同时需维持较高的数据吞吐量（$D_{throughput}=0.8$），
-后台任务在此期间仍被允许运行。
+\textbf{1. Low-power standby:} 
+CPU utilization is the lowest, the screen is turned off, the GPS module is deactivated, only the basic network connection is maintained, and background tasks run intermittently to extend the system's standby life.
 
-\item \textbf{实时导航定位（Navigation）}：\\
-模拟导航工况，
-设备需同时处理GPS定位、地图渲染与网络辅助定位。CPU负载较高（$u=0.7$），
-屏幕强制开启至最大亮度（$B=1.0$）以确保强光下的可视性。
-只需保障网络信号能够被连接（$S_{signal}=0.4$）数据交换量较低（$D_{throughput}=0.2$，主要为位置更新）。
-此场景综合了定位服务、高亮度显示与弱网高功耗的特点。
+\vspace{-3pt}
+\textbf{2. Video playback:} 
+CPU load is moderate, screen brightness is increased to ensure the viewing experience, the network continues to work to ensure streaming media playback, and background tasks are still allowed to run.
 
-\item \textbf{高性能游戏运行（Gaming）}：\\
-代表极限性能释放场景，CPU满载运行（$u=1.0$），
-屏幕亮度调至最高（$B=1.0$）。系统进入游戏模式后主动屏蔽后台脉冲任务，
-以保障前台性能。网络连接稳定（$S_{signal}=1.0$）
-且保持中等数据同步（$D_{throughput}=0.6$），
-主要用于游戏状态上传与实时交互，该场景产生最高的持续热负载与电流消耗。
+\vspace{-3pt}
+\textbf{3. Real-time navigation:} 
+The device handles GPS positioning, map rendering, and network-assisted positioning simultaneously. The CPU load is high, the screen is fully lit, the data exchange volume is low, only the network signal connection is guaranteed, and power consumption significantly increases.
 
-\end{itemize}
-\subsubsection*{预测结果}
-首先，我们全面评估不同使用场景对电池性能的短期和长期影响，
-得到了上述四种典型场景下的SOC下降速率和SOH长期衰减特性，
-结果如\autoref {fig:scenario_impact_comparison}所示。
+\vspace{-3pt}
+\textbf{4. High-performance gaming:} 
+CPU operates at full load, screen brightness is at its maximum, background tasks are blocked to ensure front-end performance, the network is stable and maintains moderate data synchronization, achieving a smooth interactive gaming experience.
+\begin{table}[htbp]
+\centering
+\caption{Transposed layout of typical smartphone usage scenarios and key parameters}
+\vspace{-0.4cm}
+\label{tab:usage_scenarios_transposed}
+\begin{tabularx}{\textwidth}{lXXXX}
+\toprule
+\textbf{Parameter} & \textbf{Standby} & \textbf{Video } & \textbf{Navigation} & \textbf{Gaming} \\
+\midrule
+ $u$ & 0.1 & 0.4 & 0.7 & 1.0 \\
+$B$ & 0 & 0.6 & 1.0 & 1.0 \\
+ GPS & Off & Off & On & Off \\
+ $S_{signal}$ & 0.8 & 0.9 & 0.4 & 1.0 \\
+ $D_{throughput}$ & 0.0 & 0.8 & 0.2 & 0.6 \\
+Background Tasks & Intermittent pulses & Allowed & Allowed & Blocked \\
+\bottomrule
+\end{tabularx}
 
-\autoref {fig:fig_1_2}显示四种典型场景的SOC下降速度呈现显著分层与时变特征。
-（Standby）模式下，耗散速率维持在约8\%/小时的恒定水平，全程几乎不受时间影响。
-视频（Video）、导航（Navigation）与游戏（Gaming）三种中高负载场景
-均表现出随时间递增的耗散速率。
-视频播放起始速率约40\%/小时，100分钟后缓慢攀升至46\%/小时，增幅约15\%。
-导航与游戏场景所需负载更大，随着使用时长增加，热累积效应显著，整个手机系统产生的热量，
-对电池温度产生累积性的影响，使得放电速率加快，呈现更为激进的加速耗尽趋势。
-导航从57\%/小时增至67\%/小时，
-游戏从68\%/小时激增至近78\%/小时，斜率显著大于视频场景。
+\end{table}
+
+
+
+
+\subsubsection*{Prediction Results}
+First, the short-term and long-term impacts of different usage scenarios on battery performance are evaluated. The SOC decline rates and long-term SOH degradation characteristics under the four typical scenarios are obtained, as shown in \autoref{fig:scenario_impact_comparison}.
+
+\autoref{fig:fig_1_2} indicates that the SOC decline rates exhibit clear stratification and time-varying behavior across scenarios. In the Standby mode, the dissipation rate remains nearly constant at approximately 8\%/hour throughout the discharge process. In contrast, the three medium-to-high load scenarios (Video, Navigation, and Gaming) show progressively increasing dissipation rates over time.
+
+Specifically, the Video scenario starts at about 40\%/hour and gradually increases to 46\%/hour after 100 minutes, corresponding to an increase of approximately 15\%. The Navigation and Gaming scenarios impose higher loads, where thermal accumulation becomes significant as usage time increases. The heat generated by the phone system raises the battery temperature, accelerates discharge, and leads to a more pronounced depletion trend. The dissipation rate in Navigation increases from 57\%/hour to 67\%/hour, while Gaming rises sharply from 68\%/hour to nearly 78\%/hour, with a slope markedly steeper than that of Video.
 
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figures/p2_6.png}
-    \caption{不同使用场景下的SOC衰减率对比（单次放电）}
-    \label{fig:fig_1_2}
+\centering
+\includegraphics[width=\linewidth]{figures/p2_6.png}
+\caption{Comparison of SOC decline rates under different usage scenarios (single discharge)}
+\label{fig:fig_1_2}
 \end{subfigure}
-\hfill  % 自动弹性间距
+\hfill
 \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figures/p2_8.png}
-    \caption{不同使用场景下的SOH衰减对比（循环老化）}
-    \label{fig:fig_6}
+\centering
+\includegraphics[width=\linewidth]{figures/p2_8.png}
+\caption{Comparison of SOH degradation under different usage scenarios (cycle aging)}
+\label{fig:fig_6}
 \end{subfigure}
-\caption{使用场景对电池性能的短期和长期影响}
+\caption{Short-term and long-term impacts of usage scenarios on battery performance}
 \label{fig:scenario_impact_comparison}
 \end{figure}
-\autoref {fig:fig_6}中四种场景的SOH衰减呈现显著分层的线性下降趋势,但是斜率差别较大。
-游戏场景衰减最为激进，
-仅约1100次循环即达寿命终点（SOH≈0\%）。
-这是因为游戏场景下，CPU高负载运行导致持续大电流放电，
-同时产生的热量使电池温度维持高位，
-根据\autoref {eq:aging}，高温显著加速了副反应速率，导致电池老化加剧。
-GPS射频模块的高功耗与屏幕常亮产生的热累积虽略低于游戏，但仍远高于轻度使用，这导致在Navi场景下，电池
-约经历1250次循环就会耗尽容量。
-在Video场景下，电流幅值与温度均低于游戏/导航场景
-，最终经历约1750次循环降至失效阈值，老化曲线的斜率相对平缓，但仍比待机快约2.15倍。
-Standby场景下，低电流与室温工作条件使老化速率常数极小，
-副反应几乎可忽略，衰减最为缓慢，在经历2000次循环后仍保持约47\%的SOH，
-展示了理想保管状态下的电池寿命极限。
 
+As shown in \autoref{fig:fig_6}, the SOH degradation in all four scenarios follows a layered, 
+approximately linear declining trend, with substantially different slopes. 
+The Gaming scenario exhibits the fastest degradation, reaching the end-of-life threshold (SOH $\approx 0\%$) after approximately 1100 cycles.
+This behavior is attributed to sustained high-current discharge and elevated battery temperature caused by intensive CPU operation. 
+According to \autoref{eq:aging}, high temperature significantly accelerates side reaction rates, thereby exacerbating battery aging.
 
-
-
-
-然后，本文对上述四种典型使用场景（Standby、Video、Navi、Game）
-和四种初始SOC状态（100\%、80\%、50\%、20\%）共16种组合进行了电池SOC的预测，
-结果如\autoref{fig:model_prediction}所示,具体的数值和预测结果如\autoref{tab:prediction_results}所示。
+The Navigation scenario shows slightly lower heat accumulation than Gaming but remains much higher than light usage due to continuous GPS RF power consumption and screen illumination,
+ resulting in capacity depletion after approximately 1250 cycles.
+ In the Video scenario, both current amplitude and operating temperature are lower than those in Gaming and Navigation, 
+ leading to a gentler aging slope and a lifespan of approximately 1750 cycles,
+  although still about 2.15 times faster than Standby. In contrast, 
+  the Standby scenario operates under low current and near-room-temperature conditions,
+   yielding an extremely small aging rate constant with nearly negligible side reactions. 
+   Even after 2000 cycles, the SOH remains at approximately 47\%, 
+   representing the upper limit of battery life under ideal storage conditions.
+Then, this paper predicts the battery SOC for the above four typical usage scenarios (Standby, Video, Navi, Game)
+and four initial SOC states (100\%, 80\%, 50\%, 20\%), a total of 16 combinations,
+as shown in \autoref{fig:model_prediction}, with specific values and prediction results shown in \autoref{tab:prediction_results}.
 
 \begin{figure}[htbp]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{figures/n3.png}
-    \caption{不同场景下的SOC预测曲线}
+    \caption{SOC prediction curves in different scenarios}
     \label{fig:soc_prediction}
   \end{subfigure}
   \hfill  
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{figures/n4.png}
-    \caption{平均3σ预测误差分布}
+    \caption{Average $3\sigma$ prediction error distribution}
     \label{fig:prediction_error}
   \end{subfigure}
-  \caption{不同场景和初始SOC下的模型预测性能分析}
+  \caption{Model prediction performance analysis under different scenarios and initial SOCs}
   \label{fig:model_prediction}
 \end{figure}
 
 \begin{table}[htbp]
 \centering
-\caption{不同场景和初始SOC下的放电时间与平均$3\sigma$预测误差}
+\caption{Discharge time  and the average $3\sigma$ prediction error}
+\vspace{-0.4cm}
 \label{tab:prediction_results}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{c|cc|cc|cc|cc}
 \hline
-\multirow{2}{*}{\textbf{初始SOC}} & \multicolumn{2}{c|}{\textbf{Standby}} & \multicolumn{2}{c|}{\textbf{Video}} & \multicolumn{2}{c|}{\textbf{Navi}} & \multicolumn{2}{c}{\textbf{Game}} \\ \cline{2-9}
-                                   & 时间(min) & 误差(\%) & 时间(min) & 误差(\%) & 时间(min) & 误差(\%) & 时间(min) & 误差(\%) \\ \hline
+\multirow{2}{*}{\textbf{Initial SOC}} & \multicolumn{2}{c|}{\textbf{Standby}} & \multicolumn{2}{c|}{\textbf{Video}} & \multicolumn{2}{c|}{\textbf{Navi}} & \multicolumn{2}{c}{\textbf{Game}} \\ \cline{2-9}
+                                   & Time (min) & Error (\%) & Time (min) & Error (\%) & Time (min) & Error (\%) & Time (min) & Error (\%) \\ \hline
 100\%                              & 700       & 2.66     & 130       & 2.72     & 90        & 2.76     & 81        & 2.77     \\
 80\%                               & 550       & 3.46     & 107       & 3.43     & 72        & 3.41     & 63        & 3.40     \\
 50\%                               & 330       & 4.51     & 65        & 4.68     & 43        & 4.74     & 39        & 4.74     \\
@@ -751,61 +729,37 @@ Standby场景下，低电流与室温工作条件使老化速率常数极小，
 \end{tabular}%
 }
 \end{table}
-从SOC预测曲线可以看出，模型成功预测了不同场景下的电池放电特性。
-相同的初始SOC下，电池的续航时间随着负载功率的提升而不断下降；
-相同的负载场景下，电池的续航时间随着初始SOC的降低而缩短。
-各曲线的阴影部分代表基于3σ准则确定的置信区间，
-其中$\sigma$为SOC预测的标准差，
-阴影宽度直观反映了模型预测的精度水平。
+From the SOC prediction curves, the model successfully captures battery discharge characteristics under different scenarios. Under the same initial SOC, battery endurance decreases with increasing load power; under the same load, endurance shortens with decreasing initial SOC. The shaded areas represent the $3\sigma$ confidence intervals, where $\sigma$ is the SOC prediction standard deviation, and the width intuitively reflects prediction accuracy.
 
-从平均$3\sigma$预测误差的三维柱状图可以定量评估模型性能。
-图中颜色从蓝色到黄色的渐变反映了预测误差的增加趋势。
-结果表明，初始SOC是影响预测误差的主导因素。
-所有场景下从100\%到20\%初始SOC的预测误差均显著上升：
-这种现象源于低SOC区域OCV-SOC曲线的平坦特性，
-电压对SOC变化的灵敏度降低，
-导致相同的电压测量噪声产生更大的SOC估计偏差，
-标准差$\sigma$增大，3$\sigma$置信区间随之扩大。
-从使用场景维度来看，
-在相同初始SOC下，不同场景的预测误差呈现一定差异。
-以20\%起始SOC为例，
-Standby场景误差最大（8.50\%），Game场景误差最小（6.96\%），
-这与观测信息量有关：
-Game场景下电压变化显著，提供了更多的测量信息用于修正预测，
-而Standby场景电压变化缓慢，测量更新对预测修正的作用有限。
-在高SOC区域（100\%和80\%起始），
-各场景误差均较小且相近（2.6\%-3.4\%），
-说明在电压灵敏度较高的区域，模型预测精度较高且受场景影响较小。
-综合来看，我们所建立的模型在16种工况下的平均$3\sigma$预测误差
-在2.66\%-8.50\%范围内，
-该模型提供了可靠的SOC预测，在世纪复杂负载与环境中，能够有效预测结果。
+Model performance is further quantified via the three-dimensional bar chart of average $3\sigma$ prediction error. The color gradient from blue to yellow reflects increasing error. Results show that initial SOC is the dominant factor: prediction error rises significantly from 100\% to 20\% initial SOC due to the flat OCV-SOC curve in the low SOC region, where reduced voltage sensitivity amplifies SOC deviations from voltage noise, increasing $\sigma$ and the $3\sigma$ interval.
 
+Considering usage scenarios, at 20\% initial SOC, Standby has the largest error (8.50\%) and Game the smallest (6.96\%), reflecting the amount of observation information: Game features significant voltage changes for better prediction correction, while Standby’s slow changes limit measurement updates. At high SOC (100\% and 80\%), errors are small and similar (2.6\%-3.4\%), indicating higher voltage sensitivity improves accuracy and reduces scenario dependence. Overall, across 16 operating conditions, the average $3\sigma$ prediction error ranges from 2.66\% to 8.50\%, demonstrating the model reliably predicts SOC under complex loads and environments.
 
-接着，我们在动态使用场景下开展了从不同初始 SOC 开始放电至电量耗尽的剩余使用时间预测（Time-to-Empty Prediction）研究，并对所构建模型的预测能力以及无迹卡尔曼滤波（UKF）算法的误差收敛特性进行了系统评估，结果如 \autoref{fig:fig_322} 所示。
+Next, we conducted a study on Time-to-Empty Prediction starting from different initial SOCs in dynamic usage scenarios, and systematically evaluated the prediction capability of the constructed model as well as the error convergence characteristics of the Unscented Kalman Filter (UKF) algorithm. The results are shown in \autoref{fig:fig_322}.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/n2.png}
-  \caption{动态场景下Time-to-Empty Prediction评估结果}
+  \caption{Evaluation results of Time-to-Empty Prediction in dynamic scenarios}
   \label{fig:fig_322}
 \end{figure}
-左图为动态场景下从不同初始SOC开始的放电至空预测（Time-to-Empty Prediction），
-右图为UKF算法在初始估计值固定为50\%时的误差收敛过程。
-这两个子图从不同角度验证了模型的预测能力和算法的自适应性能。
+The left figure shows the Time-to-Empty Prediction starting from different initial SOCs in dynamic scenarios,
+while the right figure illustrates the error convergence process of the UKF algorithm with the initial estimate fixed at 50\%.
+These two subplots validate the model's predictive capability and the algorithm's adaptive performance from different perspectives.
 
-我们将左图给出的在考虑动态发热效应与网络连接等实际因素影响下，
-不同初始 SOC 条件下的放电至空预测结果汇总于\autoref{tab:tte_prediction}。
-可以看出，随着初始 SOC 的降低，平均放电速率呈现出逐渐增大的趋势，
-表明电池在低 SOC 区间的能量消耗明显加快。
-这一现象的物理根源在于多重因素的叠加。首先，电池内阻随SOC降低而增大，导致更多能量以热量形式损耗
-其次，低SOC时电池端电压降低，为维持恒功率输出，电流必须增大，进一步加剧了能量消耗。
+We summarize the Time-to-Empty prediction results under different initial SOC conditions, considering dynamic thermal effects and network connectivity, in \autoref{tab:tte_prediction}.
+It can be seen that as the initial SOC decreases, the average discharge rate shows a gradually increasing trend,
+indicating that the energy consumption of the battery in the low SOC range is significantly accelerated.
+The physical origin of this phenomenon lies in the superposition of multiple factors. First, the internal resistance of the battery increases as SOC decreases, resulting in more energy being lost in the form of heat.
+Second, when the SOC is low, the battery terminal voltage decreases, and to maintain constant power output, the current must increase, further exacerbating energy consumption.
+\vspace{-0.3cm}
 \begin{table}[htbp]  
 \centering
-  \caption{不同SOC下的Time-to-Empty预测结果}
+  \caption{Prediction results of Time-to-Empty under different SOC levels}
   \label{tab:tte_prediction}
   \vspace{-0.4cm}
   \begin{tabular}{@{}ccc@{}}
     \toprule
-    Initial SOC (\%) & Time-to-Empty (min) & Avg. Discharge Rate$^\dagger$ (\%/min) \\
+    Initial SOC (\%) & Time-to-Empty (min) & Avg. Discharge Rate (\%/min) \\
     \midrule
     100 & 133 & 0.75 \\
     80  & 111 & 0.72 \\
@@ -818,326 +772,303 @@ Game场景下电压变化显著，提供了更多的测量信息用于修正预�
   \end{tabular}
 \end{table}
 
-右图展示了 UKF 算法在初始状态估计存在显著偏差条件下的误差收敛过程，
-用以评估状态估计算法的鲁棒性。
-在实验设计中，所有测试均将初始 SOC 估计值固定为 50\%，
-初始估计误差范围为 +50\% 至 −30\%。
-从误差曲线的整体特征来看，UKF 算法在所有测试条件下均表现出良好的收敛性能。
-不同初始误差情形下，估计误差均可在约 5–10 分钟内迅速收敛至 ±2\% 范围内，
-并进一步稳定于 ±1\% 以内。这表明了在所有SOC区间内具有均匀的估计精度，
-验证了UKF算法的鲁棒性与自适应能力.
+The right figure illustrates the error convergence process of the UKF algorithm under significant initial state estimation deviations,
+used to evaluate the robustness of the state estimation algorithm.
+In the experimental design, all tests fixed the initial SOC estimate at 50\%,
+with initial estimation error ranging from +50\% to -30\%.
+From the overall characteristics of the error curves, the UKF algorithm demonstrates good convergence performance under all test conditions.
+Under different initial error scenarios, the estimation error can rapidly converge to within ±2\% in about 5-10 minutes,
+and further stabilize within ±1\%. This indicates uniform estimation accuracy across all SOC ranges,
+validating the robustness and adaptability of the UKF algorithm.
 
-最后，我们对建立的容量衰减模型,
-通过matlab仿真，得到了电池容量和循环次数的关系。
-结果如\autoref {fig:fig_3}所示。
+Finally, we conducted a study on the established capacity degradation model,
+and obtained the relationship between battery capacity and cycle count through MATLAB simulation.
+The results are shown in \autoref {fig:fig_3}.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/p2_9.png}
-  \caption{容量和循环次数关系曲线}
+  \caption{Capacity vs. Cycle Count Curve}
   \label{fig:fig_3}
 \end{figure}
 
-结果显示，电池的有效容量从初始的$2.00 Ah$开始随循环次数增加呈现近似线性的衰减趋势，
-该电池在1000个循环内总共损失约$1.04 Ah$容量，平均每循环衰减0.052\%初始容量。
-根据行业标准的80\% EOL定义，
-模型预测该电池在约280个循环时达到寿命终止点（容量1.60 Ah，图中红色圆点标注），
-这为电池更换策略和手机厂商的质保期设计提供了量化依据。
+The results show that the effective capacity of the battery starts at an initial value of $2.00 Ah$ and exhibits an approximately linear decline with increasing cycle count.
+The battery loses about $1.04 Ah$ of capacity over 1000 cycles, with an average degradation of 0.052\% of the initial capacity per cycle.
+According to the industry standard 80\% EOL definition,
+the model predicts that the battery reaches its end-of-life point (capacity 1.60 Ah, marked by the red dot in the figure) at about 280 cycles,
+providing a quantitative basis for battery replacement strategies and warranty period design for smartphone manufacturers.
 \section{Sensitivity Analysis}
-\subsection{不同环境温度对续航时间的影响}
-为了评估环境温度对电池性能的影响，我们选择了0°C、20°C和35°C三个典型环境温度条件，在四种使用场景下进行SOC衰减测试。
-结果如\autoref{fig:fig_temp}所示。
-\begin{figure}[H]
+\subsection{The impact of different environmental temperatures on the battery life}
+To evaluate the impact of environmental temperature on battery performance, we selected three typical environmental temperature conditions: 0°C, 20°C, and 35°C, and conducted SOC decay tests under four usage scenarios.
+The results are shown in \autoref {fig:fig_temp}.
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/image_p3_1.png}
-  \caption{不同温度下的SOC衰减曲线}
+  \caption{SOC Decay Curves at Different Temperatures}
   \label{fig:fig_temp}
   \end{figure}
 
-结果表明，在任何场景下，温度越低，放电速度更快。
-例如，在低负载的待机（Standby）场景中，
-5°C放电最为快，续航时间最短，约650分钟，而在20，35°C下放电较慢，续航时间约700分钟），变化幅度为7\%。
-然而，这种温度敏感性随着负载增加而急剧衰减。在视频（Video）、导航（Navi）与游戏（Game）等高负载场景中，
-代表三种温度的曲线几乎完全重合。
-其物理根源在于焦耳热主导效应。大电流放电产生的内部产热 
-使电池温度迅速攀升至远高于环境水平的稳定工作温区。此时，无论初始环境温度是5°C还是35°C，
-电池在实际工作过程中的内部温度轨迹趋于一致，导致温度依赖的内阻
-与有效容量差异被迅速抹平。
-因此，用户行为的差异对续航的决定性作用远超环境温度波动影响。
-\subsection{模型系数$\beta_2$对模型的影响}
-
-为了定量评估CPU功耗模型中非线性系数$\beta_2$的敏感性，
-并验证模型在极限工况下的准确性，
-本文首先通过边界条件测试确定了$\beta_2$的合理取值范围。
-基于修正后的CPU功率模型：
+The results show that in any scenario, the lower the temperature, the faster the discharge speed.
+For example, in the low-load standby scenario,
+discharging at 5°C is the fastest, with the shortest battery life of approximately 650 minutes, while discharging at 20°C or 35°C is slower, with a battery life of approximately 700 minutes), with a variation of 7%.
+However, this temperature sensitivity sharply decreases as the load increases. In high-load scenarios such as video (Video), navigation (Navi), and gaming (Game),
+the curves representing the three temperatures almost completely overlap.
+The physical root cause lies in the dominant effect of Joule heating. The internal heat generated by the large current discharge
+causes the battery temperature to rapidly rise to a stable working temperature far above the ambient level. At this point, regardless of whether the initial ambient temperature is 5°C or 35°C,
+the internal temperature trajectory of the battery during actual operation tends to be consistent, resulting in the rapid elimination of the temperature-dependent internal resistance
+and the difference in effective capacity.
+Therefore, the decisive role of user behavior on battery life far exceeds the influence of environmental temperature fluctuations.
+\subsection{The impact of model coefficient $\beta_2$ on the model}
+To quantitatively assess the sensitivity of the nonlinear coefficient $\beta_2$ in the CPU power consumption model and verify its validity under extreme operating conditions, boundary condition tests are conducted to determine a reasonable range of $\beta_2$.
+The revised CPU power model is given by
 \begin{equation}
-P_{CPU}(t) = 0.1 + 2.28 \cdot u(t) + \beta_2 \cdot [u(t)]^2
+P_{CPU}(t) = 0.1 + 2.28 \cdot u(t) + \beta_2 \cdot [u(t)]^2 .
 \end{equation}
-在最高功率边界条件（$u=1$）下，模型预测功率为：
+
+Under the maximum load condition ($u=1$), the predicted power is
 \begin{equation}
-P = 0.1 + 2.28(1) + \beta_2(1)^2 = 0.1 + 2.28 + \beta_2
+P = 0.1 + 2.28 + \beta_2 .
 \end{equation}
-当$\beta_2=0.5$时，$P_{CPU}=2.88$W，与实测最高功率完全一致，验证了高负载工况下的模型准确性。
-在最低功率边界条件（$u=0.1$）下，模型预测
-$P_{CPU} =  0.333\text{W}$
-该结果与原实测值0.36W非常接近，误差仅为0.027W，符合灵敏度分析要求。
-边界条件验证表明$\beta_2=0.5$在全负载范围内具有良好的拟合精度。
+When $\beta_2 = 0.5$, the model yields $P_{CPU}=2.88$ W, which exactly matches the measured maximum power, validating the model accuracy at high load.
 
-为进一步评估$\beta_2$对整体电池性能预测的影响，
-本文选取了$\beta_2=0.2$和$\beta_2=0.5$两种参数设置，
-在动态负载下进行了完整放电周期的对比实验，
-结果如图\ref{fig:p3_4}所示。
-
-\begin{figure}[H]
+Under the minimum load condition ($u=0.1$), the predicted power is $P_{CPU}=0.333$ W, which is close to the measured value of 0.36 W, with an absolute error of 0.027 W, satisfying the requirements of sensitivity analysis.
+These boundary condition results indicate that $\beta_2 = 0.5$ provides good fitting accuracy across the full load range.
+To further assess the impact of $\beta_2$ on the overall battery performance prediction,
+this paper selected two parameter settings: $\beta_2 = 0.2$ and $\beta_2 = 0.5$,
+and conducted a comparative experiment on the complete discharge cycle under dynamic load.
+The results are shown in  \autoref{fig:p3_4}.
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=1\textwidth]{figures/image_p3_4.png}
-  \caption{不同$\beta_2$下的SOC衰减曲线与功率变化图}
+  \caption{SOC Decay Curves and Power Variation under Different $\beta_2$}
   \label{fig:p3_4}
 \end{figure}
 
-从图中可以看出，在完整的SOC放电周期（约120分钟）内，
-两种不同$\beta_2$参数下模型的SOC衰减曲线轨迹与功率变化曲线高度重合。
-尽管$\beta_2$从0.2增加到0.5，即非线性项增强了150\%，
-但对总电量消耗和续航时间的影响微弱，
-这主要是因为在实际使用场景中，二次项$\beta_2[u(t)]^2$在不同的CPU利用率条件下的贡献相对于线性项$2.28u(t)$较小。
-该结果表明，虽然$\beta_2$对边界条件下的功率预测精度至关重要，
-但在动态混合负载场景下，模型对该参数具有一定的鲁棒性，
-这为模型在不同设备和应用场景下的迁移应用提供了便利。
-\subsection{屏幕亮度对电池性能的影响}
-为了评估屏幕亮度对电池性能的影响，
-本文分别在游戏模式和待机模式下进行了对比实验，
-设置了50\%、75\%和100\%三种亮度等级。
-图\ref{fig:fig_brightness_comparison}展示了两种场景下的实验结果。
+From the figure, it can be seen that during the complete SOC discharge cycle (about 120 minutes),
+the SOC decay curves and power variation curves of the model under two different $\beta_2$ parameters are highly overlapping.
+Although $\beta_2$ increases from 0.2 to 0.5, i.e., the nonlinear term is enhanced by 150\%,
+the impact on total power consumption and endurance time is minimal,
+mainly because in practical usage scenarios, the contribution of the quadratic term $\beta_2[u(t)]^2$ under different CPU utilization conditions is relatively small compared to the linear term $2.28u(t)$.
+This result indicates that although $\beta_2$ is crucial for power prediction accuracy under boundary conditions,
+the model exhibits a certain degree of robustness to this parameter in dynamic mixed load scenarios,
+which facilitates the model's transferability across different devices and application scenarios.
+\subsection{The impact of screen brightness on battery performance}
+To evaluate the impact of screen brightness on battery performance,
+this paper conducted comparative experiments under game mode and standby mode,
+setting three brightness levels: 50\%, 75\%, and 100\%.
+Figure \ref{fig:fig_brightness_comparison} shows the experimental results in both scenarios.
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}{0.45\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/image_p3_2.png}
-    \caption{不同亮度下的SOC衰减曲线（游戏场景）}
+    \caption{SOC Decay Curves under Different Brightness Levels (Game Scenario)}
     \label{fig:fig_brightness_soc}
 \end{subfigure}
 \hfill
 \begin{subfigure}{0.45\textwidth}
     \centering
     \includegraphics[width=\linewidth]{figures/image_p3_22.png}
-    \caption{不同亮度下的SOH衰减曲线（待机场景）}
+    \caption{SOH Decay Curves under Different Brightness Levels (Standby Scenario)}
     \label{fig:fig_brightness_soh}
 \end{subfigure}
-\caption{屏幕亮度对电池性能的影响对比分析}
+\caption{Comparative Analysis of the Impact of Screen Brightness on Battery Performance}
 \label{fig:fig_brightness_comparison}
 \end{figure}
 
-在游戏场景下，由于CPU负载占据主导地位，
-屏幕亮度对续航时间的影响相对有限，呈现边际效益递减的特征。
-如图\ref{fig:fig_brightness_soc}所示，
-当屏幕亮度从100\%降至50\%时，游戏续航时间仅增加约10分钟，
-这是因为游戏场景的高计算强度使得CPU功耗在总功耗中占比更大，
-屏幕功耗的降低对整体续航的改善效果被部分抵消。
-相比之下，待机模式下屏幕亮度对电池长期健康状态的影响更为显著。
-如图\ref{fig:fig_brightness_soh}所示，
-100\%亮度下电池老化最为激进，
-而50\%亮度下老化最为缓慢，2000次循环后SOH仍维持在20\%以上。
-在待机模式下，屏幕成为主导负载，
-由于亮度与电流成平方关系，
-高亮度设置直接加速了基于阿伦尼乌斯方程的副反应进程，
-导致每轮循环的不可逆损伤累积加剧，
-从而对电池寿命产生深远影响。
-\subsection{网络吞吐量对电池的影响}
-为了评估网络数据传输强度对电池性能的影响，
-本文分别在游戏模式和待机模式下进行了敏感性分析。
-\autoref{fig:network_game}展示了游戏运行时不同网络吞吐量对SOC衰减的短期影响，
-\autoref{fig:network_standby}分析了待机模式下网络吞吐量对电池寿命的长期影响。
-两种场景下均设置了三个网络数据传输等级：
-低数据量（D=0.1）、中等数据量（D=0.5）和高数据量（D=1.0）。
+In the game scenario, since the CPU load dominates,
+the impact of screen brightness on endurance time is relatively limited, showing diminishing marginal returns.
+As shown in Figure \ref{fig:fig_brightness_soc},
+when the screen brightness is reduced from 100\% to 50\%, the game endurance time only increases by about 10 minutes,
+because the high computational intensity of the game scenario makes the CPU power consumption account for a larger proportion of the total power consumption,
+and the reduction in screen power consumption partially offsets the improvement in overall endurance.
+In contrast, the impact of screen brightness on the long-term health state of the battery is more significant in standby mode.
+As shown in Figure \ref{fig:fig_brightness_soh},
+the battery aging is most aggressive at 100\% brightness,
+while it is slowest at 50\% brightness, with SOH remaining above 20\% after 2000 cycles.
+In standby mode, the screen becomes the dominant load,
+and since brightness is proportional to the square of the current,
+high brightness settings directly accelerate the side reaction process based on the Arrhenius equation,
+leading to increased accumulation of irreversible damage per cycle,
+thereby having a profound impact on battery life.
+\subsection{The impact of network throughput on battery performance}
+To evaluate the impact of network data transmission intensity on battery performance,
+this paper conducted sensitivity analysis under game mode and standby mode.
+Figure \ref{fig:network_game} shows the short-term impact of different network throughput on SOC decay during game operation,
+and Figure \ref{fig:network_standby} analyzes the long-term impact of network throughput on battery life in standby mode.
+Three levels of network data transmission were set in both scenarios:
+low data volume (D=0.1), medium data volume (D=0.5), and high data volume (D=1.0).
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/sen1.png}
-        \caption{游戏模式下网络吞吐量对SOC的影响}
+        \caption{Impact of Network Throughput on SOC in Game Mode}
         \label{fig:network_game}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/sen2.png}
-        \caption{待机模式下网络吞吐量对SOH的影响}
+        \caption{Impact of Network Throughput on SOH in Standby Mode}
         \label{fig:network_standby}
     \end{subfigure}
-    \caption{网络吞吐量对电池性能的影响对比分析}
+    \caption{Comparative Analysis of the Impact of Network Throughput on Battery Performance}
     \label{fig:network_impact_comparison}
 \end{figure}
-放电初期（0-20分钟）三条曲线几乎完全重合，
-而运行到放电后期，网络数据量对SOC的影响累积显现，
-高数据量传输（D=1.0）导致SOC下降最快，
-而低数据量传输（D=0.1）则表现出最慢的SOC衰减。
-这种差异源于网络传输功耗在整体功耗中的占比不大，随时间的累积效应逐渐显现。
-相比之下，待机模式下网络吞吐量对电池寿命的长期影响更为持久，
-到2000个循环时分别降至39\%、44\%和46\%，电池寿命差异约6-7\%。
-结果表明，在高负载场景中，应优先优化CPU和屏幕功耗，
-而日常待机场景中应重点控制网络活动和后台任务。
-\subsection{任务波动对模型的影响}
-为了评估任务波动对时间预测模型的影响，本文设计了包含多种任务切换的混合使用场景，模拟用户在实际使用中的行为模式。
-结果如\autoref{fig:dynamic_load_validation}所示。
+During the initial discharge period (0-20 minutes), the three curves were almost completely overlapping.
+However, as the discharge progressed to the later stage, the impact of network data volume on SOC gradually became apparent.
+High data volume transmission (D=1.0) led to the fastest decline in SOC,
+while low data volume transmission (D=0.1) showed the slowest decline in SOC.
+This difference stems from the fact that the network transmission power consumption accounts for a relatively small proportion of the overall power consumption, and its cumulative effect becomes more pronounced over time.
+In contrast, the long-term impact of network throughput in the standby mode on battery life is more persistent.
+By 2000 cycles, it dropped to 39\%, 44\%, and 46\% respectively, with a battery life difference of approximately 6-7%.
+The results indicate that in high-load scenarios, CPU and screen power consumption should be prioritized for optimization,
+while in daily standby scenarios, attention should be focused on controlling network activities and background tasks. 
+\subsection{Impact of Task Fluctuations on the Model}
+To assess the impact of task fluctuations on the time prediction model, this paper designed a mixed usage scenario that included various task switches to simulate the behavior patterns of users in actual use.
+The results are shown in \autoref{fig:dynamic_load_validation}.
 
-从\autoref{fig:dynamic_power}实时功率消耗分解图可以看出，
-测试过程涵盖了总功率约4.5-5.5W的高负载阶段、
-总功率约3W的中等负载阶段、
-总功率低于0.5W的待机低功率阶段，
-以及功率切换的突变时刻，形成了复杂的动态使用场景。
-在如此剧烈的功率波动下，
-\autoref{fig:dynamic_soc}中的UKF估计SOC曲线与真实SOC曲线仍保持高度一致，
-平均$3\sigma$误差仅为2.35\%，
-这意味着在99.7\%的置信水平下SOC估计误差控制在±2.35\%以内，
-显示出极高的估计精度。
-在多个负载转换时刻（如10、15、50、6分钟处），
-UKF估计并未出现明显的偏差，
-这得益于其非线性滤波特性和实时测量更新机制。
-该动态负载测试充分验证了我们基于UKF算法的模型在真实复杂使用场景下的鲁棒性，
-即使面对频繁的任务切换和剧烈的功率波动，仍能维持高精度估计，
+From \autoref{fig:dynamic_power} real-time power consumption breakdown chart, it can be seen that the test process covered a high load stage with a total power of about 4.5-5.5W,
+a medium load stage with a total power of about 3W,
+a standby low power stage with a total power of less than 0.5W,
+and moments of sudden power switching, forming a complex dynamic usage scenario.
+Under such drastic power fluctuations,
+the UKF estimated SOC curve in \autoref{fig:dynamic_soc} remains highly consistent with the true SOC curve,
+with an average $3\sigma$ error of only 2.35\%,
+indicating that the SOC estimation error is controlled within ±2.35\% at a 99.7\% confidence level,
+demonstrating extremely high estimation accuracy.
+At multiple load switching moments (such as 10, 15, 50, and 6 minutes),
+the UKF estimation did not show significant deviation,
+which can be attributed to its nonlinear filtering characteristics and real-time measurement update mechanism.
+This dynamic load test fully validates the robustness of our UKF-based model in real complex usage scenarios,
+maintaining high-precision estimation even in the face of frequent task switching and drastic power fluctuations.
 \begin{figure}[htbp]
   \centering
-  \begin{subfigure}[b]{0.4\textwidth}
+  \begin{subfigure}[b]{0.43\textwidth}
     \centering
     \includegraphics[width=\textwidth]{figures/image_p2_21.png}
-    \caption{动态负载下的SOC估计曲线}
+    \caption{SOC Estimation  under Dynamic Load}
     \label{fig:dynamic_soc}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.56\textwidth}
+  \begin{subfigure}[b]{0.54\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{figures/image_p2_22.png}
-    \caption{实时功率消耗分解}
+    \includegraphics[width=\textwidth]{figures/image_p2_22.jpeg}
+    \caption{Real-time Power Consumption Breakdown}
     \label{fig:dynamic_power}
   \end{subfigure}
-  \caption{任务波动对模型的影响结果}
+  \caption{Impact of Task Fluctuations on the Model}
   \label{fig:dynamic_load_validation}
 \end{figure}
 
-\subsection{内阻模型对SOH退化预测的影响}
-为了评估内阻模型的准确性对电池健康状态（SOH）预测的影响，
-本文对比了考虑老化效应的混合模型和仅考虑温度影响而忽略老化的简化模型这两种不同的内阻建模方法，
-结果如\autoref{fig:fig_internal_resistance}所示。
+\subsection{Impact of Internal Resistance Model on SOH Degradation Prediction}
+To assess the impact of internal resistance model accuracy on battery health state (SOH) prediction,
+this paper compared two different internal resistance modeling methods: a hybrid model considering aging effects and a simplified model considering only temperature effects while ignoring aging.
+The results are shown in \autoref{fig:fig_internal_resistance}.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/image_p2.png}
-  \caption{不同内阻模型下的SOH衰减曲线}
+  \includegraphics[width=0.6\textwidth]{figures/image_p2.png}
+  \caption{SOH Degradation Curves under Different Internal Resistance Models}
   \label{fig:fig_internal_resistance}
 \end{figure}
 
-从整体趋势来看，混合模型预测的SOH衰减速度明显快于简化模型。
-这种差异源于混合模型中内阻会随循环次数增加而增大，
-导致更高的欧姆损耗和热量产生，进而加速电池容量衰减。
-相比之下，简化模型假设内阻保持恒定，
-无法捕捉老化过程中内阻增加对SOH的累积影响，
-因此倾向于高估电池的实际寿命。
-
-不同使用模式对SOH衰减的影响存在显著差异。
-待机模式因为待机时功率负载极低，电池内部发热和化学反应速率较小，表现出最慢的衰减速率，在2000个循环后SOH仍保持在约47\%，
-游戏模式由于负载功率最大导致内阻发热加剧和电极材料的快速劣化。，导致SOH呈现最快的衰减，
-混合模型预测其在约1100个循环时SOH就降至接近0\%，
-而简化模型预测的寿命约为1220个循环。
-视频播放和导航模式的衰减曲线介于两者之间。
-视频场景的混合模型预测寿命约为1750个循环，
-而导航场景约为1250个循环。
-三种场景下混合模型与简化模型的预测差异约为100-200个循环，并在电池寿命后期（SOH < 50\%）尤为明显。
-这表明内阻随电池的老化显著增加使得对电池容量衰减的加速作用变得更加突出。
-
+From the overall trend, the hybrid model predicts a significantly faster SOH degradation rate than the simplified model.
+This difference arises because the internal resistance in the hybrid model increases with the number of cycles,
+leading to higher ohmic losses and heat generation, which in turn accelerates battery capacity decay.
+In contrast, the simplified model assumes a constant internal resistance,
+failing to capture the cumulative impact of increasing internal resistance during aging on SOH,
+and thus tends to overestimate the actual battery lifespan.
+Significant differences exist in the impact of different usage modes on SOH degradation.
+The standby mode, due to its extremely low power load during standby, results in minimal internal battery heating and chemical reaction rates, exhibiting the slowest degradation rate, with SOH remaining at about 47% after 2000 cycles.
+The gaming mode, due to the highest load power causing intensified internal resistance heating and rapid degradation of electrode materials, leads to the fastest SOH degradation.
+The hybrid model predicts that its SOH drops to nearly 0\% at about 1100 cycles,
+while the simplified model predicts a lifespan of about 1220 cycles.
+The degradation curves for video playback and navigation modes lie between the two.
+The hybrid model predicts a lifespan of about 1750 cycles for the video scenario,
+and about 1250 cycles for the navigation scenario.
+The prediction differences between the hybrid and simplified models in these three scenarios are about 100-200 cycles, and are particularly pronounced in the later stages of battery life (SOH < 50%).
+This indicates that the significant increase in internal resistance with battery aging accentuates the acceleration of capacity degradation.
 
 
 
 
-\section{Recommandations}
-\subsection{针对用户的使用建议}
+
+\section{Recommendations}
+\subsection{Suggestions for User Usage}
 \begin{itemize}
-  \item 当进行游戏或导航等高负载场景时，电池耗减速率可达待机状态的 8-10倍。
-因此，在高负载条件下，连续使用不超过 1.5小时，或周期性静置冷却，
-每进行 1小时 高负载游戏后，建议静置 15分钟 以上，
-使电池温度回落至环境温度，从而延长使用时间与电池寿命。
-  \item 在室内环境下，可以适当降低屏幕亮度以延长续航时间和减缓电池老化。
-  \item 待机常亮限制：若需长期保持屏幕开启（如床头时钟、展示模式），强制设定亮度为 50\% 可使电池循环寿命延长。
-当不需要屏幕常亮，尽量关闭屏幕。
-  \item 避免边充边玩，充电过程中产生的焦耳热叠加高负载产热，导致电池温度升高，导致电池老化加快。
+  \item When engaging in high-load scenarios such as gaming or navigation, the battery depletion rate can be 8-10 times that of standby mode.
+Therefore, under high load conditions, continuous use should not exceed 1.5 hours, or periodic cooling breaks should be taken.
+After 1 hour of high-load gaming, it is recommended to rest for more than 15 minutes,
+allowing the battery temperature to return to ambient temperature, thereby extending usage time and battery life.
+  \item In indoor environments, reducing screen brightness appropriately can extend battery life and slow down battery aging.
+  \item Standby screen-on limit: If the screen needs to be kept on for a long time (such as a bedside clock or display mode), forcibly setting the brightness to 50% can extend the battery cycle life.
+When the screen does not need to be kept on, try to turn it off.
+  \item Avoid playing while charging, as the Joule heat generated during charging combined with the heat generated by high load causes the battery temperature to rise, accelerating battery aging.
 \end{itemize}
-\subsection{针对OS的建议}
+\subsection{Suggestions for the OS}
 \begin{itemize}
-  \item 加入我们的基于UKF的电池状态估计与时间预测模型，来告知用户电池状态与续航时间。
-  \item 当检测到电池温度过高时，对CPU进行降频限制功率，以降低温度，延缓电池老化。
-  \item 根据环境光，自动调节屏幕亮度，以延长续航时间。
+  \item Integrate our UKF-based battery state estimation and time prediction model to inform users about battery status and remaining time.
+  \item When high battery temperature is detected, throttle the CPU to limit power and reduce temperature, thereby slowing battery aging.
+  \item Automatically adjust screen brightness based on ambient light to extend battery life.
 \end{itemize}
 
 
 \section{Model Evaluation and Further Discussion}
-\subsection{Strengths }
+\subsection{Strengths}
 \begin{itemize}
-  \item 我们采用二阶$RC$等效电路模型，相比纯经验拟合更具物理可解释性，能够实现对SOC的高精度与高效率估计。
-  \item 我们引入热动力学模型并与内阻、可用容量等参数进行耦合，这能够解释温度对电池性能的动态影响，增强了模型对复杂工况的解释力与一致性。
-  \item 我们采用GA算法进行全局寻优，可一定程度避免局部最优，
-  使$R_0,R_1,R_2,C_1,C_2$及初始SOC等关键参数的辨识更稳定，
-  为后续预测提供可靠的模型基底。
-  \item 我们采用的UKF算法能够处理$E(SOC)$的非线性观测关系，实现SOC的在线估计、误差快速收敛，并可给出置信区间，从而同时评估预测精度与预测可信度。
+\item A second-order $RC$ equivalent circuit model is adopted, offering stronger physical interpretability than purely empirical fitting while enabling accurate and efficient SOC estimation.
+\item A coupled thermodynamic model incorporating internal resistance and available capacity is introduced, capturing the dynamic impact of temperature on battery behavior and improving model consistency under complex operating conditions.
+\item A genetic algorithm (GA) is employed for global parameter identification, reducing the risk of local optima and improving the robustness of key parameters ($R_0,R_1,R_2,C_1,C_2$) and initial SOC estimation.
+\item The UKF effectively handles the nonlinear $E(SOC)$ observation, achieves fast-converging online SOC estimation, and provides confidence intervals to jointly assess prediction accuracy and reliability.
 \end{itemize}
+
 \subsection{Weaknesses}
 \begin{itemize}
-\item 我们所建立的功率负载模型属于简化的模型，而真实手机功耗不只受CPU、屏幕、GPS、network、后台应用的影响，可能呈现更强的非线性与突发性。
-\item OCV拟合、等效电路参数辨识以及UKF中的$Q_k$、$R_k$等设定均依赖实测数据；更换机型、电池老化程度或系统功耗策略变化时，参数可能需要重新标定。
-\item 仅以端电压作为观测量时，在电压变化缓慢的工况（如待机）观测信息量不足，不确定性更易累积；
-  同时UKF性能对$Q_k$、$R_k$选择较敏感，若设定不当可能出现跟踪抖动或收敛变慢。
+\item The power load model is simplified; real smartphone power consumption may exhibit stronger nonlinearity and abrupt variations due to complex interactions among hardware and software components.
+\item Model performance depends on measured data for OCV fitting, parameter identification, and UKF noise settings ($Q_k$, $R_k$), requiring recalibration when battery conditions or system configurations change.
+\item Using terminal voltage alone as the observation leads to limited information under low-dynamics conditions (e.g., standby), increasing uncertainty accumulation; moreover, UKF performance is sensitive to the choice of $Q_k$ and $R_k$.
 \end{itemize}
 \section{Conclusion}
-本文针对智能手机锂电池的复杂动态行为，建立了一套多物理场耦合的连续时间数学模型，
-解决了非线性工况下的电量预测与剩余时间估计问题。
-首先，基于锂电池的二阶RC等效电路模型，
-通过基尔霍夫定律建立了状态空间微分方程组，
-精确刻画了欧姆极化、电化学极化与浓差极化的动态过程。
-针对模型参数未知问题，
-设计了遗传算法（GA）全局优化框架，以端电压均方根误差（RMSE）最小化为目标，
-辨识得到了包含欧姆内阻、极化参数及初始SOC在内的最优参数集。
-接着将模型扩展至热-电耦合域，
-引入Arrhenius方程描述温度对内阻与可用容量的指数影响，
-并建立了基于阿伦尼乌斯动力学的电池老化（SOH）微分方程。
-然后，为估计SOC与续航时间，我们部署了无迹卡尔曼滤波（UKF）算法，
-通过Sigma点变换处理OCV-SOC强非线性关系，最终得到SOC与续航时间的预测值。
+This paper establishes a set of continuous-time models to characterize the nonlinear dynamic behavior of lithium batteries in smartphones, enabling power prediction and remaining time estimation. Based on a second-order RC equivalent circuit, a state-space differential model is derived using Kirchhoff’s laws to capture ohmic, electrochemical, and concentration polarization effects. A genetic algorithm (GA) is employed to identify key parameters, including internal resistances, polarization parameters, and initial SOC, by minimizing the terminal voltage RMSE.
 
-
-
-
+The model is further extended to incorporate electro-thermal coupling, where Arrhenius-type relations describe the temperature dependence of resistance, available capacity, and battery aging (SOH). Finally, an unscented Kalman filter (UKF) is applied to estimate SOC and driving range, leveraging the sigma-point transformation to handle the nonlinear OCV–SOC relationship and obtain robust state predictions.
 \newpage
 \addcontentsline{toc}{section}{Reference}
-\nocite{*} 
+
 \bibliographystyle{plain}   % 选用样式（plain / IEEEtran / elsarticle-harv ...）
 \bibliography{reference}  
-\appendix
-\newpage
-\addcontentsline{toc}{section}{Report on Use of AI}
-\section*{Report on Use of AI}
+% \appendix
+% \newpage
+% \addcontentsline{toc}{section}{Report on Use of AI}
+% \section*{Report on Use of AI}
 
-\subsection*{Gemini}
+% \subsection*{Gemini}
 
-\textbf{Query1:}
+% \textbf{Query1:}
 
-我现在要解决这个问题，需要查阅文献，为了很好解决这个问题，我应该查找哪些期刊，输入什么关键词?
+% 我现在要解决这个问题，需要查阅文献，为了很好解决这个问题，我应该查找哪些期刊，输入什么关键词?
 
-\textbf{Output1:}
+% \textbf{Output1:}
 
-这对于2026 MCM Problem A而言是一个非常关键的起步阶段。题目明确要求建立一个基于物理或机械推理的连续时间数学模型（Continuous-Time Model），并明确禁止仅使用离散曲线拟合或黑箱机器学习。为了满足这些硬性要求，本文重点查阅了结合电化学、电池物理与计算机系统功耗的文献。在期刊选择方面，本文重点关注两类文献：一类关注电池本身的物理特性（内部视角），另一类关注智能手机硬件对电量的消耗（外部负载视角）。电池物理与能源类期刊侧重电池内部机理和SOC估算，这类期刊提供了描述电压、电流、温度与剩余电量之间关系的微分方程，包括Journal of Power Sources（极高价值，涵盖锂离子电池的各类物理模型）、IEEE Transactions on Energy Conversion、Applied Energy、Electrochimica Acta以及IEEE Transactions on Industrial Electronics（常有SOC估算和等效电路模型的论文）。移动计算与系统类期刊侧重手机各部件功耗模型，这类期刊提供了量化屏幕、CPU、网络如何作为"负载"从电池中抽取电流的方法，包括IEEE Transactions on Mobile Computing（重点关注）、ACM Transactions on Embedded Computing Systems、Proceedings of MobiSys/MobiCom（虽然是会议，但包含大量关于智能手机能耗分析的顶会论文）以及IEEE Internet of Things Journal。
+% 这对于2026 MCM Problem A而言是一个非常关键的起步阶段。题目明确要求建立一个基于物理或机械推理的连续时间数学模型（Continuous-Time Model），并明确禁止仅使用离散曲线拟合或黑箱机器学习。为了满足这些硬性要求，本文重点查阅了结合电化学、电池物理与计算机系统功耗的文献。在期刊选择方面，本文重点关注两类文献：一类关注电池本身的物理特性（内部视角），另一类关注智能手机硬件对电量的消耗（外部负载视角）。电池物理与能源类期刊侧重电池内部机理和SOC估算，这类期刊提供了描述电压、电流、温度与剩余电量之间关系的微分方程，包括Journal of Power Sources（极高价值，涵盖锂离子电池的各类物理模型）、IEEE Transactions on Energy Conversion、Applied Energy、Electrochimica Acta以及IEEE Transactions on Industrial Electronics（常有SOC估算和等效电路模型的论文）。移动计算与系统类期刊侧重手机各部件功耗模型，这类期刊提供了量化屏幕、CPU、网络如何作为"负载"从电池中抽取电流的方法，包括IEEE Transactions on Mobile Computing（重点关注）、ACM Transactions on Embedded Computing Systems、Proceedings of MobiSys/MobiCom（虽然是会议，但包含大量关于智能手机能耗分析的顶会论文）以及IEEE Internet of Things Journal。
 
-在高效检索关键词方面，建议将关键词组合使用（例如：Model A + Variable B）。针对连续时间模型要求的核心建模关键词，用于检索连续方程相关的微分方程框架，包括Lithium-ion battery Equivalent Circuit Model (ECM)（等效电路模型，最常用的连续时间模型基础）、Kinetic Battery Model (KiBaM)（动力电池模型，适合描述电量恢复效应）、State of Charge (SOC) estimation algorithm、Peukert's Law lithium-ion、Shepherd battery model（经典的放电电压方程）以及Electrochemical model single particle（单粒子模型，更物理但数学更复杂）。针对多因素影响的手机组件功耗关键词，用于将屏幕、CPU等转化为电流$I(t)$的函数，包括Smartphone power consumption profiling、OLED display power modeling brightness（屏幕亮度和功耗的函数关系）、DVFS (Dynamic Voltage and Frequency Scaling) power model（处理器负载与功耗的关系）、Cellular vs WiFi power tail energy（网络传输的尾部能量消耗模型）以及Background process energy drain Android/iOS。针对题目特定要求的环境与老化关键词，用于解决温度和老化/循环历史问题，包括Arrhenius equation battery degradation（用于描述温度对反应速率的影响）、Battery capacity fade modeling（容量衰减模型）、Lithium-ion low temperature performance以及Cycle life aging model。
+% 在高效检索关键词方面，建议将关键词组合使用（例如：Model A + Variable B）。针对连续时间模型要求的核心建模关键词，用于检索连续方程相关的微分方程框架，包括Lithium-ion battery Equivalent Circuit Model (ECM)（等效电路模型，最常用的连续时间模型基础）、Kinetic Battery Model (KiBaM)（动力电池模型，适合描述电量恢复效应）、State of Charge (SOC) estimation algorithm、Peukert's Law lithium-ion、Shepherd battery model（经典的放电电压方程）以及Electrochemical model single particle（单粒子模型，更物理但数学更复杂）。针对多因素影响的手机组件功耗关键词，用于将屏幕、CPU等转化为电流$I(t)$的函数，包括Smartphone power consumption profiling、OLED display power modeling brightness（屏幕亮度和功耗的函数关系）、DVFS (Dynamic Voltage and Frequency Scaling) power model（处理器负载与功耗的关系）、Cellular vs WiFi power tail energy（网络传输的尾部能量消耗模型）以及Background process energy drain Android/iOS。针对题目特定要求的环境与老化关键词，用于解决温度和老化/循环历史问题，包括Arrhenius equation battery degradation（用于描述温度对反应速率的影响）、Battery capacity fade modeling（容量衰减模型）、Lithium-ion low temperature performance以及Cycle life aging model。
 
-\textbf{Query2:}
+% \textbf{Query2:}
 
-手机锂电池的数据库应该怎么寻找，你能帮我找到符合这题的数据库吗?
+% 手机锂电池的数据库应该怎么寻找，你能帮我找到符合这题的数据库吗?
 
-\textbf{Output2:}
+% \textbf{Output2:}
 
-由于手机电池（通常是软包电池）和通用的18650电池在化学特性上相似，学术界常用的数据集可以作为很好的起步。NASA Prognostics Center of Excellence (PCoE)是电池老化研究领域的"黄金标准"数据集，内容包含18650电池在不同温度、负载下的老化数据，其特点是数据非常详细，包含电压、电流、温度、阻抗谱(EIS)等，虽然主要是18650电池，但对算法验证完全通用，推荐使用Battery Aging Data Set，获取地址为NASA PCoE Data Repository。CALCE（马里兰大学）是另一个非常经典的数据库，被数千篇论文引用，其内容涵盖了多种正极材料（LCO, NCM, LFP）的电池，特点是包含了长时间的日历老化（Calendar Aging）和循环老化数据，非常适合研究电池的长期衰减，获取地址为CALCE Battery Group。Oxford Battery Degradation Dataset（牛津大学）的内容专注于长期电池退化，特点是测量非常精细，包含map-based的老化测试，特别适合建立高精度的电化学或等效电路模型，获取地址为Oxford Battery Intelligence Lab。Toyota/Stanford/MIT (Nature Energy Dataset)是一个针对快充和寿命预测的大规模数据集，内容包括124个磷酸铁锂/石墨电池的循环数据，特点是数据量非常大，专门用于训练机器学习模型来预测电池寿命(RUL)，如果想做AI模型，这个数据集是极佳的选择，获取地址为Stanford Pnas/Nature Energy Data。
+% 由于手机电池（通常是软包电池）和通用的18650电池在化学特性上相似，学术界常用的数据集可以作为很好的起步。NASA Prognostics Center of Excellence (PCoE)是电池老化研究领域的"黄金标准"数据集，内容包含18650电池在不同温度、负载下的老化数据，其特点是数据非常详细，包含电压、电流、温度、阻抗谱(EIS)等，虽然主要是18650电池，但对算法验证完全通用，推荐使用Battery Aging Data Set，获取地址为NASA PCoE Data Repository。CALCE（马里兰大学）是另一个非常经典的数据库，被数千篇论文引用，其内容涵盖了多种正极材料（LCO, NCM, LFP）的电池，特点是包含了长时间的日历老化（Calendar Aging）和循环老化数据，非常适合研究电池的长期衰减，获取地址为CALCE Battery Group。Oxford Battery Degradation Dataset（牛津大学）的内容专注于长期电池退化，特点是测量非常精细，包含map-based的老化测试，特别适合建立高精度的电化学或等效电路模型，获取地址为Oxford Battery Intelligence Lab。Toyota/Stanford/MIT (Nature Energy Dataset)是一个针对快充和寿命预测的大规模数据集，内容包括124个磷酸铁锂/石墨电池的循环数据，特点是数据量非常大，专门用于训练机器学习模型来预测电池寿命(RUL)，如果想做AI模型，这个数据集是极佳的选择，获取地址为Stanford Pnas/Nature Energy Data。
 
-\textbf{Query3:}
+% \textbf{Query3:}
 
-我现在要查一下手机各模块的功率，请你给我推荐一些数据集，并且表明准确出处和链接
+% 我现在要查一下手机各模块的功率，请你给我推荐一些数据集，并且表明准确出处和链接
 
-\textbf{Output3:}
+% \textbf{Output3:}
 
-要准确查询手机各模块（CPU、GPU、屏幕、WiFi、GPS等）的功率，需要理解两类数据来源：开发者定义的"静态标准值"（最准确的参考标准）和用户行为的"动态数据集"。Android官方电源配置文件是最权威的模块参考值来源，如果想查找"某个模块的额定功耗是多少毫安"，这是最直接的来源，所有Android手机厂商在出厂时必须在系统文件中定义各个模块的电流消耗值，系统据此来计算"设置-电池"里的耗电百分比，数据内容包含CPU（不同频率下的电流）、WiFi（扫描/传输/空闲）、蓝牙、GPS、屏幕（开启/全亮）、音频DSP、摄像头等的具体电流值(mA)，适用场景为硬件功耗建模、查找特定模块的基准功耗，官方文档说明可见Android Open Source Project - Power Values，核心数据文件(XML)示例可见Google Git - power\_profile.xml，在该XML链接中可以看到诸如\texttt{<item name="wifi.active">200</item>}的代码，这意味着该参考设备WiFi活跃时消耗约200mA，不同厂商（小米、三星等）的该文件值不同，但结构一致。GreenHub Project是最大的真实设备电池数据集，这是一个学术界广泛使用的众包数据集，收集了全球数百万台Android设备的电池老化和耗电数据，数据内容包含电池电压、温度、充电/放电速率以及关联的硬件状态（屏幕是否开启、WiFi信号强度等），虽然主要是"整机功耗"，但可以通过数据分析拆解出各模块的影响，适用场景为真实环境下的功耗分析、电池老化研究、机器学习功耗预测，项目主页为GreenHub Project，数据集可在Hugging Face或Zenodo下载，也可以在Hugging Face上搜索GreenHub相关数据集，或者直接通过他们的Datasets页面申请访问，相关论文为GreenHub: A Large-Scale Collaborative Dataset to Battery Consumption Analysis of Android Devices (IEEE Access, 2021)。Kaggle移动设备与传感器数据集适合快速上手，Kaggle上有许多经过清洗的针对性数据集，虽然不如AOSP底层，但适合做数据分析练手，推荐数据集为"Smartphone Energy Consumption Dataset"或"Mobile Device Usage Dataset"，数据内容通常包含App使用时长、屏幕开启时长、数据流量消耗与剩余电量的对应关系，相关链接包括Mobile Device Usage and User Behavior Dataset (Kaggle)以及Smart Home Energy Consumption (Kaggle)（注：此类数据集有时混杂智能家居，需筛选Mobile标签）。学术级数据集CRAWDAD是一个无线网络和移动计算的数据集存档，非常硬核，数据内容包含极其精细的WiFi信号追踪、蓝牙交互和移动能耗日志，出处链接为CRAWDAD (Community Resource for Archiving Wireless Data At Dartmouth)，可在站内搜索"Power"或"Battery"。如果需要"绝对数值"（例如WiFi芯片到底消耗多少功率），不要找CSV数据集，应直接查看AOSP的power\_profile.xml，功率(mW)的计算公式为电流(mA，从xml获取)乘以电压(V，通常为3.8V或4.2V)，例如XML中gps.on为50mA，电压3.8V，则GPS功率约为190mW。如果需要"行为数据"（例如屏幕亮度和耗电量的线性关系），应使用GreenHub的数据。
+% 要准确查询手机各模块（CPU、GPU、屏幕、WiFi、GPS等）的功率，需要理解两类数据来源：开发者定义的"静态标准值"（最准确的参考标准）和用户行为的"动态数据集"。Android官方电源配置文件是最权威的模块参考值来源，如果想查找"某个模块的额定功耗是多少毫安"，这是最直接的来源，所有Android手机厂商在出厂时必须在系统文件中定义各个模块的电流消耗值，系统据此来计算"设置-电池"里的耗电百分比，数据内容包含CPU（不同频率下的电流）、WiFi（扫描/传输/空闲）、蓝牙、GPS、屏幕（开启/全亮）、音频DSP、摄像头等的具体电流值(mA)，适用场景为硬件功耗建模、查找特定模块的基准功耗，官方文档说明可见Android Open Source Project - Power Values，核心数据文件(XML)示例可见Google Git - power\_profile.xml，在该XML链接中可以看到诸如\texttt{<item name="wifi.active">200</item>}的代码，这意味着该参考设备WiFi活跃时消耗约200mA，不同厂商（小米、三星等）的该文件值不同，但结构一致。GreenHub Project是最大的真实设备电池数据集，这是一个学术界广泛使用的众包数据集，收集了全球数百万台Android设备的电池老化和耗电数据，数据内容包含电池电压、温度、充电/放电速率以及关联的硬件状态（屏幕是否开启、WiFi信号强度等），虽然主要是"整机功耗"，但可以通过数据分析拆解出各模块的影响，适用场景为真实环境下的功耗分析、电池老化研究、机器学习功耗预测，项目主页为GreenHub Project，数据集可在Hugging Face或Zenodo下载，也可以在Hugging Face上搜索GreenHub相关数据集，或者直接通过他们的Datasets页面申请访问，相关论文为GreenHub: A Large-Scale Collaborative Dataset to Battery Consumption Analysis of Android Devices (IEEE Access, 2021)。Kaggle移动设备与传感器数据集适合快速上手，Kaggle上有许多经过清洗的针对性数据集，虽然不如AOSP底层，但适合做数据分析练手，推荐数据集为"Smartphone Energy Consumption Dataset"或"Mobile Device Usage Dataset"，数据内容通常包含App使用时长、屏幕开启时长、数据流量消耗与剩余电量的对应关系，相关链接包括Mobile Device Usage and User Behavior Dataset (Kaggle)以及Smart Home Energy Consumption (Kaggle)（注：此类数据集有时混杂智能家居，需筛选Mobile标签）。学术级数据集CRAWDAD是一个无线网络和移动计算的数据集存档，非常硬核，数据内容包含极其精细的WiFi信号追踪、蓝牙交互和移动能耗日志，出处链接为CRAWDAD (Community Resource for Archiving Wireless Data At Dartmouth)，可在站内搜索"Power"或"Battery"。如果需要"绝对数值"（例如WiFi芯片到底消耗多少功率），不要找CSV数据集，应直接查看AOSP的power\_profile.xml，功率(mW)的计算公式为电流(mA，从xml获取)乘以电压(V，通常为3.8V或4.2V)，例如XML中gps.on为50mA，电压3.8V，则GPS功率约为190mW。如果需要"行为数据"（例如屏幕亮度和耗电量的线性关系），应使用GreenHub的数据。
 
 
 \end{document}
