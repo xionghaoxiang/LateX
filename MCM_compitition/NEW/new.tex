@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MCM/ICM LaTeX Template %%
+%% 2026 MCM/ICM           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{left=1in,right=0.75in,top=1in,bottom=1in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Replace ABCDEF in the next line with your chosen problem
+% and replace 1111111 with your Team Control Number
+\newcommand{\Problem}{A}
+\newcommand{\Team}{2616003}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{newtxtext}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{newtxmath} % must come after amsXXX
+
+\usepackage[pdftex]{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\lhead{Team \Team}
+\rhead{}
+\cfoot{}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\graphicspath{{.}}  % Place your graphic files in the same directory as your main document
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif, .png}
+\thispagestyle{empty}
+\vspace*{-16ex}
+\centerline{\begin{tabular}{*3{c}}
+    \parbox[t]{0.3\linewidth}{\begin{center}\textbf{Problem Chosen}\\ \Large \textcolor{red}{\Problem}\end{center}}
+    & \parbox[t]{0.3\linewidth}{\begin{center}\textbf{2026\\ MCM/ICM\\ Summary Sheet}\end{center}}
+    & \parbox[t]{0.3\linewidth}{\begin{center}\textbf{Team Control Number}\\ \Large \textcolor{red}{\Team}\end{center}}    \\
+    \hline
+\end{tabular}}
+%%%%%%%%%%% Begin Summary %%%%%%%%%%%
+% Enter your summary here replacing the (red) text
+% Replace the text from here ...
+\begin{center}
+\textcolor{black}{%
+1111
+}
+\end{center}
+% to here
+%%%%%%%%%%% End Summary %%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\pagestyle{fancy}
+% Uncomment the next line to generate a Table of Contents
+%\tableofcontents
+\newpage
+\setcounter{page}{1}
+\rhead{Page \thepage\ }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Begin your paper here
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

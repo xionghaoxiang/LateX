@@ -15,15 +15,22 @@ Mohammad Alipour, Carlos Ziebert, Fiorentino~Valerio Conte, and Riza Kizilel.
 \newblock A review on temperature-dependent electrochemical properties, aging, and performance of lithium-ion cells.
 \newblock {\em Batteries}, 6(3), 2020.
 
-\bibitem{carroll2010analysis}
-Aaron Carroll and Gernot Heiser.
-\newblock An analysis of power consumption in a smartphone.
-\newblock In {\em Proceedings of the 2010 USENIX Annual Technical Conference (USENIX ATC '10)}, pages 21--21, Boston, MA, USA, 2010. USENIX Association.
+\bibitem{android2024powervalues}
+{Android Open Source Project}.
+\newblock Power values.
+\newblock \url{https://source.android.com/docs/core/power/values}, 2024.
+\newblock Accessed: 2024-02-02.
 
 \bibitem{Carroll2010AnAO}
 Aaron Carroll and Gernot Heiser.
 \newblock An analysis of power consumption in a smartphone.
 \newblock In {\em USENIX Annual Technical Conference}, 2010.
+
+\bibitem{calce2024battery}
+{Center for Advanced Life Cycle Engineering (CALCE)}.
+\newblock {CALCE Battery Data Set -- INR Cell Data}.
+\newblock \url{https://calce.umd.edu/data\#INR}, 2024.
+\newblock Accessed: 2024-02-02.
 
 \bibitem{en10091313}
 Yixing Chen, Deqing Huang, Qiao Zhu, Weiqun Liu, Congzhi Liu, and Neng Xiong.
@@ -34,12 +41,6 @@ Yixing Chen, Deqing Huang, Qiao Zhu, Weiqun Liu, Congzhi Liu, and Neng Xiong.
 Madeleine Ecker, Nerea Nieto, Stefan K{\"a}bitz, Johannes Schmalstieg, Heiko Blanke, Andreas Warnecke, and Dirk~Uwe Sauer.
 \newblock Calendar and cycle life study of li(nimnco)o2-based 18650 lithium-ion batteries.
 \newblock {\em Journal of Power Sources}, 248:839--851, 2014.
-
-\bibitem{aosp_power_profile}
-{Google Inc.}
-\newblock power\_profile.xml --- {Android} open source project.
-\newblock \url{https://android.googlesource.com/platform/frameworks/base/+/main/core/res/res/xml/power_profile.xml}.
-\newblock Accessed: 2026-01-30.
 
 \bibitem{en4040582}
 Hongwen He, Rui Xiong, and Jinxin Fan.
